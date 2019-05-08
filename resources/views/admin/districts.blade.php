@@ -110,7 +110,7 @@
                 responsive: true,
                 language: {
                     search: "_INPUT_",
-                    searchPlaceholder: "Find a hospital",
+                    searchPlaceholder: "Find a district",
                 }
 
             });
@@ -147,7 +147,7 @@
                                 $('#district_name').val(),
                                 '<a href="#" class="btn btn-round btn-info btn-icon btn-sm edit" data-toggle="tooltip" data-placement="left" title="Edit"><i class="now-ui-icons design-2_ruler-pencil"></i></a>'
                         ]).draw(true);
-                        $('#add_district').find('input').val('');
+                        $('#add_district').find('[type="text"]').val('');
                         $('#add_district').find('input').prop('disabled', false);
                         presentNotification('District saved', 'info', 'top', 'right');
                     }
