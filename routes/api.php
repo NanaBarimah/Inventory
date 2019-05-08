@@ -30,11 +30,6 @@ Route::middleware('auth:api')->group(function(){
     Route::post('equipment/report/unit', 'EquipmentController@fetchUnitReport');
     Route::post('equipment/report/department', 'EquipmentController@fetchDepartmentReport');
 
-    Route::get('categories/', 'CategoryController@index');
-    Route::post('categories/add_category', 'CategoryController@store');
-    Route::get('categories/{category}', 'CategoryController@show');
-    Route::put('categories/update/{category}', 'CategoryController@update');
-
     Route::get('maintenances/', 'MaintenanceController@index');
     Route::post('maintenances/add', 'MaintenanceController@store');
     Route::get('maintenances/{maintenance}', 'MaintenanceController@show');
