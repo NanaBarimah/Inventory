@@ -83,6 +83,11 @@ Route::middleware('passport:admin-api')->group(function(){
     Route::get('districts/{district}', 'DistrictController@show');
     Route::put('districts/update/{district}', 'DistrictController@update');
 
+    Route::get('categories/', 'CategoryController@index');
+    Route::post('categories/add_category', 'CategoryController@store');
+    Route::get('categories/{category}', 'CategoryController@show');
+    Route::put('categories/update/{category}', 'CategoryController@update');
+
     Route::get('hospitals/', 'HospitalController@index');
     Route::post('hospitals/add_hospital', 'HospitalController@store');
     Route::get('hospitals/{hospital}', 'HospitalController@show');
