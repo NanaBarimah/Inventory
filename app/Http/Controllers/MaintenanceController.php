@@ -58,7 +58,6 @@ class MaintenanceController extends Controller
                 'duration_units' => 'required',
                 'down_time' => 'required',
                 'reason' => 'required',
-                'job_number' => 'required',
                 'date_reported' => 'required',
                 'date_inspected' => 'required',
                 'problem_found' => 'required',
@@ -75,7 +74,7 @@ class MaintenanceController extends Controller
         $maintenance->type = $request->type;
         $maintenance->cost = $request->cost;
         $maintenance->duration = $request->duration;
-        $maintenance->job_number = $request->job_number;
+        //$maintenance->job_number = $request->job_number;
         $maintenance->problem_found = $request->problem_found;
         $maintenance->faulty_category = $request->faulty_category;
         if($request->function_check == 'on'){
@@ -125,10 +124,11 @@ class MaintenanceController extends Controller
 
         $unit_head->notify(new MaintenanceCarriedOut($maintenance)); 
 
-        $admin = User::where([['role', '=', 'Admin'], ['hospital_id', '=', $request->hospital_id]])->first();
-
-        $admin->notify(new MaintenanceCarriedOut($maintenance));
-
+        $admin = User::where([['role', '=', 'Admin'], ['hospital_id', '=', $request->hospital_id], ['id', '<>', $request->mtce_officer]])->first();
+        if($admin != null){
+            $admin->notify(new MaintenanceCarriedOut($maintenance));  
+        }
+        
         return response()->json([
             'error' => $result,
             'data' => $maintenance,

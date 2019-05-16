@@ -44,6 +44,7 @@
                                         <tr>
                                             <th>Unit Name</th>
                                             <th>Department</th>
+                                            <th>Unit Head</th>
                                             <th class="disabled-sorting">Actions</th>
                                         </tr>
                                     </thead>
@@ -51,6 +52,7 @@
                                         <tr>
                                             <th>Unit Name</th>
                                             <th>Department</th>
+                                            <th>Unit Head</th>
                                             <th class="disabled-sorting text-right">Actions</th>
                                         </tr>
                                     </tfoot>
@@ -60,6 +62,7 @@
                                             <tr>
                                                 <td>{{$unit->name}}</td>
                                                 <td>{{$department->name}}</td>
+                                                <td>{{$unit->user->firstname.' '.$unit->user->lastname}}</td>
                                                 <td>
                                                     <span data-toggle="modal" data-target="#editunitModal" data-id="{{$unit->id}}" data-name="{{$unit->name}}" data-department="{{$department->id}}">
                                                         <a href="#" class="btn btn-round btn-info btn-icon btn-sm edit" data-placement="left" title="Edit" data-toggle="tooltip">

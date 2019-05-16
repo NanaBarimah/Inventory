@@ -188,7 +188,7 @@ class UnitController extends Controller
    
 
     public function viewAll(){
-        $department = Department::where('hospital_id', Auth::user()->hospital_id)->get();
+        $department = Department::with('units', 'units.user')->where('hospital_id', Auth::user()->hospital_id)->get();
         $users = User::where('hospital_id', Auth::user()->hospital_id)->get();
         if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'storekeeper'){
             return view('units')->with('departments', $department)->with('users', $users);

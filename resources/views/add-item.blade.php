@@ -75,16 +75,22 @@
                                             <div class="row justify-content-center">
                                                 <div class="col-sm-10">
                                                     <div class="row">
-                                                        <div class="col-sm-12 col-md-6">
+                                                        <div class="col-sm-12 col-md-4">
                                                             <div class="input-group form-control-lg">
                                                                 <input type="text" class="form-control" placeholder="Model No. (required)"
                                                                     name="model_number" required="true">
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-12 col-md-6">
+                                                        <div class="col-sm-12 col-md-4">
                                                             <div class="input-group form-control-lg">
                                                                 <input type="text" placeholder="Serial No. (required)"
                                                                     class="form-control" name="serial_number" required="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12 col-md-4">
+                                                            <div class="input-group form-control-lg">
+                                                                <input type="text" placeholder="Equipment Code (required)"
+                                                                    class="form-control" name="code" required="true" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -293,7 +299,7 @@
             var form_data = $(this).serialize();
             $(this).find('input, textarea, select').prop('disabled',true);
 
-
+            console.log(form_data);
             request = $.ajax({
                 url: '/api/equipment/add_equipment',
                 method: 'post',

@@ -131,12 +131,12 @@
                                                                     class="form-control datepicker" name="date_inspected" required="true" />
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-12 col-md-4">
+                                                        <!--div class="col-sm-12 col-md-4">
                                                             <div class="input-group form-control-lg">
                                                                 <input type="text" placeholder="Job Number"
                                                                     class="form-control" name="job_number" required="true" />
                                                             </div>
-                                                        </div>
+                                                        </div-->
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-10 mt-3">

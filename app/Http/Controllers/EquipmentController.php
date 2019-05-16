@@ -20,7 +20,9 @@ class EquipmentController extends Controller
     public function index()
     {
         if(Auth::user()->role == 'Unit Head'){
-            $equipment = Equipment::where('hospital_id', '=', Auth::user()->hospital_id)->where('user_id', '=', Auth::user()->id)->get();
+            $equipment = Equipment::with('unit', 'category', 'unit.department')->where('hospital_id', '=', Auth::user()->hospital_id)->whereHas('unit', function($q){
+                $q->where('user_id', Auth::user()->id);
+            })->get();
         }else{
         $equipment = Equipment::where('hospital_id','=',Auth::user()->hospital_id)->with('category', 'unit', 'unit.department')->get();
         }
@@ -292,8 +294,6 @@ class EquipmentController extends Controller
     }
 
     private function formatDate($date){
-        $date = str_replace(',', '', $date);
-        $date = str_replace('-', '/', $date);
         return date("Y-m-d H:i:s", strtotime(stripslashes($date)));
     }
 }

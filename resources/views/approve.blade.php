@@ -129,8 +129,8 @@
             var is_hospital_approved = maintenance.is_hospital_approved;
             var id = maintenance.id;
 
-            $('#check-{{$maintenance->id}}').css('display', 'inline');
-            if($('#toggle-{{$maintenance->id}}').prop('checked') == true){
+            $('#check-'+id).css('display', 'inline');
+            if($('#toggle-'+id).prop('checked') == true){
                 is_hospital_approved = 1;
             }else{
                 is_hospital_approved = 0;
@@ -143,7 +143,7 @@
                 method: 'put',
                 data : form_data,
                 success: function(data, status){
-                    $('#check-{{$maintenance->id}}').css('display', 'none');
+                    $('#check-'+id).css('display', 'none');
                     if(data.error){
                         presentNotification(data.message, 'danger', 'top', 'right');
                     }else{
@@ -165,7 +165,7 @@
                 },
 
                 error : function(xhr, desc, err){
-                    $('#check-{{$maintenance->id}}').css('display', 'none');
+                    $('#check-'+id).css('display', 'none');
                     presentNotification('Network error', 'danger', 'top', 'right');
                 }
             });

@@ -59,7 +59,7 @@ class MaintenanceCarriedOut extends Notification
             'title' => 'New Maintenance',
             'message' => 'New maintenance recorded for equipment '.$this->request->equipment_code,
             'data' => $this->request,
-            'action' => '/maintenance/details/'.$this->request->equipment_code
+            'action' => '/maintenance/history/'.$this->request->equipment_code
         ];
     }
 }

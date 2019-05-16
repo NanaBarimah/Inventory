@@ -65,4 +65,8 @@ class User extends Authenticatable
         return $this->where('username', $username)->first();
     }
 
+    /*public function unit(){
+       return $this->belongsTo('App\Unit', 'user_id');
+    }*/
+
 }

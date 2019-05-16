@@ -70,7 +70,7 @@
                                             <td class="text-right">
                                             <input type="checkbox" name="active" class="bootstrap-switch" id="active" <?php if($user->active == 1){echo 'checked';}?>
                                             data-on-label="<i class='now-ui-icons ui-1_check'></i>" 
-                                            data-off-label="<i class='now-ui-icons ui-1_simple-remove'></i>" onchange="setActive({{$user}})"/>
+                                            data-off-label="<i class='now-ui-icons ui-1_simple-remove'></i>" onchange="setActive({{$user}}, this    )"/>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -126,11 +126,11 @@
             })
         });*/
 
-        function setActive(user){
-            var active = user.active;
+        function setActive(user, el){
+            var active;
             var id = user.id;
 
-            if(active == 0){
+            if(el.checked == 1){
                 active = 1;
             }else{
                 active = 0;
