@@ -42,18 +42,22 @@
                                                     Inventory
                                                 </a>
                                             </li>
+                                            @if(Auth::guard('admin')->user()->role == 'Admin')
                                             <li class="nav-item">
                                                 <a class="nav-link" data-toggle="tab" href="#reports" role="tablist">
                                                     <i class="now-ui-icons business_chart-bar-32"></i>
                                                     Reports
                                                 </a>
                                             </li>
+                                            @endif
+                                            @if(Auth::guard('admin')->user()->role == 'Admin')
                                             <li class="nav-item">
                                                 <a class="nav-link" data-toggle="tab" href="#users" role="tablist">
                                                     <i class="now-ui-icons users_single-02"></i>
                                                     Users
                                                 </a>
                                             </li>
+                                            @endif
                                             <li class="nav-item">
                                                 <a class="nav-link" data-toggle="tab" href="#details" role="tablist">
                                                     <i class="now-ui-icons travel_info"></i>

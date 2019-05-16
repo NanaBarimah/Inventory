@@ -30,7 +30,9 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="inline-block">Hospitals</h4>
-                                <a href="/admin/hospitals/add" class="btn btn-purple pull-right">Add New</a>
+                                @if(Auth::guard('admin')->user()->role == 'Admin')
+                                    <a href="/admin/hospitals/add" class="btn btn-purple pull-right">Add New</a>
+                                @endif
                             </div>
                             <div class="card-body">
                                 <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -40,7 +42,9 @@
                                             <th>District</th>
                                             <th>Address</th>
                                             <th>Contact</th>
-                                            <th class="disabled-sorting text-right">Actions</th>
+                                            @if(Auth::guard('admin')->user()->role == 'Admin')
+                                                <th class="disabled-sorting text-right">Actions</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -49,7 +53,9 @@
                                             <th>District</th>
                                             <th>Address</th>
                                             <th>Contact</th>
-                                            <th class="disabled-sorting text-right">Actions</th>
+                                            @if(Auth::guard('admin')->user()->role == 'Admin')
+                                                <th class="disabled-sorting text-right">Actions</th>
+                                            @endif
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -61,11 +67,13 @@
                                             <td>{{$hospital->district->name}}</td>
                                             <td>{{$hospital->address}}</td>
                                             <td>{{$hospital->contact_number}}</td>
-                                            <td class="text-right">
-                                                <a href="/admin/hospitals/edit/{{$hospital->id}}" class="btn btn-round btn-info btn-icon btn-sm edit">
-                                                    <i class="now-ui-icons design-2_ruler-pencil"></i>
-                                                </a>
-                                            </td>
+                                            @if(Auth::guard('admin')->user()->role == 'Admin')
+                                                <td class="text-right">
+                                                    <a href="/admin/hospitals/edit/{{$hospital->id}}" class="btn btn-round btn-info btn-icon btn-sm edit">
+                                                        <i class="now-ui-icons design-2_ruler-pencil"></i>
+                                                    </a>
+                                                </td>
+                                            @endif
                                         </tr>
                                         @endforeach
                                     </tbody>

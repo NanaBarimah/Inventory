@@ -6,6 +6,7 @@ use App\Admin;
 use App\User;
 use App\Hospital;
 use App\District;
+use App\Requests;
 use Auth;
 
 use Illuminate\Http\Request;
@@ -31,8 +32,14 @@ class AdminController extends Controller
     {
         $hospitals = Hospital::count();
         $districts = District::count();
-        $users = User::count();
-        return view('admin.admin')->with('users', $users)->with('districts', $districts)->with('hospitals', $hospitals);
+        if(Auth::guard('admin')->user()->role == 'Admin'){
+            $users = User::count();
+            return view('admin.admin')->with('users', $users)->with('districts', $districts)->with('hospitals', $hospitals);
+        }elseif(Auth::guard('admin')->user()->role == 'Biomedical Engineer'){
+            $jobs = Requests::where('assigned_to', '=', Auth::guard('admin')->user()->id)->count();
+            return view('admin.admin')->with('jobs', $jobs)->with('districts', $districts)->with('hospitals', $hospitals);
+        }
+        
         //$admins = Admin::all();
 
         //return response()->json($admins, 200);

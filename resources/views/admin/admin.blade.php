@@ -53,17 +53,32 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="statistics">
-                                            <div class="info">
-                                                <div class="icon icon-info">
-                                                    <i class="now-ui-icons users_single-02"></i>
+                                    @if(Auth::guard('admin')->user()->role == 'Admin')
+                                        <div class="col-md-4">
+                                            <div class="statistics">
+                                                <div class="info">
+                                                    <div class="icon icon-info">
+                                                        <i class="now-ui-icons users_single-02"></i>
+                                                    </div>
+                                                    <a href="/admin/users"><h3 class="info-title">{{$users}}</h3>
+                                                    <h6 class="stats-title">Users</h6></a>
                                                 </div>
-                                                <a href="/admin/users"><h3 class="info-title">{{$users}}</h3>
-                                                <h6 class="stats-title">Users</h6></a>
                                             </div>
                                         </div>
-                                    </div>
+                                    @endif
+                                    @if(Auth::guard('admin')->user()->role == 'Biomedical Engineer')
+                                        <div class="col-md-4">
+                                            <div class="statistics">
+                                                <div class="info">
+                                                    <div class="icon icon-info">
+                                                        <i class="now-ui-icons users_single-02"></i>
+                                                    </div>
+                                                    <a href="/admin/users"><h3 class="info-title">{{$jobs}}</h3>
+                                                    <h6 class="stats-title">Assigned Jobs</h6></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 

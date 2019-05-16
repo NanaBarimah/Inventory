@@ -23,8 +23,16 @@ class EquipmentController extends Controller
             $equipment = Equipment::with('unit', 'category', 'unit.department')->where('hospital_id', '=', Auth::user()->hospital_id)->whereHas('unit', function($q){
                 $q->where('user_id', Auth::user()->id);
             })->get();
+        }elseif (Auth::user()->role == 'Department Head') {
+            $equipment = Equipment::with('unit', 'category', 'unit.department')->where('hospital_id', '=', Auth::user()->hospital_id)->whereHas('unit', function($q){
+                $q->whereHas('department', function($d){
+                    $d->where('user_id', Auth::user()->id);
+                });
+            })->get();
+        }else if(Auth::user()->role == 'Admin' || Auth::user()->role == 'Engineer' || Auth::user()->role == 'Storekeeper' || Auth::user()->role == 'Hospital Admin'){
+            $equipment = Equipment::where('hospital_id','=',Auth::user()->hospital_id)->with('category', 'unit', 'unit.department')->get();
         }else{
-        $equipment = Equipment::where('hospital_id','=',Auth::user()->hospital_id)->with('category', 'unit', 'unit.department')->get();
+            return abort(403);
         }
         return view('inventory')->with('equipment', $equipment);
         //return response()->json($equipment, 200);

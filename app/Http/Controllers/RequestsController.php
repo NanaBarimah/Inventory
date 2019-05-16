@@ -8,6 +8,7 @@ use App\Equipment_request;
 use App\Admin;
 use App\User;
 use App\Unit;
+use App\Department;
 use Auth;
 use DB;
 use App\Notifications\RequestReceived;
@@ -24,8 +25,22 @@ class RequestsController extends Controller
      */
     public function index()
     {
-        //
-        $equipment = Equipment::where('hospital_id', '=', Auth::user()->hospital_id)->with('unit')->get();
+        if(Auth::user()->role == 'Unit Head'){
+            $equipment = Equipment::with('unit', 'category', 'unit.department')->where('hospital_id', '=', Auth::user()->hospital_id)->whereHas('unit', function($u){
+                $u->where('user_id', Auth::user()->id);
+            })->get();
+        }elseif (Auth::user()->role == 'Department Head') {
+            $equipment = Equipment::with('unit', 'category', 'unit.department')->where('hospital_id', '=', Auth::user()->hospital_id)->whereHas('unit', function($u){
+                $u->whereHas('department', function($d){
+                    $d->where('user_id', Auth::user()->id);
+                });
+            })->get();
+        }elseif (Auth::user()->role == 'Admin' || Auth::user()->role == 'Engineer') {
+            $equipment = Equipment::with('unit', 'category', 'unit.department')->where('hospital_id', '=', Auth::user()->hospital_id)->get(); 
+        }else{
+            abort(403);
+        }
+
         $region = Hospital::with('district', 'district.region')->where('id', '=', Auth::user()->hospital_id)->first();
 
         $region = $region->district->region_id;
