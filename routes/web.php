@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function(){
     
 Route::middleware('admin')->prefix('admin')->group(function(){
     Route::get('/', 'AdminController@index')->name('admin.dashboard');
+    Route::get('/profile', 'AdminController@profile')->name('admin.profile');
     Route::get('/hospitals', 'HospitalController@index')->name('admin.hospitals');
     Route::get('/hospitals/add', 'HospitalController@addHospital')->name('admin.hospitals.add');
     Route::get('/hospitals/{code}', 'HospitalController@viewHospital')->name('admin.hospitals.view');
@@ -64,6 +65,7 @@ Route::middleware('admin')->prefix('admin')->group(function(){
     Route::get('/assigned', 'RequestsController@presentEngineerJobs')->name('assigned');
     Route::get('/assigned/maintenance/{equipment}/{job}', 'RequestsController@handleMaintenance')->name('request.maintenance');
     Route::get('/approve', 'MaintenanceController@adminApprovals')->name('admin-approve');
+    Route::get('/markAsRead', 'NotificationController@markAllAsRead')->name('mark.read');
 });
 
 

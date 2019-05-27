@@ -73,7 +73,7 @@
                                                     <div class="icon icon-info">
                                                         <i class="now-ui-icons users_single-02"></i>
                                                     </div>
-                                                    <a href="/admin/users"><h3 class="info-title">{{$jobs}}</h3>
+                                                    <a href="/admin/assigned"><h3 class="info-title">{{$jobs}}</h3>
                                                     <h6 class="stats-title">Assigned Jobs</h6></a>
                                                 </div>
                                             </div>

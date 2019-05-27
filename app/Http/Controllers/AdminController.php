@@ -8,8 +8,10 @@ use App\Hospital;
 use App\District;
 use App\Requests;
 use Auth;
+use App\Region;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -43,6 +45,16 @@ class AdminController extends Controller
         //$admins = Admin::all();
 
         //return response()->json($admins, 200);
+    }
+
+    public function profile()
+    {
+        $region = Region::where('id', '=', Auth::guard('admin')->user()->region_id)->first();
+
+        return view('admin.admin-profile')->with('region', $region); 
+        //$users = User::all();
+
+        //return response()->json($users, 200);
     }
 
     /**
@@ -132,9 +144,40 @@ class AdminController extends Controller
      * @param  \App\Admin  $admin
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Admin $admin)
+    public function update(Request $request)
     {
-        //
+        $admin = Admin::where('id', $request->admin)->first();
+        $status = true;
+
+        $request->validate([
+            'firstname' => 'required',
+            'lastname' => 'required',
+        ]);
+        
+        if(request('password_reset') == 'yes'){
+            if(Hash::check(request('old_password'), $admin->password)){
+                $admin->password = bcrypt(request('new_password'));
+            }else{
+                return response()->json([
+                    'error' => true,
+                    'message' => 'The old password you provided is wrong'
+                ]);
+            }
+        }
+        
+        $admin->firstname = $request->firstname;
+        $admin->lastname = $request->lastname;
+
+        if($admin->update()){
+            $status = false;
+        }
+       
+        return response()->json(
+            [
+            'error' => $status,
+            'message' => !$status ? 'admin Updated Successfully!' : 'Could not update admin'
+            ]
+        );
     }
 
     /**

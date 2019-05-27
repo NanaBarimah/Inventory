@@ -25,9 +25,9 @@
 
 <body>
     <div class="wrapper">
-        @include('layouts.sidebar')
+        @include('layouts.admin_sidebar')
         <div class="main-panel">
-            @include('layouts.navbar', ['page_title' => 'User Profile'])
+            @include('layouts.admin_navbar', ['page_title' => 'Admin Profile'])
             <div class="panel-header panel-header-sm">
             </div>
             <div class="content">
@@ -43,13 +43,13 @@
                                         <div class="col-md-6 pr-1">
                                             <div class="form-group">
                                                 <label>First Name</label>
-                                                <input type="text" class="form-control" placeholder="First Name" value="{{Auth::user()->firstname}}" name="firstname">
+                                                <input type="text" class="form-control" placeholder="First Name" value="{{Auth::guard('admin')->user()->firstname}}" name="firstname">
                                             </div>
                                         </div>
                                         <div class="col-md-6 pl-1">
                                             <div class="form-group">
                                                 <label>Last Name</label>
-                                                <input type="text" class="form-control" placeholder="Last Name" value="{{Auth::user()->lastname}}" name="lastname">
+                                                <input type="text" class="form-control" placeholder="Last Name" value="{{Auth::guard('admin')->user()->lastname}}" name="lastname">
                                             </div>
                                         </div>
                                     </div>
@@ -58,13 +58,13 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Username</label>
-                                                <input type="text" class="form-control" placeholder="Username" value="{{Auth::user()->username}}" name="username" readonly>
+                                                <input type="text" class="form-control" placeholder="Username" value="{{Auth::guard('admin')->user()->username}}" name="username" readonly>
                                             </div>
                                         </div>
                                         <div class="col-md-8 pr-1">
                                             <div class="form-group">
                                                 <label>Role</label>
-                                                <p class="form-control" disabled>{{Auth::user()->role}}</p>
+                                                <p class="form-control" disabled>{{Auth::guard('admin')->user()->role}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -94,7 +94,7 @@
                                     </div>
 
                                     <div class="card-footer text-center">
-                                        <input type="hidden" name="user" id="user" value="{{Auth::user()->id}}"/>
+                                        <input type="hidden" name="user" id="user" value="{{Auth::guard('admin')->user()->id}}"/>
                                         <button type="submit" id="btn_submit" class="btn btn-wd btn-purple" disabled>Save</button>
                                     </div>
                                 </form>
@@ -107,15 +107,15 @@
                             </div>
                             <div class="card-body">
                                 <div class="author">
-                                <img class="round" width="96" height="96" avatar="{{Auth::user()->firstname}} {{Auth::user()->lastname}}" />
-                                    <h5 class="title" id="card-fullname">{{ucfirst(Auth::user()->firstname)}} {{ucfirst(Auth::user()->lastname)}}</h5>
+                                <img class="round" width="96" height="96" avatar="{{Auth::guard('admin')->user()->firstname}} {{Auth::guard('admin')->user()->lastname}}" />
+                                    <h5 class="title" id="card-fullname">{{ucfirst(Auth::guard('admin')->user()->firstname)}} {{ucfirst(Auth::guard('admin')->user()->lastname)}}</h5>
                                     <p class="description" id="card-username">
-                                        {{Auth::user()->username}}
+                                        {{Auth::guard('admin')->user()->username}}
                                     </p>
                                 </div>
                                 <p class="description text-center">
-                                    {{ucfirst(Auth::user()->role)}}
-                                    <br> {{$hospital->name}}
+                                    {{ucfirst(Auth::guard('admin')->user()->role)}}
+                                    <br> {{$region->name}}
                                 </p>
                             </div>
                         </div>
@@ -125,7 +125,6 @@
             </div>
         </div>
     </div>
-            @include('hospital-modal')
     
     <!--   Core JS Files   -->
     <!--script src="{{ asset('js/app.js') }}" defer></script-->
@@ -162,7 +161,7 @@
             }
 
             request = $.ajax({
-                url: '/api/users/update/{{Auth::user()->id}}',
+                url: "/api/admins/update/{{Auth::guard('admin')->user()->id}}",
                 data: form_data,
                 method: 'PUT',
                 success: function(data, status){
@@ -203,5 +202,6 @@
             );
         }
     </script>
+    
 </body>
 </html>

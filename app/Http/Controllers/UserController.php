@@ -106,13 +106,12 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $user = User::findOrFail($request->user)->first();
+        $user = User::where('id', $request->user)->first();
         $status = true;
 
         $request->validate([
             'firstname' => 'required',
             'lastname' => 'required',
-            'username' => 'required'
         ]);
         
         if(request('password_reset') == 'yes'){
@@ -128,7 +127,6 @@ class UserController extends Controller
         
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
-        $user->username = $request->username;
 
         if($user->update()){
             $status = false;

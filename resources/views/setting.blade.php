@@ -97,8 +97,9 @@
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script>
-      $('#save').click(function(e){
+      $('#save').on('click', function(e){
         e.preventDefault();
+
         var recipients = $('#recipients').val();
         var hospital_id = $('#hospital_id').val();
         var duration = $('#duration').val();
