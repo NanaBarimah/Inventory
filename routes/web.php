@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/settings', 'SettingController@index')->name('settings');
     Route::get('/vendors', 'ServiceVendorController@index')->name('vendors');
     Route::get('/request-maintenance', 'RequestsController@index')->name('request');
+    Route::get('/requests', 'RequestsController@viewAll')->name('request');
     Route::get('/markAsRead', 'NotificationController@markAllAsRead')->name('mark-as-read');
     Route::get('/approve', 'MaintenanceController@approve')->name('approve');
 });

@@ -32,6 +32,17 @@ class RequestsController extends Controller
         return view('request')->with('equipment', $equipment)->with('region', $region);
     }
 
+    public function viewAll(){
+        $requests = Requests::with('equipments', 'engineer')->whereHas('equipments', function($q){
+            $q->where('hospital_id', Auth::user()->hospital_id);
+        })->get();
+
+        /*return response()->json([
+            'requests' => $requests
+        ]);*/
+        return view('requests')->with('requests', $requests);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

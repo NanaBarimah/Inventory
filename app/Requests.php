@@ -22,4 +22,8 @@ class Requests extends Model
     {
         return $this->belongsToMany('App\Equipment', 'equipment_requests')->withTimestamps();
     }
+
+    public function engineer(){
+        return $this->hasOne('App\Admin', 'id', 'assigned_to');
+    }
 }

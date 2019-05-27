@@ -27,7 +27,7 @@
     <div class="wrapper">
         @include('layouts.sidebar')
         <div class="main-panel">
-            @include('layouts.navbar', ['page_title' => 'Inventory List'])
+            @include('layouts.navbar', ['page_title' => 'Requests List'])
             <div class="panel-header panel-header-sm">
             </div>
             <div class="content">
@@ -35,63 +35,54 @@
                     <div class="col-md-11 center">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="inline-block">Inventory List</h4>
-                                @if(strtolower(Auth::user()->role) != 'hospital admin')
-                                <a href="/inventory/add" class="btn btn-light pull-right">Add New</a>
+                                <h4 class="inline-block">Requests List</h4>
+                                @if(strtolower(Auth::user()->role) == 'admin')
+                                <a href="/request-maintenance" class="btn btn-purple pull-right">Add New</a>
                                 @endif
                             </div>
                             <div class="card-body">
-                                <!--table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
                                             <th>Code</th>
-                                            <th>Serial No.</th>
-                                            <th>Model No.</th>
-                                            <th>Manufacturer</th>
+                                            <th>Equipment Count</th>
+                                            <th>Serial Numbers</th>
+                                            <th>Maintenance Type</th>
+                                            <th>Description</th>
+                                            <th>Assigned To</th>
                                             <th>Status</th>
-                                            <th>Type</th>
-                                            <th>Unit</th>
-                                            <th>Department</th>
                                             <th class="disabled-sorting text-right">Actions</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Code</th>
-                                            <th>Serial No.</th>
-                                            <th>Model No.</th>
-                                            <th>Manufacturer</th>
+                                            <th>Equipment Count</th>
+                                            <th>Serial Numbers</th>
+                                            <th>Maintenance Type</th>
+                                            <th>Description</th>
+                                            <th>Assigned To</th>
                                             <th>Status</th>
-                                            <th>Type</th>
-                                            <th>Unit</th> 
-                                            <th>Department</th>
                                             <th class="disabled-sorting text-right">Actions</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                    @foreach($equipment as $item)
+                                    @foreach($requests as $request)
                                         <tr class="uppercase">
                                             <td>
-                                                <a href="/inventory/{{$item->code}}">{{$item->code}}</a>
+                                                <a href="javascript::void(0)">{{$request->id}}</a>
                                             </td>
-                                            <td>{{$item->serial_number}}</td>
-                                            <td>{{$item->model_number}}</td>
-                                            <td>{{$item->manufacturer_name}}</td>
-                                            <td>{{$item->status}}</td>
-                                            <td>{{$item->category->name}}</td>
-                                            <td>{{$item->unit->name}}</td>
-                                            <td>{{$item->unit->department->name}}</td>
+                                            <td>{{$request->equipments->count()}}</td>
+                                            <td>
+                                            @foreach($request->equipments as $equipment)
+                                                {{$equipment->serial_number}}, 
+                                            @endforeach
+                                            </td>
+                                            <td>{{$request->maintenance_type}}</td>
+                                            <td>{{$request->description}}</td>
+                                            <td>{{$request->assigned_to == null ? "Not yet assigned" : $request->engineer->firstname.' '.$request->engineer->lastname}}</td>
+                                            <td>{{$request->assigned_to == null ? "Pending" : "Assigned"}}</td>
                                             <td class="text-right">
-                                                @if(strtolower(Auth::user()->role) != 'hospital admin')
-                                                <a href="/inventory/edit/{{$item->code}}" class="btn btn-round btn-info btn-icon btn-sm edit" data-toggle="tooltip" data-placement="left" title="Edit">
-                                                    <i class="now-ui-icons design-2_ruler-pencil"></i>
-                                                </a>
-                                                @endif
-                                                @if(strtolower(Auth::user()->role) != 'storekeeper')
-                                                <a href="/maintenance/history/{{$item->code}}" class="btn btn-round btn-warning btn-icon btn-sm report" data-toggle="tooltip" data-placement="left" title="Maintenance History">
-                                                    <i class="now-ui-icons business_chart-bar-32"></i>
-                                                </a>
-                                                @endif
                                                 <a href="#" class="btn btn-round btn-purple btn-icon btn-sm report" data-toggle="tooltip" data-placement="left" title="Submit Report" disabled>
                                                     <i class="now-ui-icons ui-1_send"></i>
                                                 </a>
@@ -99,7 +90,7 @@
                                         </tr>
                                     @endforeach
                                     </tbody>
-                                </table-->
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -107,7 +98,7 @@
             </div>
         </div>
     </div>
-            @include('hospital-modal')
+    @include('hospital-modal')
     
     <!--   Core JS Files   -->
     <!--script src="{{ asset('js/app.js') }}" defer></script-->

@@ -189,6 +189,7 @@
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script>
+        var table; 
         $(document).ready(function () {
                 
             $(function () {
@@ -206,7 +207,7 @@
 
             });
 
-            var table = $('#datatable').DataTable();
+            table = $('#datatable').DataTable();
         });
 
         $('#add_new_unit_form').on('submit', function(e){
@@ -233,7 +234,6 @@
                     if(data.error){
                         presentNotification(data.message+". Try again.", 'danger', 'top', 'right');
                     }else{
-                        var table = $('#datatable').DataTable();
                         table.row.add([
                             $('#unit_name').val(),
                             $('#department_name option:selected').text(),
