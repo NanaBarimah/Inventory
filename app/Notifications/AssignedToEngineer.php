@@ -58,9 +58,9 @@ class AssignedToEngineer extends Notification
     {
         return [
             'title' => 'New maintenance assignment',
-            'message' => 'A new maintenance job has been assigned to you scheduled for '.$this->request->scheduled_for,
+            'message' => 'A new maintenance job has been assigned to you scheduled for '.\Carbon\Carbon::parse($this->request->scheduled_for)->format('jS F Y'),
             'data' => $this->request,
-            'action' => '/assigned'
+            'action' => '/admin/assigned'
         ];
     }
 }

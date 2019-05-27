@@ -209,20 +209,25 @@ class MaintenanceController extends Controller
     }
 
     public function presentHistoryTable(){
-        if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer'){
-            $equipment = Equipment::where('hospital_id','=',Auth::user()->hospital_id)->with('category', 'unit')->get();
+        if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin'){
+            $equipment = Equipment::where('hospital_id','=',Auth::user()->hospital_id)->with('category', 'unit', 'unit.department')->get();
             return view('maintenance-history')->with('equipment', $equipment);
         }else if(Auth::user()->role == 'Unit Head'){
             $equipment = array();
-            $equipments = Unit::with('equipments')->where('user_id', '=', Auth::user()->id)->get();
-            
-            foreach($equipments as $single){
-                foreach($single->equipments as $one){
-                    array_push($equipment, $one);
-                }
-            }
-
+            //$equipments = Unit::with('equipments')->where('user_id', '=', Auth::user()->id)->get();
+            $equipment = Equipment::with('unit', 'category', 'unit.department')->where('hospital_id', '=', Auth::user()->hospital_id)->whereHas('unit', function($q){
+                $q->where('user_id', Auth::user()->id);
+            })->get();
+        
             return view('maintenance-history')->with('equipment', $equipment);
+        }elseif (Auth::user()->role == 'Department Head') {
+           $equipment = Equipment::with('unit', 'category', 'unit.department')->where('hospital_id', '=', Auth::user()->hospital_id)->whereHas('unit', function($q){
+                $q->whereHas('department', function($d){
+                    $d->where('user_id', Auth::user()->id);
+                });
+           })->get();
+
+           return view('maintenance-history')->with('equipment', $equipment);
         }else{
             return abort(403);
         }

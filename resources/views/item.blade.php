@@ -46,7 +46,7 @@
                     <div class="col-md-11 center">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="inline-block">{{$equipment->code}}</h4>
+                                <h4 class="inline-block">{{$equipment->code}}-{{$equipment->category->name}} {{$equipment->manufacturer_name}}</h4>
                                 @if(strtolower(Auth::user()->role) != 'hospital admin')
                                 <a href="/inventory/edit/{{$equipment->code}}" class="btn btn-purple pull-right btn-round">Edit</a>
                                 @endif

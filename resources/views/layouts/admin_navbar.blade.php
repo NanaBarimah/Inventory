@@ -20,14 +20,14 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-end" id="navigation">
                         <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown" id="notifications">
                                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-bell"></i>@if(Auth::guard('admin')->user()->notifications->count() > 0)<span class="badge badge-danger notification-badge">{{Auth::guard('admin')->user()->notifications->count()}}</span>@endif
+                                    <i class="fa fa-bell"></i>@if(Auth::guard('admin')->user()->unreadNotifications->count() > 0)<span class="badge badge-danger notification-badge" id="notificationsCount">{{Auth::guard('admin')->user()->unreadNotifications->count()}}</span>@endif
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
                                 @if(Auth::guard('admin')->user()->notifications->count() > 0)
                                     @foreach(Auth::guard('admin')->user()->notifications as $notification)
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{$notification->data['action']}}">
                                         <div class="notification-item">
                                             <span class="notification-title">{{$notification->data['title']}}</span>
                                             <p class="notification-body">{{$notification->data['message']}}</p>
@@ -49,7 +49,7 @@
                                     </p>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-                                    <a class="dropdown-item" href="#">My Profile</a>
+                                    <a class="dropdown-item" href="/admin/profile">My Profile</a>
                                     <a class="dropdown-item" href="/admin/logout">Logout</a>
                                 </div>
                             </li>

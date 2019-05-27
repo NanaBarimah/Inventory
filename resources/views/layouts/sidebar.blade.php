@@ -27,7 +27,7 @@
                                         <span class="sidebar-normal">All Inventory Items</span>
                                     </a>
                                 </li>
-                                @if(strtolower(Auth::user()->role) != 'hospital admin')
+                                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'storekeeper')
                                 <li>
                                     <a href="/inventory/add">
                                         <span class="sidebar-normal">Add New Item</span>
@@ -71,7 +71,7 @@
                         </div>
                     </li>
                     @endif
-                    @if(strtolower(Auth::user()->role) != 'storekeeper')
+                    @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head')
                     <li>
                         <a data-toggle="collapse" href="#maintenanceList">
                             <i class="now-ui-icons ui-2_settings-90"></i>
@@ -88,26 +88,30 @@
                                     </a>
                                 </li>
                                 @endif
+                                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head' || strtolower(Auth::user()->role) == 'engineer')
                                 <li>
                                     <a href="/request-maintenance">
                                         <span class="sidebar-normal">Request Maintenance</span>
                                     </a>
                                 </li>
+                                @endif
                                 <li>
                                     <a href="/maintenance/history">
                                         <span class="sidebar-normal">Maintenance History</span>
                                     </a>
                                 </li>
+                                @if(strtolower(Auth::user()->role) == 'unit head' || strtolower(Auth::user()->is_unit_head) == 1)
                                 <li>
                                     <a href="/approve">
                                         <span class="sidebar-normal">Maintenance Approvals</span>
                                     </a>
                                 </li>
+                                @endif
                             </ul>
                         </div>
                     </li>
                     @endif
-                    @if(strtolower(Auth::user()->role) != 'storekeeper')
+                    @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin')
                     <li>
                         <a href="/reports">
                             <i class="now-ui-icons business_chart-pie-36"></i>
@@ -115,7 +119,7 @@
                         </a>
                     </li>
                     @endif
-                    @if(strtolower(Auth::user()->role) != 'storekeeper' && strtolower(Auth::user()->role) != 'hospital admin')
+                    @if(strtolower(Auth::user()->role) == 'admin' && strtolower(Auth::user()->role) != 'engineer')
                     <li>
                         <a href="/schedule">
                             <i class="now-ui-icons ui-1_calendar-60"></i>

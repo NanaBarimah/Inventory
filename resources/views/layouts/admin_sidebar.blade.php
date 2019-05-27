@@ -13,7 +13,7 @@
                     <p>Reports</p>
                 </a>
                 </li>
-                @if(Auth::guard('admin')->user()->role != 'Biomedical Engineer')
+                @if(Auth::guard('admin')->user()->role == 'Admin')
                 <li>
                     <a href="/admin/districts">
                         <i class="now-ui-icons location_pin"></i>

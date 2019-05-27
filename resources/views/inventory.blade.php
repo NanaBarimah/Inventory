@@ -36,8 +36,8 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="inline-block">Inventory List</h4>
-                                @if(strtolower(Auth::user()->role) != 'hospital admin')
-                                <a href="/inventory/add" class="btn btn-light pull-right">Add New</a>
+                                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'storekeeper')
+                                <a href="/inventory/add" class="btn btn-purple pull-right">Add New</a>
                                 @endif
                             </div>
                             <div class="card-body">

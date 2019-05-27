@@ -121,7 +121,7 @@
                             </a>
                         </div>
                         @endif
-                        @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer')
+                        @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head')
                         <div class="col-md-4 col-sm-6">
                             <a href="/maintenance/history" class="menu-item text-center">
                                 <div class="card">
@@ -137,7 +137,7 @@
                             </a>
                         </div>
                         @endif
-                        @if(strtolower(Auth::user()->role) != 'storekeeper')
+                        @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin')
                         <div class="col-md-4 col-sm-6">
                             <a href="/reports" class="menu-item text-center">
                                 <div class="card">
@@ -187,7 +187,7 @@
                         @endif
                     </div>
                 </div>
-                @if(strtolower(Auth::user()->role) != 'storekeeper')
+                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head')
                 <div class="col-md-3 col-sm-12">
                     <div class="card gradient-background">
                         <div class="card-header">

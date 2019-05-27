@@ -25,23 +25,11 @@ Route::middleware('auth:api')->group(function(){
     Route::post('equipment/add_equipment', 'EquipmentController@store');
     Route::get('equipment/{equipment}', 'EquipmentController@show');
     Route::put('equipment/update/{equipment}', 'EquipmentController@update');
-    Route::post('equipment/report/cummulative', 'EquipmentController@fetchCummulativeReport');
-    Route::post('equipment/report/categorized', 'EquipmentController@fetchCategorizedReport');
-    Route::post('equipment/report/unit', 'EquipmentController@fetchUnitReport');
-    Route::post('equipment/report/department', 'EquipmentController@fetchDepartmentReport');
 
     Route::get('maintenances/', 'MaintenanceController@index');
     Route::post('maintenances/add', 'MaintenanceController@store');
     Route::get('maintenances/{maintenance}', 'MaintenanceController@show');
     Route::put('maintenances/update/{maintenance}', 'MaintenanceController@update');
-    Route::post('maintenances/report/cummulative', 'MaintenanceController@getCummulativeReport');
-    Route::post('maintenances/report/categorized', 'MaintenanceController@getCategorizedReport');
-    Route::post('maintenances/report/unit', 'MaintenanceController@getUnitReport');
-    Route::post('maintenances/report/department', 'MaintenanceController@getDepartmentReport');
-    Route::post('maintenances/report/cost/month', 'MaintenanceController@costPerMonth');
-    Route::post('maintenances/report/cost/type', 'MaintenanceController@costPerType');
-    Route::post('maintenances/report/cost/unit', 'MaintenanceController@costPerUnit');
-    Route::post('maintenances/report/cost/department', 'MaintenanceController@costPerDepartment');
     Route::put('maintenances/approve', 'MaintenanceController@hospitalApprove');
 
     Route::post('departments/add', 'DepartmentController@store');
@@ -103,13 +91,36 @@ Route::middleware('passport:admin-api')->group(function(){
     Route::post('admin/maintenances/report/cost/department', 'MaintenanceController@costPerDepartment');
     Route::put('admin/maintenances/admin-approve', 'MaintenanceController@adminApprove');
 
-    Route::put('requests/assign/{request}', 'RequestsController@assign');
+    Route::put('requests/assign/{request}', 'RequestsController@assign');   
 });
 
 // route for issue tokens
 Route::group(['middleware' => ['passport:admin-api']], function() {
     Route::post('/token1', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 });
+
+    Route::post('maintenances/report/cummulative', 'MaintenanceController@getCummulativeReport');
+    Route::post('maintenances/report/categorized', 'MaintenanceController@getCategorizedReport');
+    Route::post('maintenances/report/unit', 'MaintenanceController@getUnitReport');
+    Route::post('maintenances/report/department', 'MaintenanceController@getDepartmentReport');
+    Route::post('maintenances/report/cost/month', 'MaintenanceController@costPerMonth');
+    Route::post('maintenances/report/cost/type', 'MaintenanceController@costPerType');
+    Route::post('maintenances/report/cost/unit', 'MaintenanceController@costPerUnit');
+    Route::post('maintenances/report/cost/department', 'MaintenanceController@costPerDepartment');
+    Route::post('maintenances/report/cummulative', 'MaintenanceController@getCummulativeReport');
+    Route::post('maintenances/report/categorized', 'MaintenanceController@getCategorizedReport');
+    Route::post('maintenances/report/unit', 'MaintenanceController@getUnitReport');
+    Route::post('maintenances/report/department', 'MaintenanceController@getDepartmentReport');
+    Route::post('maintenances/report/cost/month', 'MaintenanceController@costPerMonth');
+    Route::post('maintenances/report/cost/type', 'MaintenanceController@costPerType');
+    Route::post('maintenances/report/cost/unit', 'MaintenanceController@costPerUnit');
+    Route::post('maintenances/report/cost/department', 'MaintenanceController@costPerDepartment');
+    Route::post('equipment/report/cummulative', 'EquipmentController@fetchCummulativeReport');
+    Route::post('equipment/report/categorized', 'EquipmentController@fetchCategorizedReport');
+    Route::post('equipment/report/unit', 'EquipmentController@fetchUnitReport');
+    Route::post('equipment/report/department', 'EquipmentController@fetchDepartmentReport'); 
+    
+    
 
 /*Route::prefix('maintenances')->group(function(){
     Route::get('/', 'MaintenanceController@index');

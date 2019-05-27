@@ -56,7 +56,7 @@ class RequestAssigned extends Notification
     {
         return [
             'title' => 'Maintenance request accepted',
-            'message' => 'Your maintenance request has been assigned to a biomedical engineer. The maintenance is scheduled for '.$this->request->scheduled_for,
+            'message' => 'Your maintenance request has been assigned to a biomedical engineer. The maintenance is scheduled for '.\Carbon\Carbon::parse($this->request->scheduled_for)->format('jS F Y'),
             'data' => $this->request,
             'action' => '/requests'
         ];

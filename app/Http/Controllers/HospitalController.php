@@ -154,10 +154,14 @@ class HospitalController extends Controller
     }
 
     public function updateHospital($code){
-        $hospital = Hospital::where('id', $code)->first();
-        $districts = District::where('region_id', Auth::guard('admin')->user()->region_id)->get();
+        if(Auth::guard('admin')->user()->role == 'Admin'){
+            $hospital = Hospital::where('id', $code)->first();
+            $districts = District::where('region_id', Auth::guard('admin')->user()->region_id)->get();
 
-        return view('admin.edit-hospital')->with('districts', $districts)->with('hospital', $hospital);
+            return view('admin.edit-hospital')->with('districts', $districts)->with('hospital', $hospital);
+        }else{
+            abort(403);
+        }
     }
 
     public function updateSettings(Request $request){
