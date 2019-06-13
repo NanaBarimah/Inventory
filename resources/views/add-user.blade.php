@@ -1,135 +1,93 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-<meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Inventory Management</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'
-    />
-    
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
-    <!-- Styles -->
-    <!--link href="{{ asset('css/app.css') }}" rel="stylesheet"-->
-    <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet" />
-    <link href="{{ asset('css/now-ui-dashboard.min.css?v=1.2.0')}}" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" media="screen" href="{{asset('css/main.css')}}" />
-</head>
-
-<body>
-    <div class="wrapper">
-        @include('layouts.sidebar')
-        <div class="main-panel">
-            @include('layouts.navbar', ['page_title' => 'Add User'])
-            <div class="panel-header panel-header-sm">
-            </div>
-            
-            <div class="content">
-                <div class="col-md-8 mr-auto ml-auto">
-                    <div>
-                        <div class="card" data-color="primary">
-                            <form method="post" action="#" id="add_user_form">
-                                <div class="card-header text-center" data-background-color="gray">
-                                    <h3 class="card-title">
-                                        New User
-                                    </h3>
-                                    <h3 class="description">Add a new user.</h5>
-                                </div>
-
-                                
-                            <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6 pr-1">
-                                            <div class="form-group">
-                                                <label>First Name</label>
-                                                <input type="text" class="form-control resetable" placeholder="First Name" name="firstname" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 pl-1">
-                                            <div class="form-group">
-                                                <label>Last Name</label>
-                                                <input type="text" class="form-control resetable" placeholder="Last Name" name="lastname" required>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-4 pr-1">
-                                            <div class="form-group">
-                                                <label>Username</label>
-                                                <input type="text" class="form-control resetable" placeholder="Username" name="username" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 pr-1">
-                                            <div class="form-group">
-                                                <label>Phone</label>
-                                                <input type="tel" class="form-control resetable" placeholder="Phone Number" name="phone_number" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 pl-1">
-                                            <div class="form-group">
-                                                    <label>User Role</label>
-                                                    <select class="selectpicker" data-style="btn btn-purple btn-round" name="role" required>
-                                                        <option selected disabled hidden>Select role</option>
-                                                        <option value="Admin">System Administrator</option>
-                                                        <option value="Hospital Admin">Hospital Administrator</option>
-                                                        <option value="Engineer">Engineer</option>
-                                                        <option value="Storekeeper">Storekeeper</option>
-                                                    </select>
-                                                    <input type="hidden" name="hospital_id" value="{{Auth::user()->hospital_id}}"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 pr-1">
-                                            <div class="form-group">
-                                                <label>Password</label>
-                                                <input type="password" class="form-control resetable" name="password" id="new_password" required>
-                                                <p class="text-danger text-center" style="font-size:11px; display:none">The passwords you have provided do not match</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 pr-1">
-                                            <div class="form-group">
-                                                <label>Confirm Password</label>
-                                                <input type="password" class="form-control resetable" id="confirm_password" name="password_confirmation" required>
-                                                <p class="text-danger text-center" style="font-size:11px; display:none;">The passwords you have provided do not match</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="card-footer">
-                                    <div class="pull-right">
-                                        <input type='reset' class='btn btn-wd' value='Reset' id="btn_reset"/>
-                                        <button type='submit' class='btn btn-purple btn-wd' id="btn_save">Save</button>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
-
-                            </form>
+@extends('layouts.user-dashboard', ['page_title' => 'Add user'])
+@section('content')
+    <div class="content">
+        <div class="col-md-10 mr-auto ml-auto">
+            <div>
+                <div class="card" data-color="primary">
+                    <form method="post" action="#" id="add_user_form" class="p=4">
+                        <div class="card-header">
+                            <h4 class="inline-block">
+                                New User
+                            </h4>
                         </div>
-                    </div>
-                </div>
 
+                        
+                    <div class="card-body">
+                            <div class="row mb-4">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label><b>Email address</b> <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control form-line resetable" placeholder="Email Address" name="email" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 pl-1">
+                                    <div class="form-group">
+                                        <label class="pl-3"><b>Role</b>  <span class="text-danger">*</span></label>
+                                        <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="role" title="System Role" required>
+                                            <option>Admin</option>
+                                            <option>Regular Technician</option>
+                                            <option>Limited Technician</option>
+                                            <option>Hospital Head</option>
+                                            <option>View Only</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <p class="text-muted"><b>Personal Information</b></p>
+                            </div>
+                            <div class="row">
+                                
+                                
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label><b>First Name</b></label>
+                                        <input type="text" class="form-control resetable" name="firstname">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label><b>Last Name</b></label>
+                                        <input type="text" class="form-control resetable" name="lastname">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label><b>Phone</b></label>
+                                        <input type="tel" class="form-control resetable" name="phone_number">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label><b>Job Title</b></label>
+                                        <input type="tel" class="form-control resetable" name="phone_number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="d-block">
+                                <p class="text-muted text-small">All fields marked (<span class="text-danger">*</span>) are mandatory</p>
+                            </div>
+                            <div class="pull-right">
+                                <input type='reset' class='btn btn-wd' value='Reset' id="btn_reset"/>
+                                <button type='submit' class='btn btn-purple btn-wd' id="btn_save">Save</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    </form>
+                </div>
             </div>
+        </div>
+
     </div>
-            @include('hospital-modal')
-    
-    <!--   Core JS Files   -->
-    <!--script src="{{ asset('js/app.js') }}" defer></script-->
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{asset('js/popper.min.js')}}"></script>
-    <script src="{{asset('js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('js/perfect-scrollbar.jquery.min.js')}}"></script>
-    <script src="{{asset('js/main.js')}}"></script>
-    <script src="{{asset('js/now-ui-dashboard.min.js?v=1.2.0')}}" type="text/javascript"></script>
+@endsection
+@section('scripts')
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script>
@@ -189,6 +147,4 @@
             );
         }
     </script>
-</body>
-
-</html>
+@endsection

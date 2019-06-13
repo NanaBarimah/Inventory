@@ -1,98 +1,70 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-<meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Inventory Management</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'
-    />
-    
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
-    <!-- Styles -->
-    <!--link href="{{ asset('css/app.css') }}" rel="stylesheet"-->
-    <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet" />
-    <link href="{{ asset('css/now-ui-dashboard.min.css?v=1.2.0')}}" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" media="screen" href="{{asset('css/main.css')}}" />
-</head>
-
-<body>
-    <div class="wrapper">
-        @include('layouts.sidebar')
-        <div class="main-panel">
-            @include('layouts.navbar', ['page_title' => 'Users List'])
-            <div class="panel-header panel-header-sm">
-            </div>
-            <div class="content">
-                <div class="row">
-                    <div class="col-md-10 center">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="inline-block">Users List</h4>
-                                <a href="/users/add" class="btn btn-purple pull-right">Add User</a>
-                            </div>
-                            <div class="card-body">
-                                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
-                                            <th>Role</th>
-                                            <th class="disabled-sorting text-right">Enable User</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
-                                            <th>Role</th>
-                                            <th class="disabled-sorting text-right">Enable User</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                    @foreach($users as $user)
-                                        <tr class="uppercase">
-                                            <td>
-                                                {{$user->firstname}}
-                                            </td>
-                                            <td>{{$user->lastname}}</td>
-                                            <td style="text-transform:lowercase;">{{strtolower($user->username)}}</td>
-                                            <td>{{ucfirst($user->role)}}</td>
-                                            <td class="text-right">
-                                            <input type="checkbox" name="active" class="bootstrap-switch" id="active" <?php if($user->active == 1){echo 'checked';}?>
-                                            data-on-label="<i class='now-ui-icons ui-1_check'></i>" 
-                                            data-off-label="<i class='now-ui-icons ui-1_simple-remove'></i>" onchange="setActive({{$user}}, this    )"/>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+    @extends('layouts.user-dashboard', ['page_title' => 'Users'])
+    @section('content')
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12 center">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="inline-block">System Users</h4>
+                        <a href="/users/add" class="btn btn-purple pull-right">Add User</a>
+                    </div>
+                    <div class="card-body">
+                        <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email Address</th>
+                                    <th>Role</th>
+                                    <th>Phone No.</th>
+                                    <th>Job Title</th>
+                                    <th>Profile Status</th>
+                                    <th class="disabled-sorting text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email Address</th>
+                                    <th>Role</th>
+                                    <th>Phone No.</th>
+                                    <th>Job Title</th>
+                                    <th>Profile Status</th>
+                                    <th class="disabled-sorting text-right">Action</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr class="uppercase">
+                                    <td>
+                                        Kwame Gyan
+                                    </td>
+                                    <td style="text-transform:lowercase;">kwamegyan@codbitgh.com</td>
+                                    <td>Admin</td>
+                                    <td>0244111666</td>
+                                    <td>Senior Engineer</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td class="text-right">
+                                        <div class="dropdown">
+                                            <button type="button"
+                                                class="btn btn-round btn-default dropdown-toggle btn-simple btn-icon no-caret"
+                                                data-toggle="dropdown">
+                                                <i class="now-ui-icons loader_gear"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" href="#">Edit User</a>
+                                                <a class="dropdown-item text-danger" href="#">Deactivate User</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-            @include('hospital-modal')
-    
-    <!--   Core JS Files   -->
-    <!--script src="{{ asset('js/app.js') }}" defer></script-->
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{asset('js/popper.min.js')}}"></script>
-    <script src="{{asset('js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('js/perfect-scrollbar.jquery.min.js')}}"></script>
-    <script src="{{asset('js/main.js')}}"></script>
-    <script src="{{asset('js/now-ui-dashboard.min.js?v=1.2.0')}}" type="text/javascript"></script>
+    @endsection
+    @section('scripts')
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
@@ -171,6 +143,4 @@
             );
         }
     </script>
-</body>
-
-</html>
+    @endsection

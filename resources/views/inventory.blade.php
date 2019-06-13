@@ -21,6 +21,22 @@
     <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet" />
     <link href="{{ asset('css/now-ui-dashboard.min.css?v=1.2.0')}}" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" media="screen" href="{{asset('css/main.css')}}" />
+    <style>
+        .btn-outline{
+            background: #fff;
+            color: #666;
+            border: 1px solid #666;
+        }
+
+        .btn-outline:hover{
+            background: #666;
+            color: #fff;
+        }
+
+        .btn-outline:disabled{
+            color:#fff;
+        }
+    </style>
 </head>
 
 <body>
@@ -37,69 +53,84 @@
                             <div class="card-header">
                                 <h4 class="inline-block">Inventory List</h4>
                                 @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'storekeeper')
-                                <a href="/inventory/add" class="btn btn-purple pull-right">Add New</a>
+                                <a href="/inventory/add" class="btn btn-round btn-outline pull-right">Add New</a>
                                 @endif
                             </div>
                             <div class="card-body">
-                                <!--table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Serial No.</th>
-                                            <th>Model No.</th>
-                                            <th>Manufacturer</th>
-                                            <th>Status</th>
-                                            <th>Type</th>
-                                            <th>Unit</th>
-                                            <th>Department</th>
-                                            <th class="disabled-sorting text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Serial No.</th>
-                                            <th>Model No.</th>
-                                            <th>Manufacturer</th>
-                                            <th>Status</th>
-                                            <th>Type</th>
-                                            <th>Unit</th> 
-                                            <th>Department</th>
-                                            <th class="disabled-sorting text-right">Actions</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                    @foreach($equipment as $item)
-                                        <tr class="uppercase">
-                                            <td>
-                                                <a href="/inventory/{{$item->code}}">{{$item->code}}</a>
-                                            </td>
-                                            <td>{{$item->serial_number}}</td>
-                                            <td>{{$item->model_number}}</td>
-                                            <td>{{$item->manufacturer_name}}</td>
-                                            <td>{{$item->status}}</td>
-                                            <td>{{$item->category->name}}</td>
-                                            <td>{{$item->unit->name}}</td>
-                                            <td>{{$item->unit->department->name}}</td>
-                                            <td class="text-right">
-                                                @if(strtolower(Auth::user()->role) != 'hospital admin')
-                                                <a href="/inventory/edit/{{$item->code}}" class="btn btn-round btn-info btn-icon btn-sm edit" data-toggle="tooltip" data-placement="left" title="Edit">
-                                                    <i class="now-ui-icons design-2_ruler-pencil"></i>
-                                                </a>
-                                                @endif
-                                                @if(strtolower(Auth::user()->role) != 'storekeeper')
-                                                <a href="/maintenance/history/{{$item->code}}" class="btn btn-round btn-warning btn-icon btn-sm report" data-toggle="tooltip" data-placement="left" title="Maintenance History">
-                                                    <i class="now-ui-icons business_chart-bar-32"></i>
-                                                </a>
-                                                @endif
-                                                <a href="#" class="btn btn-round btn-purple btn-icon btn-sm report" data-toggle="tooltip" data-placement="left" title="Submit Report" disabled>
-                                                    <i class="now-ui-icons ui-1_send"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table-->
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-12">
+                                        <h6>Filter Items</h6>
+                                        <form method="get" action="javascript:void(0)">
+                                            <select class="selectpicker form-control" data-style="btn btn-outline btn-round"
+                                                title="Filter By">
+                                                <option>--N/A--</option>
+                                                <option value="departments">Departments</option>
+                                                <option value="units">Units</option>
+                                            </select>
+                                            <select class="selectpicker mt-2 form-control col-md-5 col-sm-12" data-style="btn btn-outline btn-round"
+                                                title="Status">
+                                                <option>--N/A--</option>
+                                                <option>Active</option>
+                                                <option>Inactive</option>                                                
+                                            </select>
+                                            <select class="selectpicker mt-2 form-control col-md-6 col-sm-12" data-style="btn btn-outline btn-round"
+                                                title="Manufacturer">
+                                                <option>--N/A--</option>                                                
+                                            </select>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="checkbox">
+                                                    <span class="form-check-sign"></span>
+                                                    Pending work order
+                                                </label>
+                                            </div>
+                                            <select class="selectpicker form-control mt-2" data-style="btn btn-outline btn-round"
+                                                title="Work order priority" disabled>
+                                                <option>--N/A--</option>
+                                                <option value="departments">High</option>
+                                                <option value="units">Mid Level</option>
+                                                <option value="units">Low</option>
+                                            </select>
+                                            <button type="submit" class="float-right right btn-purple btn">Filter</button>
+                                        </form>
+                                        <div class="filter-overlay"></div>
+                                    </div>
+                                    <div class="col-md-9 col-sm-12">                                    
+                                    <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                                <th>Type</th>
+                                                <th>Unit</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Name</th>
+                                                <th>Status</th>
+                                                <th>Type</th>
+                                                <th>Unit</th> 
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                        @foreach($equipment as $item)
+                                            <tr class="uppercase">
+                                                <td>
+                                                    <a href="/inventory/{{$item->code}}">{{$item->code}}</a>
+                                                </td>
+                                                <td>{{$item->category->name}}</td>
+                                                <td>{{$item->status}}</td>
+                                                <td>{{$item->category->name}}</td>
+                                                <td>{{$item->unit->name}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -107,7 +138,7 @@
             </div>
         </div>
     </div>
-            @include('hospital-modal')
+    @include('hospital-modal')
     
     <!--   Core JS Files   -->
     <!--script src="{{ asset('js/app.js') }}" defer></script-->
