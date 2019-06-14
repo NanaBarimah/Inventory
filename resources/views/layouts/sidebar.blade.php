@@ -47,7 +47,7 @@
                         </a>
                         <div class="collapse" id="categoryList">
                             <ul class="nav">
-                                <li>
+                                {{--<li>
                                     <a href="/departments">
                                         <span class="sidebar-normal">Departments</span>
                                     </a>
@@ -58,13 +58,18 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/vendors">
-                                        <span class="sidebar-normal">Service Vendors</span>
+                                    <a href="#" data-toggle="modal" data-target="#hospitalDetailsModal">
+                                        <p>Hospital Info</p>
+                                    </a>
+                                </li>--}}
+                                <li>
+                                    <a href="/departments">
+                                        <span class="sidebar-normal">Departments & Units</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" data-toggle="modal" data-target="#hospitalDetailsModal">
-                                        <p>Hospital Info</p>
+                                    <a href="/vendors">
+                                        <span class="sidebar-normal">Service Vendors</span>
                                     </a>
                                 </li>
                             </ul>
@@ -148,6 +153,9 @@
                                 </li>
                             </ul>
                         </div>
+                    </li>
+                    <li>
+                        <a href="/categories"><p>Categories</p></a>
                     </li>
                     <li>
                         <a href="/settings">
