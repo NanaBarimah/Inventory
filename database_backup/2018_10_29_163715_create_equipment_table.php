@@ -15,6 +15,7 @@ class CreateEquipmentTable extends Migration
     {
         Schema::create('equipment', function (Blueprint $table) {
             $table->string('code')->primary();
+            $table->string('name');
             $table->string('serial_number')->unique();
             $table->string('model_number');
             $table->string('manufacturer_name');
@@ -31,6 +32,8 @@ class CreateEquipmentTable extends Migration
             $table->integer('unit_id')->unsigned();
             $table->string('user_id');
             $table->integer('maintenance_frequency');
+            $table->text('reason');
+            $table->date('warranty');
             $table->timestamps();
             $table->softDeletes();
 

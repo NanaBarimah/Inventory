@@ -17,7 +17,7 @@ class CreateAdminsTable extends Migration
             $table->string('id')->primary();
             $table->string('firstname');
             $table->string('lastname');
-            $table->string('username')->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->string('phone_number');
             $table->integer('region_id')->unsigned();

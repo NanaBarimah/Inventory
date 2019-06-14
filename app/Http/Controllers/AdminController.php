@@ -80,7 +80,7 @@ class AdminController extends Controller
             [
             'firstname' => 'required|string',
             'lastname'  => 'required|string',
-            'username'  => 'required|string',
+            'email'  => 'required|string',
             'password'  => 'required|string|min:6|confirmed',
             'region_id' => 'required|string',
             'phone_number' => 'required|string',
@@ -92,12 +92,12 @@ class AdminController extends Controller
             [
             'firstname' => $request->firstname,
             'lastname'  => $request->lastname,
-            'username'  => $request->username,
+            'email'  => $request->email,
             'phone_number' => $request->phone_number,
             'password'  => bcrypt($request->password),
             'region_id' => $request->region_id,
             'role'      => $request->role,
-            'id'        => md5($request->username.microtime())
+            'id'        => md5($request->email.microtime())
             ]
         );
 

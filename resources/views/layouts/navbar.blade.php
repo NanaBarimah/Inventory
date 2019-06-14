@@ -19,7 +19,7 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-end" id="navigation">
                         <ul class="navbar-nav">
-                            <li class="nav-item dropdown" id="notification-bell">
+                            {{--<li class="nav-item dropdown" id="notification-bell">
                                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>@if(Auth::user()->unreadNotifications->count() > 0)<span class="badge badge-danger notification-badge" id="notification-count">{{Auth::user()->unreadNotifications->count()}}</span>@endif
                                 </a>
@@ -39,7 +39,7 @@
                                     <i class="dropdown-item">No new notifications</i>
                                 @endif
                                 </div>
-                            </li>
+                            </li>--}}
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <img class="round" width="30" height="30" avatar="{{Auth::user()->firstname}} {{Auth::user()->lastname}}" />

@@ -79,8 +79,8 @@
                                                         <i class="fas fa-cog"></i>
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="#">Edit User</a>
-                                                        <a class="dropdown-item text-danger" href="#">Deactivate User</a>
+                                                        <a class="dropdown-item" href="#">Edit Asset Category</a>
+                                                        <a class="dropdown-item text-danger" href="#">Delete Asset Category</a>
                                                     </div>
                                                 </span>
                                             </div>
@@ -93,8 +93,8 @@
                                                         <i class="fas fa-cog"></i>
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="#">Edit User</a>
-                                                        <a class="dropdown-item text-danger" href="#">Deactivate User</a>
+                                                        <a class="dropdown-item" href="#">Edit Asset Category</a>
+                                                        <a class="dropdown-item text-danger" href="#">Delete Asset Category</a>
                                                     </div>
                                                 </span>
                                             </div>
@@ -362,6 +362,12 @@
             }else{
                 $('#div_select_parent').css('display', 'none');
             }
-        })
+        });
+
+
+        $('#new_asset_category').on('submit', function(e){
+            e.preventDefault();
+            var data = 
+        });
     </script>
 @endsection

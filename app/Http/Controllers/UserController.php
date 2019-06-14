@@ -36,43 +36,33 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $result = true;
-        $request->validate(
-            [
-            'firstname' => 'required|string',
-            'lastname'  => 'required|string',
-            'username'  => 'required|string|unique:users',
-            'password'  => 'required|string|min:6|confirmed',
+        $request->validate([
+            'email'  => 'required|string|unique:users',
             'hospital_id' => 'required|string',
-            'phone_number' => 'required|string',
             'role' => 'required'
-            ]
-        );
+        ]);
         
-        $user = new User(
-            [
-            'id'        => md5($request->username.microtime()),    
-            'firstname' => $request->firstname,
-            'lastname'  => $request->lastname,
-            'username'  => $request->username,
-            'phone_number' => $request->phone_number,
-            'password'  => bcrypt($request->password),
-            'hospital_id' => $request->hospital_id,
-            'role'      => $request->role  
-            ]
-        );
+        $user = new User();
+
+        $user->id           = md5($request->email.microtime());   
+        $user->firstname    = $request->firstname;
+        $user->lastname     = $request->lastname;
+        $user->email        = $request->email;
+        $user->role         = $request->role; 
+        $user->password     = $request->password;
+        $user->phone_number = $request->phone_number;
+        $user->job_title    = $request->job_title;
+        $user->hospital_id  = $request->hospital_id; 
 
         if($user->save()){
             $result = false;
         }
 
-        return response()->json(
-            [
+        return response()->json([
             'error'   => $result,
             'data'    => $user,
             'message' => !$result ? 'Successfully created user' : 'Error creating user'
-            ],
-            201
-        );
+            ],201);
     }
 
     /**
@@ -151,7 +141,8 @@ class UserController extends Controller
         //
     }
 
-    public function listAll(){
+    public function listAll()
+    {
         if(strtolower(Auth::user()->role) == 'admin'){
             $users = User::where('hospital_id', '=', Auth::user()->hospital_id)->get();
 
@@ -161,12 +152,13 @@ class UserController extends Controller
         }
     }
 
-    public function addNew(){
+    public function addNew()
+    {
         return view('add-user');
     }
 
     public function is_active (Request $request)
-      {
+    {
          $user = User::where('id', $request->user_id)->first();
 
          $isactive     = $request->active;
@@ -187,26 +179,68 @@ class UserController extends Controller
                'error'   => true
             ]);
          }
-      }
+    }
 
-      public function viewAll(){
-          $users = User::with('hospital')->get();
-          return view('admin.users')->with('users', $users);
-      }
+    public function viewAll()
+    {
+        $users = User::with('hospital')->get();
+        return view('admin.users')->with('users', $users);
+    }
 
-      public function userLogin(Request $request)
+    public function completeProfile($id)
+    {
+        $user = User::with('hospital')->where('id', $id)->where('completed', 0)->first();
+
+        return view('complete-profile')->with('user', $user);
+    }
+
+    public function complete(Request $request)
+    {
+        $user = User::where('id', $request->id)->first();
+
+        $request->validate([
+            'firstname'    => 'required|string',
+            'lastname'     => 'required|string',
+            'password'     => 'required|string|min:6|confirmed',
+            'phone_number' => 'required|string',
+            'job_title'    => 'required|string'
+        ]);
+        
+        $user->firstname    = $request->firstname;
+        $user->lastname     = $request->lastname;
+        $user->password     = $request->password;
+        $user->phone_number = $request->phone_number;
+        $user->job_title    = $request->job_title;
+        $user->completed    = 1;
+
+        if($user->save()){
+            return response()->json([
+                'error'   => false,
+                'user'    => $user,
+                'message' => 'User profile completed successfully!'
+            ]);
+        }
+
+        return response()->json([
+            'error'   => true,
+            'message' => 'Could not complete the user profile'
+        ]);
+
+    }
+      
+      /*public function userLogin(Request $request)
       {
           //validate the form
           $request->validate([
-              'username' => 'required|string',
+              'email' => 'required|string',
               'password' => 'required|min:6'
           ]);
 
-          $username = $request->username;
+          $email = $request->email;
           $password = $request->password;
           $active = 1;
 
-          $user = User::where([['username', '=', $request->username], ['password', '=', $request->password], ['active', '=', 1]])->first();
+          $user = User::where([['email', '=', $request->email], ['password', '=', $request->password], ['active', '=', 1]])->first();
 
           if($user != null){
               $user->api_token = bin2hex(openssl_random_pseudo_bytes(30));
@@ -217,8 +251,8 @@ class UserController extends Controller
           }else{
               return response()->json([
                   "error" => true,
-                  "user" => "No user with specified username and password"
+                  "user" => "No user with specified email and password"
               ]);
           }
-      }
+      }*/
 }

@@ -11,9 +11,16 @@
 |
 */
 
-Route::get('/', function () {
+/* Route::get('/', function () {
     return view('auth/login');
-})->middleware('guest');
+})->middleware('guest'); */
+
+Route::middleware('guest')->group(function(){
+    Route::get('/', function(){
+        return view('auth/login');
+    });
+    Route::get('/user/profile-complete/{id}', 'UserController@completeProfile');
+});
 
 Auth::routes();
 

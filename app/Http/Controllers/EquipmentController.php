@@ -96,6 +96,7 @@ class EquipmentController extends Controller
         $request->pos_rep_date = $this->formatDate($request->pos_rep_date);
         
         $equipment->code = $request->code;   //$hospital_code."-".$code;
+        $equipment->name = $request->name;
         $equipment->serial_number = $request->serial_number != null ?  $request->serial_number : 'N/A';
         $equipment->model_number = $request->model_number != null ? $request->model_number : 'N/A';
         $equipment->manufacturer_name  = $request->manufacturer_name != null ? $request->manufacturer_name : 'N/A';
@@ -112,6 +113,8 @@ class EquipmentController extends Controller
         $equipment->pos_rep_date = $request->pos_rep_date;
         $equipment->equipment_cost = $request->equipment_cost;
         $equipment->service_vendor_id = $request->service_vendor_id;
+        $equipment->reason = $request->reason;
+        $equipment->warranty = $request->warranty;
 
 
         if($equipment->save()){
