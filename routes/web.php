@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/schedule', 'ScheduleController@index')->name('schedule');
     Route::get('/schedule/fetch_all', 'ScheduleController@fetchAll')->name('schedule');
     Route::get('/departments', 'DepartmentController@viewALl')->name('departments');
+    Route::get('/department/{department}', 'DepartmentController@view')->name('department.view');
     Route::get('/units', 'UnitController@viewAll')->name('units');
     Route::get('/settings', 'SettingController@index')->name('settings');
     Route::get('/vendors', 'ServiceVendorController@index')->name('vendors');
