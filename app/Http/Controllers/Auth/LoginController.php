@@ -50,21 +50,20 @@ class LoginController extends Controller
 
     protected function credentials(Request $request)
     {
-        $field = filter_var($request->get($this->username()), FILTER_VALIDATE_EMAIL)
-            ? $this->username()
-            : 'username';
+        //$field = filter_var($request->get($this->username()), FILTER_VALIDATE_EMAIL) ? $this->username() : 'username';
 
         return [
-            $field => $request->get($this->username()),
+            //$field => $request->get($this->username()),
+            'email'    => $request->email,
             'password' => $request->password,
-            'active' => 1,
+            'active'   => 1,
         ];
     }
 
-    public function username()
+    /*public function username()
     {
         return 'username';
-    }
+    }*/
 
     protected function authenticated(Request $request, $user)
     {
@@ -92,7 +91,7 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
-            $user = User::where('username', '=', $request->username)->first();
+            $user = User::where('email', '=', $request->email)->first();
             /*$user->api_token = bin2hex(openssl_random_pseudo_bytes(30));
             $user->save();*/
             return $this->sendLoginResponse($request);

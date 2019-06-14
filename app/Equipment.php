@@ -10,7 +10,7 @@ class Equipment extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'code', 'serial_number', 'model_number', 'manufacturer_name', 'description', 'category_id', 'unit_id', 'status', 'location', 'year_of_purchase', 'installation_time', 'pos_rep_date', 'equipment_cost', 'service_vendor_cost'
+        'code', 'name', 'serial_number', 'model_number', 'manufacturer_name', 'description', 'category_id', 'unit_id', 'status', 'location', 'year_of_purchase', 'installation_time', 'pos_rep_date', 'equipment_cost', 'service_vendor_cost', 'reason', 'warranty'
     ];
 
     public $primaryKey = 'code';

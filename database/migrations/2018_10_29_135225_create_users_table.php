@@ -15,16 +15,16 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('firstname');
-            $table->string('lastname');
-            $table->string('username')->unique();
-            $table->string('password');
-            $table->string('phone_number');
-            $table->integer('hospital_id')->unsigned();
+            $table->string('firstname')->nullable();
+            $table->string('lastname')->nullable();
+            $table->string('email')->unique();
             $table->string('role');
+            $table->string('password')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->string('job_title')->nullable();
+            $table->boolean('completed')->default(false);
+            $table->integer('hospital_id')->unsigned();
             $table->boolean('active')->default(1);
-            $table->boolean('is_unit_head')->default(false);
-            //$table->string('api_token', 60)->unique();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

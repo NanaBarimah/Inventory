@@ -93,26 +93,13 @@
     <script>
         $('#add_user_form').on('submit', function(e){
             e.preventDefault();
-            $('#btn_save').html('<i class="now-ui-icons loader_refresh spin"></i>');
             var form_data = $(this).serialize();
-            
-            if($('#new_password').val() != $('#confirm_password').val()){
-                $('.text-danger').html('The passwords you have provided do not match');
-                $('#btn_save').html('Save');
-                $('.text-danger').css('display', 'block');
-                return false;
-            }
-
-            if($('#new_password').val().length < 6){
-                $('.text-danger').html('Password should be longer than 6 characters');
-                $('.text-danger').css('display', 'block');
-                return false
-            }
-            
+            form_data+='&hospital_id={{Auth::user()->hospital_id}}';
             $(this).find('input, select').prop('disabled',true);
 
+            $('#btn_save').html('<i class="now-ui-icons loader_refresh spin"></i>');
 
-            request = $.ajax({
+            $.ajax({
                 url: '/api/users/add_user',
                 method: 'post',
                 data: form_data,

@@ -24,12 +24,12 @@ class AdminLoginController extends Controller
     {
         //Validate the form data
         $this->validate($request, [
-            'username' => 'required|string',
+            'email' => 'required|string',
             'password' => 'required|min:6'
         ]);
 
         $credentials = [
-            'username' => $request->username,
+            'email' => $request->email,
             'password' => $request->password,
             'active' => 1,
         ];
@@ -44,7 +44,7 @@ class AdminLoginController extends Controller
         
         //if unsuccessful, the redirect back to login page with the form data
         return redirect()->back()
-            ->withInput($request->only('username', 'remember'))
+            ->withInput($request->only('email', 'remember'))
             ->withErrors([
                 'active' => 'This account has been deactived.'
             ]);

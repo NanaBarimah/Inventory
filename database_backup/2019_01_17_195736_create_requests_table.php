@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEquipmentRequestsTable extends Migration
+class CreateRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,19 @@ class CreateEquipmentRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('equipment_requests', function (Blueprint $table) {
-            $table->primary(['requests_id', 'equipment_code']);
-            $table->integer('requests_id')->unsigned();
+        Schema::create('requests', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('equipment_code');
+            $table->text('description');
+            $table->string('requested_by');
+            $table->smallInteger('status')->default(2);
+            $table->text('reason');
+            $table->text('response');
             $table->timestamps();
             $table->softDeletes();
-        
+
             $table->foreign('equipment_code')->references('code')->on('equipment')
-                ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('requests_id')->references('id')->on('requests')
-                ->onUpdate('cascade')->onDelete('cascade');
+                  ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -34,6 +36,6 @@ class CreateEquipmentRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('equipment_requests');
+        Schema::dropIfExists('requests');
     }
 }

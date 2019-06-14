@@ -84,10 +84,10 @@
                             <strong>This account has been deactivated</strong>
                         </span>
                     @endif
-                    <input type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" id="username" aria-describedby="username" placeholder="Username" name="username" value="{{ old('username') }}" required autofocus>
-                    @if ($errors->has('username'))
+                    <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" id="email" aria-describedby="email" placeholder="Email" name="email" value="{{ old('email') }}" required autofocus>
+                    @if ($errors->has('email'))
                         <span class="invalid-feedback text-center" role="alert">
-                            <strong>{{ $errors->first('username') }}</strong>
+                            <strong>{{ $errors->first('email') }}</strong>
                         </span>
                     @endif
                 </div>

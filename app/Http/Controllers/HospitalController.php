@@ -64,7 +64,13 @@ class HospitalController extends Controller
             $service->contact_number = 'No contact';
             $service->hospital_id = $hospital->id;
 
-            if($service->save()){
+            $ghs = new Service_Vendor();
+
+            $ghs->name = 'Ghana Health Service';
+            $ghs->contact_number = 'No contact';
+            $ghs->hospital_id = $hospital->id;
+
+            if($service->save() && $ghs->save()){
                 $user = new User();
 
                 $user->id        = md5($request->username.microtime());

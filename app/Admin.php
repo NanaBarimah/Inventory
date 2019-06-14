@@ -20,7 +20,7 @@ class Admin extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id', 'firstname', 'lastname', 'username', 'password', 'region_id', 'role', 'phone_number',
+        'id', 'firstname', 'lastname', 'email', 'password', 'region_id', 'role', 'phone_number',
     ];
 
     /**
@@ -45,9 +45,9 @@ class Admin extends Authenticatable
     }
 
     // App\Model\AdminUser
-    public function findForPassport($username)
+    public function findForPassport($email)
     {
-        return $this->where('username', $username)->first();
+        return $this->where('email', $email)->first();
         // may be also cheking is_admin flag
         // return $this->where('username', $username)->where('is_admin', 1)->first();
     }

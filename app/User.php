@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id', 'firstname', 'lastname', 'username', 'password', 'hospital_id', 'role', 'phone_number', 'api_token'
+        'id', 'firstname', 'lastname', 'email', 'role', 'password', 'phone_number', 'job_title', 'hospital_id'
     ];
 
     /**
@@ -33,6 +33,13 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
 
     public $incrementing  = false;
+
+    public function setPasswordAttribute($password)
+    {
+        if ( !empty($password) ) {
+            $this->attributes['password'] = bcrypt($password);
+        }
+    }
 
     /**
      * Get the hospital that has these users.
@@ -60,9 +67,9 @@ class User extends Authenticatable
     }
 
     // App\Model\User
-    public function findForPassport($username)
+    public function findForPassport($email)
     {
-        return $this->where('username', $username)->first();
+        return $this->where('email', $email)->first();
     }
 
     /*public function unit(){

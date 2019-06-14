@@ -20,6 +20,11 @@ Route::middleware('auth:api')->group(function(){
     Route::put('users/update/{user}', 'UserController@update');
     Route::put('users/activate', 'UserController@is_active');
     Route::post('users/user-login', 'UserController@userLogin');
+    Route::post('user/complete-profile', 'UserController@complete');
+
+    Route::post('asset-category/add', 'AssetCategoryController@store');
+    Route::post('fault-category/add', 'FaultCategoryController@store');
+    Route::post('priority/add', 'PriorityController@store');
 
     Route::get('equipment/', 'EquipmentController@index');
     Route::post('equipment/add_equipment', 'EquipmentController@store');
@@ -65,11 +70,6 @@ Route::middleware('passport:admin-api')->group(function(){
     Route::post('districts/add_district', 'DistrictController@store');
     Route::get('districts/{district}', 'DistrictController@show');
     Route::put('districts/update/{district}', 'DistrictController@update');
-
-    Route::get('categories/', 'CategoryController@index');
-    Route::post('categories/add_category', 'CategoryController@store');
-    Route::get('categories/{category}', 'CategoryController@show');
-    Route::put('categories/update/{category}', 'CategoryController@update');
 
     Route::get('hospitals/', 'HospitalController@index');
     Route::post('hospitals/add_hospital', 'HospitalController@store');
