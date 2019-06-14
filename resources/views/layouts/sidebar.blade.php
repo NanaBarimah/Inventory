@@ -155,8 +155,10 @@
                         </div>
                     </li>
                     <li>
-                        <a href="/categories"><p>Categories</p></a>
-                    </li>
+                        <a href="/categories">
+                            <i class="now-ui-icons files_single-copy-04 "></i>
+                            <p>Categories</p></a>
+                        </li>
                     <li>
                         <a href="/settings">
                             <i class="now-ui-icons ui-1_settings-gear-63"></i>

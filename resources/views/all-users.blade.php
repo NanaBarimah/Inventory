@@ -6,7 +6,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="inline-block">System Users</h4>
-                        <a href="/users/add" class="btn btn-purple pull-right">Add User</a>
                     </div>
                     <div class="card-body">
                         <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -62,6 +61,11 @@
                 </div>
             </div>
         </div>
+        <a href="/users/add">
+            <div class="fab">
+                +
+            </div>
+        </a>
     </div>
     @endsection
     @section('scripts')
