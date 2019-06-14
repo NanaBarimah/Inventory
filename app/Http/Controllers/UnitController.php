@@ -49,88 +49,31 @@ class UnitController extends Controller
     {
         $result = true;
         $request->validate([
-            'name' => 'required|string',
+            'name'          => 'required|string',
             'department_id' => 'required'
         ]);
-       
-        
-        if($request->user_id == null || $request->user_id == 'add_new'){
-    
-            $user = new User();
 
-            $user->id        = md5($request->username.microtime());
-            $user->firstname = $request->firstname;
-            $user->lastname  = $request->lastname;
-            $user->username  = $request->username;
-            $user->password  = bcrypt($request->password);
-            $user->phone_number = $request->phone_number;
-            $user->hospital_id = $request->hospital_id;
-            $user->role = 'Unit Head';
-            
-            if($user->save()){
-                $unit  = new Unit();
-    
-                $unit->name = $request->name;
-                $unit->department_id = $request->department_id;
-                $unit->user_id = $user->id;    
-                
-                if(Unit::where([['name', $request->name], ['department_id', $request->department_id]])->get()->count() > 0){
-                    return response()->json([
-                        'error' => $result,
-                        'message' => 'Unit name already exists in this department'
-                    ]);
-                }
-                if($unit->save()){
-                    $result = false;
-                }
-    
-            }
-    
+        if(Unit::where([['name', $request->name], ['department_id', $request->department_id]])->get()->count() > 0){
             return response()->json([
                 'error' => $result,
-                'data' => $unit,
-                'message' => !$result ? 'Unit created successfully' : 'Error creating unit'
-              ]);
-        }else{
-            $unit  = new Unit();
-    
-            $unit->name = $request->name;
-            $unit->department_id = $request->department_id;
-            $unit->user_id = $request->user_id;    
-                
-            if(Unit::where([['name', $request->name], ['department_id', $request->department_id]])->get()->count() > 0){
-                return response()->json([
-                    'error' => $result,
-                    'message' => 'Unit name already exists in this department'
-                ]);
-            }
-            
-            if($unit->save()){
-                $result = false;
-
-                $user = User::where('id', $request->user_id)->first();
-                if($user){
-                    $is_unit_head = 1;
-                    $user->is_unit_head = $is_unit_head;
-
-                    $user->save();
-                }else{
-                    //rollback
-                    $result = true;
-                    return response()->json([
-                        'error' => $result,
-                        'data' => $unit,
-                        'message' => !$result ? 'Unit created successfully' : 'Error creating unit. Unit head could not be assigned.'
-                      ]);
-                }
-            }
-            
-            return response()->json([
-                'error' => $result,
-                'data' => $unit,
-                'message' => !$result ? 'Unit created successfully' : 'Error creating unit'
-              ]);
+                'message' => 'Unit name already exists in this department'
+            ]);
         }
+        
+        $unit  = new Unit();
+
+        $unit->name          = $request->name;
+        $unit->department_id = $request->department_id;
+        $unit->user_id       = $request->user_id;
+        $unit->location      = $request->location;
+        $unit->phone_number  = $request->phone_number;   
+        
+        return response()->json([
+            'error' => $result,
+            'data' => $unit,
+            'message' => !$result ? 'Unit created successfully' : 'Error creating unit'
+        ]);
+        
     }
 
     /**
@@ -184,8 +127,6 @@ class UnitController extends Controller
     {
         //
     }
-
-   
 
     public function viewAll(){
         $department = Department::with('units', 'units.user')->where('hospital_id', Auth::user()->hospital_id)->get();

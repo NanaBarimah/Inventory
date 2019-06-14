@@ -10,7 +10,7 @@ class Department extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'name', 'hospital_id', 'user_id', 'location', 'phone_number'
     ];
 
     public function units()

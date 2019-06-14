@@ -1,96 +1,119 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-<meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Inventory Management</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'
-    />
-    
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
-    <!-- Styles -->
-    <!--link href="{{ asset('css/app.css') }}" rel="stylesheet"-->
-    <link href="{{ asset('css/bootstrap.min.css')}}" rel="stylesheet" />
-    <link href="{{ asset('css/now-ui-dashboard.min.css?v=1.2.0')}}" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" media="screen" href="{{asset('css/main.css')}}" />
-</head>
-
-<body>
-    <div class="wrapper">
-        @include('layouts.sidebar')
-        <div class="main-panel">
-            @include('layouts.navbar', ['page_title' => 'Service Vendors'])
-            <div class="panel-header panel-header-sm">
-            </div>
-            <div class="content">
-                <div class="row">
-                    <div class="col-md-10 center">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="inline-block">Service Vendors List</h4>
-                                <a href="#" class="btn btn-purple pull-right" data-toggle="modal" data-target="#addVendorModal">Add New</a>
-                            </div>
-                            <div class="card-body">
-                                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Contact Number</th>
-                                            <th class="disabled-sorting">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Contact Number</th>
-                                            <th class="disabled-sorting text-right">Actions</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                    @foreach($vendors as $vendor)
-                                        <tr>
-                                            <td>{{$vendor->name}}</td>
-                                            <td>{{$vendor->contact_number}}</td>
-                                            <td>
-                                                <span data-toggle="modal" data-target="#editVendorModal" data-id="{{$vendor->id}}" data-name="{{$vendor->name}}" data-contact="{{$vendor->contact_number}}">
-                                                    <a href="#" class="btn btn-round btn-info btn-icon btn-sm edit" data-placement="left" title="Edit" data-toggle="tooltip">
-                                                        <i class="now-ui-icons design-2_ruler-pencil"></i>
-                                                    </a>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+@extends('layouts.user-dashboard', ['page_title' => 'Service Vendors'])
+@section('content')
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12 center">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="inline-block">Service Vendors List</h4>
+                        <a href="#" class="btn btn-purple pull-right" data-toggle="modal" data-target="#addVendorModal">Add New</a>
+                    </div>
+                    <div class="card-body">
+                        <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Contact Name</th>
+                                    <th>Contact Number</th>
+                                    <th>Email</th>
+                                    <th>Vendor Type</th>
+                                    <th>Address</th>
+                                    <th>Website</th>
+                                    <th class="disabled-sorting">Actions</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Contact Name</th>
+                                    <th>Contact Number</th>
+                                    <th>Email</th>
+                                    <th>Vendor Type</th>
+                                    <th>Address</th>
+                                    <th>Website</th>
+                                    <th class="disabled-sorting text-right">Actions</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                            @foreach($vendors as $vendor)
+                                <tr>
+                                    <td>{{$vendor->name}}</td>
+                                    <td>{{$vendor->contact_name !== null ? $vendor->contact_name : 'N/A'}}</td>
+                                    <td>{{$vendor->contact_number !== null ? $vendor->contact_number : 'N/A'}}</td>
+                                    <td>{{$vendor->email !== null ? $vendor->email : 'N/A'}}</td>
+                                    <td>{{$vendor->vendor_type !== null ? $vendor->vendor_type : 'N/A'}}</td>
+                                    <td>{{$vendor->address !== null ? $vendor->address : 'N/A'}}</td>
+                                    <td>{{$vendor->website !== null ? $vendor->website : 'N/A'}}</td>
+                                    <td>
+                                        <span data-toggle="modal" data-target="#editVendorModal" data-id="{{$vendor->id}}" data-name="{{$vendor->name}}" data-contact="{{$vendor->contact_number}}">
+                                            <a href="#" class="btn btn-round btn-info btn-icon btn-sm edit" data-placement="left" title="Edit" data-toggle="tooltip">
+                                                <i class="now-ui-icons design-2_ruler-pencil"></i>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal fade" id="addVendorModal" tabindex="-1" role="dialog" aria-labelledby="addVendorLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h5 class="modal-title margin-bottom-10" id="addVendorLabel">New Vendor</h5>
-                    <form method="post" action="#" id="add_new_vendor_form">
-                        <div class="form-group">
-                            <input type="text" class="form-control normal-radius" placeholder="Vendor Name" name="name" id="vendor_name"/>
-                            <input type="tel" class="form-control normal-radius" placeholder="Vendor Contact" name="contact_number" id="vendor_contact"/>
-                            <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_submit">Save</button>
-                        </div>
-                    </form>
+        <div class="modal-dialog modal-lg" role="document">
+        <form method = "post" id="add_new_vendor_form">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h6 class="header">New Vendor</h6>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label><b>Vendor Name</b> <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control resetable" name="name">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label><b>Contact Person Name</b></label>
+                        <input type="text" class="form-control resetable" name="contact_name">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label><b>Contact Number</b></label>
+                        <input type="tel" class="form-control resetable" name="contact_number">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label><b>Email</b></label>
+                        <input type="email" class="form-control resetable" name="email">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label><b>Website</b></label>
+                        <input type="url" class="form-control resetable" name="website">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label><b>Vendor Type</b> <span class="text-danger">*</span></label>
+                        <select class="selectpicker col-md-12" title="Vendor Type" data-style="btn btn-purple" name="vendor_type">
+                            <option>Maintenance Contractors</option>
+                            <option>Purchase equipment</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label><b>Address</b></label>
+                        <input type="text" class="form-control resetable" name="address">
+                    </div>
                 </div>
             </div>
+            <div class="modal-footer mt-4">
+                <button type="submit" class="btn btn-purple float-right" id="btn_submit">Save</button>
+            </div>
+        </div>
+    </form>
         </div>
     </div>
     <div class="modal fade" id="editVendorModal" tabindex="-1" role="dialog" aria-labelledby="editVendorLabel" aria-hidden="true">
@@ -111,15 +134,8 @@
             </div>
         </div>
     </div>
-            @include('hospital-modal')
-    <!--   Core JS Files   -->
-    <!--script src="{{ asset('js/app.js') }}" defer></script-->
-    <script src="{{ asset('js/jquery.min.js') }}"></script>
-    <script src="{{asset('js/popper.min.js')}}"></script>
-    <script src="{{asset('js/bootstrap.min.js')}}"></script>
-    <script src="{{asset('js/perfect-scrollbar.jquery.min.js')}}"></script>
-    <script src="{{asset('js/main.js')}}"></script>
-    <script src="{{asset('js/now-ui-dashboard.min.js?v=1.2.0')}}" type="text/javascript"></script>
+@endsection
+@section('scripts')
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
@@ -130,18 +146,16 @@
                 $('[data-toggle="tooltip"]').tooltip()
             });
 
-            $('#datatable').DataTable({
+            let table = $('#datatable').DataTable({
                 "pagingType": "full_numbers",
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
                 responsive: true,
                 language: {
                     search: "_INPUT_",
-                    searchPlaceholder: "Find an item",
+                    searchPlaceholder: "Search for vendor",
                 }
 
             });
-
-            var table = $('#datatable').DataTable();
         });
 
         $('#add_new_vendor_form').on('submit', function(e){
@@ -241,6 +255,4 @@
             );
         }
     </script>
-</body>
-
-</html>
+@endsection
