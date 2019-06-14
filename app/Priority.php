@@ -9,7 +9,7 @@ class Priority extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'hospital_id'];
 
     public function work_orders()
     {

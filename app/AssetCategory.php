@@ -9,7 +9,7 @@ class AssetCategory extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'hospital_id'];
 
     public function parent()
     {
