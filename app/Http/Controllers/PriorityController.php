@@ -36,12 +36,14 @@ class PriorityController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string'
+            'name'        => 'required|string',
+            'hospital_id' => 'required'
         ]);
 
         $priority = new Priority();
 
-        $priority->name = $request->name;
+        $priority->name        = $request->name;
+        $priority->hospital_id = $request->hospital_id;
 
         if($priority->save()){
             return response()->json([

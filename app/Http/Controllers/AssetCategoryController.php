@@ -38,12 +38,14 @@ class AssetCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string'
+            'name'        => 'required|string',
+            'hospital_id' => 'required'
         ]);
 
         $assetCategory = new AssetCategory();
 
-        $assetCategory->name = $request->name;
+        $assetCategory->name        = $request->name;
+        $assetCategory->hospital_id = $request->hospital_id;
 
         if($assetCategory->save()){
             return response()->json([

@@ -36,12 +36,14 @@ class FaultCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string'
+            'name'        => 'required|string',
+            'hospital_id' => 'required'
         ]);
 
         $faultCategory = new FaultCategory();
 
-        $faultCategory->name = $request->name;
+        $faultCategory->name        = $request->name;
+        $faultCategory->hospital_id = $request->hospital_id;
 
         if($faultCategory->save()){
             return response()->json([

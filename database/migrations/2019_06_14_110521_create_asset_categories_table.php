@@ -17,8 +17,12 @@ class CreateAssetCategoriesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('parent_id')->nullable();
+            $table->integer('hospital_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('hospital_id')->references('id')->on('hospitals')
+                  ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

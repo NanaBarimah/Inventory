@@ -16,8 +16,12 @@ class CreatePrioritiesTable extends Migration
         Schema::create('priorities', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->integer('hospital_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('hospital_id')->references('id')->on('hospitals')
+                  ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
