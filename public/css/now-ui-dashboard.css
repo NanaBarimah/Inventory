@@ -2672,9 +2672,9 @@ Created using IcoMoon - icomoon.io
       display: block;
       text-decoration: none;
       position: relative;
-      text-transform: uppercase;
+      text-transform: capitalize;
       cursor: pointer;
-      font-size: 0.7142em;
+      font-size: 1em;
       padding: 10px 8px;
       line-height: 1.625rem; }
     .sidebar .nav li:first-child > a,

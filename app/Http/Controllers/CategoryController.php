@@ -20,11 +20,7 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
-        if(strtolower(Auth::guard('admin')->user()->role) == 'admin'){
-            return view('admin.categories', compact('categories'));
-        }else{
-            return abort(403);
-        }
+        return view('categories');
         //return response()->json($categories, 200);
     }
 
