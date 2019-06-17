@@ -117,21 +117,16 @@ class PartController extends Controller
      * @param  \App\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Part $part)
     {
         $request->validate([
             'name'               => 'required',
             'quantity'           => 'required',
             'min_quantity'       => 'required',
             'cost'               => 'required',
-            'area'               => 'required',
             'part_categories_id' => 'required',
-            'description'        => 'required',
-            'manufacturer_year'  => 'required'
         ]);
-
-        $part = Part::where('id', $request->id)->first();
-
+        
         $part->name              = $request->name;
         $part->quantity          = $request->quantity;
         $part->min_quantity      = $request->min_quantity;
@@ -139,7 +134,13 @@ class PartController extends Controller
         $part->area              = $request->area;
         $part->part_category_id  = $request->part_category_id;
         $part->description       = $request->description;
-        $part->manufacturer_year = date($request->manufacturer_year);
+        $part->manufacturer_year  = date('Y-m-d', $request->manufacturer_year);
+
+        if($request->image != null){
+            $fileName        = Utils::saveBase64Image($request->image, microtime().'-'.$part->name, 'img/assets/parts/');
+            $part->image = $fileName;
+        }
+
 
         if($part->update()) {
             return response()->json([

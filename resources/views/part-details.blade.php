@@ -193,20 +193,22 @@
 </div>
 @endsection
 @section('scripts')
-<script src="{{asset('js/qrcode.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('js/qrcode.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
-<script>
-    $(document).ready(function(){
-        let qr = new QRCode(document.getElementById("qrcode"), "{{$part->id}}");
-    });
+    <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
+    <script src="{{asset('js/jasny-bootstrap.min.js')}}"></script>
+    <script>
+        $(document).ready(function(){
+            let qr = new QRCode(document.getElementById("qrcode"), "{{$part->id}}");
+        });
 
-    $("#edit_part").on("submit", function(e){
-        e.preventDefault();
+        $("#edit_part").on("submit", function(e){
+            e.preventDefault();
 
-        let data = new FormData(this);
-        data.append("hospital_id", {{Auth::user()->hospital_id}});
-        let btn = $(this).find('[type="submit"]');
-        submit_file_form("/api/spare-part/update/{{$part->id}}", "post", data, undefined, btn, true);
-    });
-</script>
+            let data = new FormData(this);
+            data.append("hospital_id", '{{Auth::user()->hospital_id}}');
+            let btn = $(this).find('[type="submit"]');
+            submit_file_form("/api/spare-part/update/{{$part->id}}", "put", data, undefined, btn, true);
+        });
+    </script>
 @endsection

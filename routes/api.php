@@ -33,6 +33,7 @@ Route::middleware('auth:api')->group(function(){
     Route::put('priority/update/{priority}', 'PriorityController@update');
 
     Route::post('spare-part/add', 'PartController@store');
+    Route::put('spare-part/update/{part}', 'PartController@update');
     Route::get('equipment/', 'EquipmentController@index');
     Route::post('equipment/add_equipment', 'EquipmentController@store');
     Route::get('equipment/{equipment}', 'EquipmentController@show');
