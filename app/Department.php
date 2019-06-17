@@ -9,6 +9,10 @@ class Department extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+    
+    public $incrementing = false;
+
     protected $fillable = [
         'name', 'hospital_id', 'user_id', 'location', 'phone_number'
     ];
@@ -18,4 +22,8 @@ class Department extends Model
         return $this->hasMany('App\Unit');
     }
 
+    public function assets()
+    {
+        return $this->hasMany('App\Asset');
+    }
 }

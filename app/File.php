@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class FaultCategory extends Model
+class File extends Model
 {
     use SoftDeletes;
 
@@ -13,10 +13,10 @@ class FaultCategory extends Model
     
     public $incrementing = false;
 
-    protected $fillable = ['name', 'hospital_id'];
+    protected $fillable = ['name'];
 
-    public function work_orders()
+    public function asset()
     {
-        return $this->hasMany('App\WorkOrder');
+        return $this->belongsTo('App\Asset');
     }
 }

@@ -9,12 +9,19 @@ class Part extends Model
 {
     use SoftDeletes;
 
-    protected $primaryKey = "id";
+    protected $primaryKey = 'id';
+    
     public $incrementing = false;
-    protected $fillable = ['name', 'cost', 'part_categories_id'];
+    
+    protected $fillable = ['name', 'cost', 'part_categories_id', 'hospital_id'];
 
     public function part_category()
     {
         return $this->belongsTo('App\PartCategory');
+    }
+
+    public function assets()
+    {
+        return $this->belongsToMany('App\Asset', 'asset_parts')->withTimestamps();
     }
 }

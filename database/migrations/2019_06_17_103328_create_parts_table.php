@@ -18,16 +18,19 @@ class CreatePartsTable extends Migration
             $table->string('name');
             $table->integer('quantity')->default(0);
             $table->integer('min_quantity')->default(0);
-            $table->decimal('cost');
+            $table->decimal('cost', 10, 2);
             $table->string('image')->nullable();
             $table->string('area')->nullable();
-            $table->string('part_categories_id')->nullable();
+            $table->string('part_category_id')->nullable();
+            $table->string('hospital_id');
             $table->text('description')->nullable();
             $table->date('manufacturer_year')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('part_categories_id')->references('id')->on('part_categories')
+            $table->foreign('part_category_id')->references('id')->on('part_categories')
+                  ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('hospital_id')->references('id')->on('hospitals')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
     }

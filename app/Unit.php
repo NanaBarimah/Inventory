@@ -9,6 +9,10 @@ class Unit extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+    
+    public $incrementing = false;
+
     protected $fillable = [
         'name', 'department_id', 'user_id', 'location', 'phone_number',
     ];
@@ -27,4 +31,8 @@ class Unit extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function assets()
+    {
+        return $this->hasMany('App\Asset');
+    }
 }

@@ -14,14 +14,19 @@ class CreateAssetCategoriesTable extends Migration
     public function up()
     {
         Schema::create('asset_categories', function (Blueprint $table) {
-            $table->increments('id');
+            $table->string('id')->primary();
             $table->string('name');
-            $table->integer('parent_id')->nullable();
-            $table->integer('hospital_id')->unsigned();
+            $table->string('parent_id')->nullable();
+            $table->string('hospital_id');
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('hospital_id')->references('id')->on('hospitals')
+                  ->onUpdate('cascade')->onDelete('cascade');
+        });
+
+        Schema::table('asset_categories', function($table) {
+            $table->foreign('parent_id')->references('id')->on('asset_categories')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
     }

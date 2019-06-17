@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePrioritiesTable extends Migration
+class CreateFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreatePrioritiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('priorities', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->string('id')->primary();
+            $table->string('asset_id');
             $table->string('name');
-            $table->string('hospital_id');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('hospital_id')->references('id')->on('hospitals')
+            $table->foreign('asset_id')->references('id')->on('assets')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
     }
@@ -32,6 +32,6 @@ class CreatePrioritiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('priorities');
+        Schema::dropIfExists('files');
     }
 }

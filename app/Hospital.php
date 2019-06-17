@@ -9,6 +9,10 @@ class Hospital extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+    
+    public $incrementing = false;
+
     protected $fillable = [
         'name', 'address', 'district_id', 'contact_number'
     ];
@@ -58,5 +62,10 @@ class Hospital extends Model
     public function services()
     {
         return $this->hasMany('App\Service_Vendor');
+    }
+
+    public function assets()
+    {
+        return $this->hasMany('App\Asset');
     }
 }

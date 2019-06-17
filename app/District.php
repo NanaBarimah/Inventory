@@ -9,6 +9,10 @@ class District extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+    
+    public $incrementing = false;
+    
     protected $fillable = [
         'name', 'region_id',
     ];
