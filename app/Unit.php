@@ -31,4 +31,8 @@ class Unit extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function assets()
+    {
+        return $this->hasMany('App\Asset');
+    }
 }

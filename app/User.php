@@ -76,4 +76,8 @@ class User extends Authenticatable
        return $this->belongsTo('App\Unit', 'user_id');
     }*/
 
+    public function asset()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

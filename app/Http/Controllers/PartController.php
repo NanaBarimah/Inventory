@@ -42,16 +42,16 @@ class PartController extends Controller
 
         $part = new Part();
 
-        $part->id                 = md5($request->name.microtime());
-        $part->name               = $request->name;
-        $part->quantity           = $request->quantity;
-        $part->min_quantity       = $request->min_quantity;
-        $part->cost               = $request->cost;
-        $part->area               = $request->area;
-        $part->part_categories_id = $request->part_categories_id;
-        $part->hospital_id        = $request->hospital_id;
-        $part->description        = $request->description;
-        $part->manufacturer_year  = date($request->manufacturer_year);
+        $part->id                = md5($request->name.microtime());
+        $part->name              = $request->name;
+        $part->quantity          = $request->quantity;
+        $part->min_quantity      = $request->min_quantity;
+        $part->cost              = $request->cost;
+        $part->area              = $request->area;
+        $part->part_category_id  = $request->part_category_id;
+        $part->hospital_id       = $request->hospital_id;
+        $part->description       = $request->description;
+        $part->manufacturer_year = date($request->manufacturer_year);
 
         if($request->image != null){
             $fileName        = Utils::saveBase64Image($request->image, microtime().'-'.$part->name, 'assets/images/parts/');
@@ -118,14 +118,14 @@ class PartController extends Controller
 
         $part = Part::where('id', $request->id)->first();
 
-        $part->name               = $request->name;
-        $part->quantity           = $request->quantity;
-        $part->min_quantity       = $request->min_quantity;
-        $part->cost               = $request->cost;
-        $part->area               = $request->area;
-        $part->part_categories_id = $request->part_categories_id;
-        $part->description        = $request->description;
-        $part->manufacturer_year  = date($request->manufacturer_year);
+        $part->name              = $request->name;
+        $part->quantity          = $request->quantity;
+        $part->min_quantity      = $request->min_quantity;
+        $part->cost              = $request->cost;
+        $part->area              = $request->area;
+        $part->part_category_id  = $request->part_category_id;
+        $part->description       = $request->description;
+        $part->manufacturer_year = date($request->manufacturer_year);
 
         if($part->update()) {
             return response()->json([

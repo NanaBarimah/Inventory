@@ -22,4 +22,8 @@ class Department extends Model
         return $this->hasMany('App\Unit');
     }
 
+    public function assets()
+    {
+        return $this->hasMany('App\Asset');
+    }
 }

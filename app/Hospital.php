@@ -63,4 +63,9 @@ class Hospital extends Model
     {
         return $this->hasMany('App\Service_Vendor');
     }
+
+    public function assets()
+    {
+        return $this->hasMany('App\Asset');
+    }
 }

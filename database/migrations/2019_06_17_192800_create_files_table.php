@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAssetCategoriesTable extends Migration
+class CreateFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,14 @@ class CreateAssetCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('asset_categories', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->string('id')->primary();
+            $table->string('asset_id');
             $table->string('name');
-            $table->string('parent_id')->nullable();
-            $table->string('hospital_id');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('hospital_id')->references('id')->on('hospitals')
-                  ->onUpdate('cascade')->onDelete('cascade');
-        });
-
-        Schema::table('asset_categories', function($table) {
-            $table->foreign('parent_id')->references('id')->on('asset_categories')
+            $table->foreign('asset_id')->references('id')->on('assets')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
     }
@@ -38,6 +32,6 @@ class CreateAssetCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('asset_categories');
+        Schema::dropIfExists('files');
     }
 }

@@ -28,4 +28,9 @@ class Service_Vendor extends Model
     {
         return $this->belongsTo('App\Hospital');
     }
+
+    public function assets()
+    {
+        return $this->hasMany('App\Asset');
+    }
 }

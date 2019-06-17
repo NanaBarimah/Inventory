@@ -19,4 +19,9 @@ class Part extends Model
     {
         return $this->belongsTo('App\PartCategory');
     }
+
+    public function assets()
+    {
+        return $this->belongsToMany('App\Asset', 'asset_parts')->withTimestamps();
+    }
 }
