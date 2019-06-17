@@ -365,3 +365,77 @@ appFunctions = {
             }
         })
     });
+
+    let presentNotification = (message, color, from, align) => {
+        $.notify(
+            {
+                message: message
+            }, {
+                type: color,
+                timer: 1500,
+                placement: {
+                    from: from,
+                    align: align
+                }
+            }
+        );
+    }
+
+    let submit_form = (url, method, data = null, success = null, action_button = null, should_reload = false) => {
+            
+        const button = $(action_button);
+        const initial_text = button.html();
+
+        button.prop('disabled', true);
+        button.html('<i class="now-ui-icons education_atom spin"></i>');
+        
+        $.ajax({
+            'url' : url,
+            'method' : method,
+            'data' : data,
+            success : (data) => {
+                button.prop('disabled', false);
+                button.html(initial_text);
+
+                if(success == null){
+                    if(!data.error){
+                        presentNotification(data.message, 'info', 'top', 'right');
+                        if(should_reload){
+                            setTimeout(() => {
+                                location.reload();
+                            }, 500);
+                        }
+                    }else{
+                        presentNotification(data.message, 'danger', 'top', 'right');
+                    }
+                    
+                }else{
+                    success(data);
+                    if(should_reload){
+                        setTimeout(() => {
+                            location.reload();
+                        }, 500);
+                    }
+                }
+
+            },
+            error: (xhr) => {
+                button.prop('disabled', false);
+                button.html(initial_text);
+                
+                presentNotification(xhr.responseText, 'danger', 'top', 'right');       
+            }
+        })
+    }
+
+    let generateDtbl = (table, empty_table = "No data to display", search = "Search table") => {
+        return $(table).DataTable({
+            "pagingType": "full_numbers",
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: search,
+                sEmptyTable: empty_table
+            }
+        })
+    }

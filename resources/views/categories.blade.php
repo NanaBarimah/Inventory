@@ -1,3 +1,4 @@
+@php $user = Auth::user() @endphp
 @extends('layouts.user-dashboard', ['page_title' => 'Categories'])
 @section('styles')
 <style>
@@ -36,7 +37,7 @@
                 <div class="card-body">
                     <div class="tab-content tab-space">
                         <div class="tab-pane active" id="assets">
-                            <h6 class="header">Asset Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#asset-modal">Add New</a></span></h6>
+                            <h6 class="header">Asset Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#asset-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "asset_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>
@@ -65,56 +66,54 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            Computers
-                                        </td>
-                                        <td>
-                                            <div class="col-md-12">
-                                                <span class="text-muted">Laptops</span>
-                                                <span class="dropdown">
-                                                    <button type="button"
-                                                        class="btn btn-default dropdown-toggle btn-simple btn-icon no-caret"
-                                                        data-toggle="dropdown" style="border:none;">
-                                                        <i class="fas fa-cog"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="#">Edit Asset Category</a>
-                                                        <a class="dropdown-item text-danger" href="#">Delete Asset Category</a>
-                                                    </div>
-                                                </span>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <span class="text-muted">Laptops</span>
-                                                <span class="dropdown">
-                                                    <button type="button"
-                                                        class="btn btn-default dropdown-toggle btn-simple btn-icon no-caret"
-                                                        data-toggle="dropdown" style="border:none;">
-                                                        <i class="fas fa-cog"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="#">Edit Asset Category</a>
-                                                        <a class="dropdown-item text-danger" href="#">Delete Asset Category</a>
-                                                    </div>
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td class="text-right">
-                                            <a href="javascript:void(0)">
-                                                <i class="fas fa-pen text-muted"></i>
-                                            </a>
-                                            &nbsp;
-                                            <a href="javascript:void(0)">
-                                                <i class="fas fa-trash text-danger"></i>
-                                            </a>
-                                            &nbsp;
-                                        </td>
-                                    </tr>
+                                    @foreach($parent_categories as $category)
+                                        <tr>
+                                            <td>
+                                                {{$category->name}}
+                                            </td>
+                                            <td>
+                                                @if($category->children->count() > 0)
+                                                @foreach($category->children as $child)
+                                                <div class="col-md-12">
+                                                    <span class="text-muted">{{$child->name}}</span>
+                                                    <span class="dropdown">
+                                                        <button type="button"
+                                                            class="btn btn-default dropdown-toggle btn-simple btn-icon no-caret"
+                                                            data-toggle="dropdown" style="border:none;">
+                                                            <i class="fas fa-cog"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" href="javascript:void(0)"  onclick="edit_asset_category('{{$child->name}}', '{{$child->id}}', '{{$category->id}}')">Edit Asset Category</a>
+                                                            <a class="dropdown-item text-danger" href="javascript:void(0)">Delete Asset Category</a>
+                                                        </div>
+                                                    </span>
+                                                </div>
+                                                @endforeach
+                                                @else
+                                                <div class="col-md-12">
+                                                    <span class="text-muted">
+                                                        N/A
+                                                    </span>
+                                                </div>
+                                                @endif
+                                            </td>
+                                            <td class="text-right">
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Edit"  onclick="edit_asset_category('{{$category->name}}', '{{$category->id}}', undefined, {{$category->children->count() > 0 ? true : false}})">
+                                                    <i class="fas fa-pen text-muted"></i>
+                                                </a>
+                                                &nbsp;
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </a>
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                         <div class="tab-pane" id="faults">
-                        <h6 class="header">Fault Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#faults-modal">Add New</a></span></h6>
+                            <h6 class="header">Fault Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#faults-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "faults_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>
@@ -136,10 +135,29 @@
                                         </th>
                                     </tr>
                                 </tfoot>
+                                <tbody>
+                                    @foreach($fault_categories as $category)
+                                        <tr>
+                                            <td>
+                                                {{$category->name}}
+                                            </td>
+                                            <td class="text-right">
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Edit" onclick="edit_fault_category('{{$category->name}}', '{{$category->id}}')">
+                                                    <i class="fas fa-pen text-muted"></i>
+                                                </a>
+                                                &nbsp;
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </a>
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
                             </table>
                         </div>
                         <div class="tab-pane" id="works">
-                        <h6 class="header">Work Asset Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#priority-modal">Add New</a></span></h6>
+                        <h6 class="header">Work Order Priorities <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#priority-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "works_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>
@@ -161,6 +179,25 @@
                                         </th>
                                     </tr>
                                 </tfoot>
+                                <tbody>
+                                    @foreach($priority_categories as $category)
+                                        <tr>
+                                            <td>
+                                                {{$category->name}}
+                                            </td>
+                                            <td class="text-right">
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Edit" onclick="edit_priority('{{$category->name}}', '{{$category->id}}')">
+                                                    <i class="fas fa-pen text-muted"></i>
+                                                </a>
+                                                &nbsp;
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </a>
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -180,13 +217,13 @@
             <div class="modal-body">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label><b>Category Name</b></label>
-                        <input type="tel" class="form-control resetable" name="name">
+                        <label><b>Category Name</b> <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control data" name="name" required>
                     </div>
                 </div>
                 <div class="form-check mt-3">
                     <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="is_sub_category">
+                        <input class="form-check-input data" name="is_subcategory" type="checkbox" id="is_sub_category">
                         <span class="form-check-sign"></span>
                         This category is a subcategory
                     </label>
@@ -194,18 +231,17 @@
                 <div class="col-md-12 mt-3" style="display:none;" id="div_select_parent">
                     <div class="form-group">
                         <label><b>Parent Category</b></label>
-                        <select class="selectpicker col-md-12" title="Parent Category" data-live-search="true">
-                            <option>Electronics</option>
-                            <option>Other option</option>
-                            <optgroup label="Some group">
-                                <option>Some sub option</option>
+                        <select class="selectpicker col-md-12 data" title="Parent Category" name="parent_id" data-live-search="true">
+                            @foreach($parent_categories as $category)
+                            <option value="{{$category->id}}">{{$category->name}}</option>
+                            @endforeach
                             </optgroup>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="modal-footer mt-4 right">
-                <button type="submit" class="btn btn-custom">Save</button>
+                <button type="submit" class="btn btn-purple text-right pull-right" id="btn_save_asset">Save</button>
             </div>
         </div>
     </form>
@@ -228,7 +264,7 @@
                 </div>
             </div>
             <div class="modal-footer mt-4 right">
-                <button type="submit" class="btn btn-custom">Save</button>
+                <button type="submit" class="btn btn-purple">Save</button>
             </div>
         </div>
     </form>
@@ -250,8 +286,96 @@
                     </div>
                 </div>
             </div>
+            <div class="modal-footer mt-4">
+                <button type="submit" class="btn btn-purple text-right pull-right">Save</button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>
+<div id="edit-asset-modal" class="modal fade right">
+  <div class="modal-dialog">
+    <form method = "post" id="edit_asset_category">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h6 class="header">Edit Asset Category</h6>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label><b>Category Name</b> <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control data" name="name" id="edit_asset_name" required>
+                    </div>
+                </div>
+                <div class="form-check mt-3 edit_parent">
+                    <label class="form-check-label">
+                        <input class="form-check-input data" name="is_subcategory" type="checkbox" id="edit_is_sub_category">
+                        <span class="form-check-sign"></span>
+                        This category is a subcategory
+                    </label>
+                </div>
+                <div class="col-md-12 mt-3" style="display:none;" id="edit_select_parent">
+                    <div class="form-group">
+                        <label><b>Parent Category</b></label>
+                        <select class="selectpicker col-md-12 data" title="Parent Category" 
+                        name="parent_id" data-live-search="true" id="edit_parent_id">
+                            @foreach($parent_categories as $category)
+                                <option value="{{$category->id}}">{{$category->name}}</option>
+                            @endforeach
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="modal-footer mt-4 right">
-                <button type="submit" class="btn btn-custom">Save</button>
+                <button type="submit" class="btn btn-purple text-right pull-right" id="btn_save_asset">Save</button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>
+<div id="edit-fault-modal" class="modal fade right">
+  <div class="modal-dialog">
+    <form method = "post" id="edit_fault_category">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h6 class="header">Edit Fault Category</h6>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label><b>Fault Type Name</b></label>
+                        <input type="tel" class="form-control resetable" name="name" id="edit_fault_name">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer mt-4 right">
+                <button type="submit" class="btn btn-purple">Save</button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>
+<div id="edit-priority-modal" class="modal fade right">
+  <div class="modal-dialog">
+    <form method = "post" id="edit_priority">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h6 class="header">Edit Priority Type</h6>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label><b>Priority Type Name</b></label>
+                        <input type="tel" class="form-control resetable" name="name" id="edit_priority_name">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer mt-4 right">
+                <button type="submit" class="btn btn-purple">Save</button>
             </div>
         </div>
     </form>
@@ -264,97 +388,19 @@
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script>
+        let temp_asset_id, temp_fault_id, temp_priority;
+
         $(document).ready(function () {
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip()
             });
 
-            let asset_table = $('#asset_table').DataTable({
-                "pagingType": "full_numbers",
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                responsive: true,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Find an item",
-                    sEmptyTable: "No asset categories created"
-                }
-            });
+            let asset_table = generateDtbl('#asset_table');
         
-            let faults_table = $('#faults_table').DataTable({
-                "pagingType": "full_numbers",
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Find an item",
-                    sEmptyTable: "No fault categories created"
-                }
-            });
+            let faults_table = generateDtbl('#faults_table');
 
-            let works_table = $('#works_table').DataTable({
-                "pagingType": "full_numbers",
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Find an item",
-                    sEmptyTable: "No work order priorities created"
-                }
-            });
+            let works_table = generateDtbl('#works_table');
         });
-
-        /*$('#active').on('switchChange.bootstrapSwitch', function(e, s){
-            var form_data = $('toggle_active').serialize();
-            alert(form_data);
-
-            request = $.ajax({
-                url : '/api/users/activate',
-
-            })
-        });*/
-
-        function setActive(user, el){
-            var active;
-            var id = user.id;
-
-            if(el.checked == 1){
-                active = 1;
-            }else{
-                active = 0;
-            }
-
-            var form_data = "user_id="+id+"&active="+active;
-            
-            $.ajax({
-                url : '/api/users/activate',
-                method: 'put',
-                data : form_data,
-                success: function(data, status){
-                    if(data.error){
-                        presentNotification(data.message, 'danger', 'top', 'right');
-                    }else{
-                        presentNotification(data.message, 'info', 'top', 'right');
-                    }
-                },
-
-                error : function(xhr, desc, err){
-                    presentNotification('Network error', 'danger', 'top', 'right');
-                }
-            });
-        }
-
-        function presentNotification(message, color, from, align){
-            $.notify(
-                {
-                    message: message
-                }, {
-                    type: color,
-                    timer: 1500,
-                    placement: {
-                        from: from,
-                        align: align
-                    }
-                }
-            );
-        }
 
         $('#is_sub_category').on('change', function(){
             if($(this).prop('checked')){
@@ -367,7 +413,138 @@
 
         $('#new_asset_category').on('submit', function(e){
             e.preventDefault();
-            var data = 
+
+            var data = {
+                hospital_id : '{{$user->hospital_id}}'
+            };
+            
+            $.each($(this).find('.data'), function(i, e){
+                data[$(e).attr('name')] = $(e).val();
+            });
+
+            if($('#is_sub_category').prop('checked') == false){
+                data.parent_id = null;
+            }
+            
+            let btn = $(this).find('[type=submit]');
+
+            submit_form("/api/asset-category/add", "post", data, undefined, btn, true);
         });
+
+        $('#new_fault_category').on('submit', function(e){
+            e.preventDefault();
+            let data = {
+                hospital_id: '{{$user->hospital_id}}',
+            }
+
+            data.name = $(this).find('[name="name"]').val();
+            
+            let btn = $(this).find('[type=submit]');
+            submit_form("/api/fault-category/add", "post", data, undefined, btn, true);
+        });
+
+        $('#new_priority_category').on('submit', function(e){
+            e.preventDefault();
+            let data = {
+                hospital_id: '{{$user->hospital_id}}',
+            }
+
+            data.name = $(this).find('[name="name"]').val();
+            let btn = $(this).find('[type=submit]');
+            submit_form("/api/priority/add", "post", data, undefined, btn, true);
+        });
+
+        let edit_asset_category = (name, id, parent_id = null, has_children = false) => {
+            $("#edit_asset_name").val(name);
+            temp_asset_id = id;
+
+            if(parent_id != null && parent_id != undefined){
+                $("#edit_parent_id").val(parent_id);
+                $("#edit_parent_id").selectpicker('refresh');
+                $("#edit_is_sub_category").prop("checked", true);
+                $("#edit_select_parent").css("display", 'block');
+            }else{
+                $("#edit_parent_id").val(null);
+                $("#edit_parent_id").selectpicker('refresh');
+                $("#edit_is_sub_category").prop("checked", false);
+                $("#edit_select_parent").css("display", 'none');
+            }
+
+            if(has_children){
+                $(".edit_parent").css('display', 'none');
+            }else{
+                $(".edit_parent").css('display', 'block');
+            }
+            
+            $('#edit-asset-modal').modal("show");
+        }
+
+        $('#edit_is_sub_category').on('change', function(){
+            if($(this).prop('checked')){
+                $('#edit_select_parent').css('display', 'block');
+            }else{
+                $('#edit_select_parent').css('display', 'none');
+            }
+        });
+
+        $('#edit_asset_category').on('submit', function(e){
+            e.preventDefault();
+
+            var data = {
+                hospital_id : '{{$user->hospital_id}}'
+            };
+            
+            $.each($(this).find('.data'), function(i, e){
+                data[$(e).attr('name')] = $(e).val();
+            });
+
+            if($('#edit_is_sub_category').prop('checked') == false){
+                data.parent_id = null;
+            }
+            
+            let btn = $(this).find('[type=submit]');
+
+            submit_form("/api/asset-category/update/"+temp_asset_id, "put", data, undefined, btn, true);
+        });
+
+        let edit_fault_category = (name, id) => {
+            $("#edit_fault_name").val(name);
+            temp_fault_id = id;
+
+            $('#edit-fault-modal').modal("show");
+        }
+
+        $("#edit_fault_category").on("submit", function(e){
+            e.preventDefault();
+            
+            let data = {
+                hospital_id: '{{$user->hospital_id}}',
+            }
+
+            data.name = $(this).find('[name="name"]').val();
+            
+            let btn = $(this).find('[type=submit]');
+            submit_form("/api/fault-category/update/"+temp_fault_id, "put", data, undefined, btn, true);
+        });
+
+        let edit_priority = (name, id) => {
+            $("#edit_priority_name").val(name);
+            temp_priority_id = id;
+
+            $('#edit-priority-modal').modal("show");
+        }
+
+        $("#edit_priority").on("submit", function(e){
+            e.preventDefault();
+            
+            let data = {
+                hospital_id: '{{$user->hospital_id}}',
+            }
+
+            data.name = $(this).find('[name="name"]').val();
+            
+            let btn = $(this).find('[type=submit]');
+            submit_form("/api/priority/update/"+temp_priority_id, "put", data, undefined, btn, true);
+        })
     </script>
 @endsection

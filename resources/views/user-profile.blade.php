@@ -188,20 +188,6 @@
             });
         });
 
-        function presentNotification(message, color, from, align){
-            $.notify(
-                {
-                    message: message
-                }, {
-                    type: color,
-                    timer: 1500,
-                    placement: {
-                        from: from,
-                        align: align
-                    }
-                }
-            );
-        }
     </script>
 </body>
 </html>

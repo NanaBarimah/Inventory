@@ -63,7 +63,7 @@
         </div>
         <a href="/users/add">
             <div class="fab">
-                +
+                <i class="fas fa-plus"></i>
             </div>
         </a>
     </div>
@@ -130,21 +130,6 @@
                     presentNotification('Network error', 'danger', 'top', 'right');
                 }
             });
-        }
-
-        function presentNotification(message, color, from, align){
-            $.notify(
-                {
-                    message: message
-                }, {
-                    type: color,
-                    timer: 1500,
-                    placement: {
-                        from: from,
-                        align: align
-                    }
-                }
-            );
         }
     </script>
     @endsection

@@ -301,21 +301,6 @@
             $('#btn_edit').prop('disabled', false);
         });
 
-        function presentNotification(message, color, from, align){
-            $.notify(
-                {
-                    message: message
-                }, {
-                    type: color,
-                    timer: 1500,
-                    placement: {
-                        from: from,
-                        align: align
-                    }
-                }
-            );
-        }
-
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href");
             if (target == '#new_operator') {

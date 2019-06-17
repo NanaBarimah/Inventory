@@ -1,3 +1,4 @@
+@php $user = Auth::user() @endphp
 @extends('layouts.user-dashboard', ['page_title' => 'Add user'])
 @section('content')
     <div class="content">
@@ -94,7 +95,7 @@
         $('#add_user_form').on('submit', function(e){
             e.preventDefault();
             var form_data = $(this).serialize();
-            form_data+='&hospital_id={{Auth::user()->hospital_id}}';
+            form_data+='&hospital_id={{$user->hospital_id}}';
             $(this).find('input, select').prop('disabled',true);
 
             $('#btn_save').html('<i class="now-ui-icons loader_refresh spin"></i>');
@@ -118,20 +119,5 @@
                 }
             });
         });
-
-        function presentNotification(message, color, from, align){
-            $.notify(
-                {
-                    message: message
-                }, {
-                    type: color,
-                    timer: 1500,
-                    placement: {
-                        from: from,
-                        align: align
-                    }
-                }
-            );
-        }
     </script>
 @endsection

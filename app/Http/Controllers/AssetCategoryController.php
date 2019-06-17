@@ -46,6 +46,7 @@ class AssetCategoryController extends Controller
 
         $assetCategory->name        = $request->name;
         $assetCategory->hospital_id = $request->hospital_id;
+        $assetCategory->parent_id = $request->parent_id;
 
         if($assetCategory->save()){
             return response()->json([
@@ -92,9 +93,9 @@ class AssetCategoryController extends Controller
      */
     public function update(Request $request, AssetCategory $assetCategory)
     {
-        $status = $assetCategory->update(
-            $request->only(['name'])
-        );
+        $assetCategory->name = $request->name;
+        $assetCategory->parent_id = $request->parent_id;
+        $status = $assetCategory->update();
 
         return response()->json([
             'data' => $assetCategory,

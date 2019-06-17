@@ -24,7 +24,6 @@
 
     @yield('styles')
 </head>
-
     <body>
         <div class="wrapper">
             @include('layouts.sidebar')

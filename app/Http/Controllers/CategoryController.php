@@ -22,11 +22,19 @@ class CategoryController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $asset_categories = AssetCategory::where('hospital_id', $user->hospital_id)->get();
+        $asset_categories = AssetCategory::with('parent', 'children')->where('hospital_id', $user->hospital_id)->get();
         $fault_categories = FaultCategory::where('hospital_id', $user->hospital_id)->get();
         $priority_categories = Priority::where('hospital_id', $user->hospital_id)->get();
 
-        return view('categories');
-        //return response()->json($categories, 200);
+        function filter_parents($item){
+            return $item->children->count() > 0;
+        }
+
+        $parent_categories = $asset_categories->filter(function($item){
+            return $item->parent_id == null;
+        })->values();
+
+        return view('categories', compact("asset_categories", "fault_categories", "priority_categories", "parent_categories"));
+        //return response()->json($parent_categories, 200);
     }
 }
