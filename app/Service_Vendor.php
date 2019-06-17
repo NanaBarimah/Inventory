@@ -10,16 +10,16 @@ class Service_Vendor extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'name', 'contact_number', 'hospital_id'
+        'name', 'address', 'contact_number', 'contact_name', 'email', 'vendor_type', 'website', 'hospital_id'
     ];
 
     public $table = "service_vendors";
-
+/* 
     public function equipment()
     {
         return $this->hasMany('App\Equipment');
     }
-
+ */
     public function hospital()
     {
         return $this->belongsTo('App\Hospital');

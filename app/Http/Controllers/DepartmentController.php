@@ -56,7 +56,8 @@ class DepartmentController extends Controller
     {
         $result = true;
         $request->validate([
-            'name' => 'required|string'
+            'name'        => 'required|string',
+            'hospital_id' => 'required'
         ]);
 
         if(Department::where([['hospital_id', $request->hospital_id], ['name', $request->name]])->get()->count() > 0){
@@ -66,54 +67,23 @@ class DepartmentController extends Controller
             ]);
         }
 
-        if($request->user_id == null ){
-            $user = new User;
+        $department = new Department;
 
-            $user->id           = md5($request->username.microtime());
-            $user->firstname    = $request->firstname;
-            $user->lastname     = $request->lastname;
-            $user->username     = $request->username;
-            $user->password     = bcrypt($request->password);
-            $user->phone_number = $request->phone_number;
-            $user->hospital_id  = $request->hospital_id;
-            $user->role         = 'Department Head';
+        $department->name         = $request->name;
+        $department->hospital_id  = $request->hospital_id;
+        $department->user_id      = $request->user_id;
+        $department->location     = $request->location;
+        $department->phone_number = $request->phone_number;
 
-            if($user->save()){
-                $department  = new Department();
-
-                $department->name        = $request->name;
-                $department->hospital_id = $request->hospital_id;
-                $department->user_id     = $user->id;
-       
-                
-                if($department->save()){
-                    $result = false;
-                }
-                
-            }
-            
-            return response()->json([
-                'error' => $result,
-                'data' => $department,
-                'message' => !$result ? 'Department created successfully' : 'Error creating department'
-            ]);
-        }else{
-            $department = new Department;
-
-            $department->name        = $request->name;
-            $department->hospital_id = $request->hospital_id;
-            $department->user_id     = $request->user_id;
-
-            if($department->save()){
-                $result = false;
-            }
-
-            return response()->json([
-                'error' => $result,
-                'data' => $department,
-                'message' => !$result ? 'Department created successfully' : 'Error creating department'
-            ]);
+        if($department->save()){
+            $result = false;
         }
+
+        return response()->json([
+            'error' => $result,
+            'data' => $department,
+            'message' => !$result ? 'Department created successfully' : 'Error creating department'
+        ]);
     }
 
     /**

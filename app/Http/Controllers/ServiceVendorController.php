@@ -40,24 +40,33 @@ class ServiceVendorController extends Controller
     {
         $result = true;
         $request->validate([
-            'name' => 'required|string',
+            'name'           => 'required|string',
+            'address'        => 'required|string',
             'contact_number' => 'required|string',
-            'hospital_id' => 'required'
+            'contact_name'   => 'required|string',
+            'email'          => 'required|string',
+            'vendor_type'    => 'required|string',
+            'hospital_id'    => 'required',
         ]);
             
-        $service_Vendor  = new Service_Vendor();
+        $service_vendor  = new Service_vendor();
 
-        $service_Vendor->name = $request->name;
-        $service_Vendor->contact_number = $request->contact_number;
-        $service_Vendor->hospital_id = $request->hospital_id;
+        $service_vendor->name           = $request->name;
+        $service_vendor->address        = $request->address;
+        $service_vendor->contact_number = $request->contact_number;
+        $service_vendor->contact_name   = $request->contact_name;
+        $service_vendor->email          = $request->email;
+        $service_vendor->vendor_type    = $request->vendor_type;
+        $service_vendor->website        = $request->website;
+        $service_vendor->hospital_id    = $request->hospital_id;
 
-        if($service_Vendor->save()){
+        if($service_vendor->save()){
             $result = false;
         }
 
         return response()->json([
             'error' => $result,
-            'data' => $service_Vendor,
+            'data' => $service_vendor,
             'message' => !$result ? 'Service Vendor created successfully' : 'Error creating service vendor'
           ]);
     }
@@ -94,16 +103,26 @@ class ServiceVendorController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'contact_number' => 'required'
+            'name'           => 'required',
+            'address'        => 'required',
+            'contact_number' => 'required',
+            'contact_name'   => 'required',
+            'email'          => 'required',
+            'vendor_type'    => 'required',
         ]);
         /*$status = $service_Vendor->update(
             $request->only(['name', 'contact_number'])
         );*/
 
         $vendor = Service_Vendor::find($request->id)->first();
-        $vendor->name = $request->name;
+
+        $vendor->name           = $request->name;
+        $vendor->address        = $request->address;
         $vendor->contact_number = $request->contact_number;
+        $vendor->contact_name   = $request->contact_name;
+        $vendor->email          = $request->email;
+        $vendor->vendor_type    = $request->vendor_type;
+        $vendor->website        = $request->website;
 
         $status = $vendor->update();
 
