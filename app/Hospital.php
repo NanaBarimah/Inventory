@@ -29,6 +29,16 @@ class Hospital extends Model
         return $this->hasMany('App\User');
     }
 
+    public function priorities()
+    {
+        return $this->hasMany('App\Priority');
+    }
+
+    public function part_categories()
+    {
+        return $this->hasMany('App\PartCategory');
+    }
+
     /**
      * Get the equipment for the hospital.
      */
