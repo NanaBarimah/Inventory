@@ -13,7 +13,7 @@ class Part extends Model
     
     public $incrementing = false;
     
-    protected $fillable = ['name', 'cost', 'part_categories_id'];
+    protected $fillable = ['name', 'cost', 'part_categories_id', 'hospital_id'];
 
     public function part_category()
     {

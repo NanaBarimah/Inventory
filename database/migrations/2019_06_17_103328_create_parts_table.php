@@ -22,12 +22,15 @@ class CreatePartsTable extends Migration
             $table->string('image')->nullable();
             $table->string('area')->nullable();
             $table->string('part_categories_id')->nullable();
+            $table->string('hospital_id');
             $table->text('description')->nullable();
             $table->date('manufacturer_year')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('part_categories_id')->references('id')->on('part_categories')
+                  ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('hospital_id')->references('id')->on('hospitals')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
     }

@@ -49,6 +49,7 @@ class PartController extends Controller
         $part->cost               = $request->cost;
         $part->area               = $request->area;
         $part->part_categories_id = $request->part_categories_id;
+        $part->hospital_id        = $request->hospital_id;
         $part->description        = $request->description;
         $part->manufacturer_year  = date($request->manufacturer_year);
 
