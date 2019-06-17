@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Priority extends Model
+class PartCategory extends Model
 {
     use SoftDeletes;
 
@@ -16,8 +16,8 @@ class Priority extends Model
         return $this->belongsTo('App\Hospital');
     }
 
-    public function work_orders()
+    public function parts()
     {
-        return $this->hasMany('App\WorkOrder');
+        return $this->hasMany('App\Part');
     }
 }
