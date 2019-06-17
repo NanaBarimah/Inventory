@@ -23,6 +23,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#spare-parts" role="tablist">
+                               Spare Part Categories
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#faults" role="tablist">
                                 Fault Categories
                             </a>
@@ -112,6 +117,50 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="tab-pane" id="spare-parts">
+                            <h6 class="header">Work Order Priorities <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#spare-part-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
+                            <table id = "spare_parts_table" class="data-table table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Category Name
+                                        </th>
+                                        <th  class="disabled-sorting text-right">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>
+                                            Category Name
+                                        </th>
+                                        <th class="disabled-sorting text-right">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    @foreach($priority_categories as $category)
+                                        <tr>
+                                            <td>
+                                                {{$category->name}}
+                                            </td>
+                                            <td class="text-right">
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Edit" onclick="edit_spare_part('{{$category->name}}', '{{$category->id}}')">
+                                                    <i class="fas fa-pen text-muted"></i>
+                                                </a>
+                                                &nbsp;
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete">
+                                                    <i class="fas fa-trash text-danger"></i>
+                                                </a>
+                                                &nbsp;
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="tab-pane" id="faults">
                             <h6 class="header">Fault Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#faults-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "faults_table" class="data-table table table-striped">
@@ -157,7 +206,7 @@
                             </table>
                         </div>
                         <div class="tab-pane" id="works">
-                        <h6 class="header">Work Order Priorities <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#priority-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
+                            <h6 class="header">Work Order Priorities <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#priority-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "works_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>
@@ -259,7 +308,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label><b>Fault Type Name</b></label>
-                        <input type="tel" class="form-control resetable" name="name">
+                        <input type="text" class="form-control resetable" name="name" required>
                     </div>
                 </div>
             </div>
@@ -282,7 +331,30 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label><b>Priority Type</b></label>
-                        <input type="tel" class="form-control resetable" name="name">
+                        <input type="text" class="form-control resetable" name="name" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer mt-4">
+                <button type="submit" class="btn btn-purple text-right pull-right">Save</button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>
+<div id="spare-part-modal" class="modal fade right">
+  <div class="modal-dialog">
+    <form method = "post" id="new_spare_part_category">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h6 class="header">New Spare Part Type</h6>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label><b>Spare Part Type Name</b></label>
+                        <input type="text" class="form-control resetable" name="name" required>
                     </div>
                 </div>
             </div>
@@ -347,7 +419,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label><b>Fault Type Name</b></label>
-                        <input type="tel" class="form-control resetable" name="name" id="edit_fault_name">
+                        <input type="text" class="form-control resetable" name="name" id="edit_fault_name">
                     </div>
                 </div>
             </div>
@@ -370,7 +442,30 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label><b>Priority Type Name</b></label>
-                        <input type="tel" class="form-control resetable" name="name" id="edit_priority_name">
+                        <input type="text" class="form-control resetable" name="name" id="edit_priority_name">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer mt-4 right">
+                <button type="submit" class="btn btn-purple">Save</button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>
+<div id="edit-spare-part-modal" class="modal fade right">
+  <div class="modal-dialog">
+    <form method = "post" id="edit_spare_part">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h6 class="header">Edit Spare Part Type</h6>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label><b>Spare Part Type Name</b></label>
+                        <input type="text" class="form-control resetable" name="name" id="edit_spare_part_name">
                     </div>
                 </div>
             </div>
@@ -388,7 +483,7 @@
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script>
-        let temp_asset_id, temp_fault_id, temp_priority;
+        let temp_asset_id, temp_fault_id, temp_priority, temp_spare_part_id;
 
         $(document).ready(function () {
             $(function () {
@@ -400,6 +495,8 @@
             let faults_table = generateDtbl('#faults_table');
 
             let works_table = generateDtbl('#works_table');
+            
+            let spare_parts_table = generateDtbl('#spare_parts_table');
         });
 
         $('#is_sub_category').on('change', function(){
@@ -545,6 +642,37 @@
             
             let btn = $(this).find('[type=submit]');
             submit_form("/api/priority/update/"+temp_priority_id, "put", data, undefined, btn, true);
-        })
+        });
+
+        $('#new_spare_part_category').on('submit', function(e){
+            e.preventDefault();
+            let data = {
+                hospital_id: '{{$user->hospital_id}}',
+            }
+
+            data.name = $(this).find('[name="name"]').val();
+            let btn = $(this).find('[type=submit]');
+            submit_form("/api/priority/add", "post", data, undefined, btn, true);
+        });
+
+        let edit_spare_part = (name, id) => {
+            $("#edit_spare_part_name").val(name);
+            temp_spare_part_id = id;
+
+            $('#edit-spare-part-modal').modal("show");
+        }
+
+        $("#edit_spare_part").on("submit", function(e){
+            e.preventDefault();
+            
+            let data = {
+                hospital_id: '{{$user->hospital_id}}',
+            }
+
+            data.name = $(this).find('[name="name"]').val();
+            
+            let btn = $(this).find('[type=submit]');
+            submit_form("/api/spare-part/update/"+temp_priority_id, "put", data, undefined, btn, true);
+        });
     </script>
 @endsection

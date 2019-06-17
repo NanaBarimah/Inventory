@@ -41,10 +41,6 @@ class ServiceVendorController extends Controller
         $result = true;
         $request->validate([
             'name'           => 'required|string',
-            'address'        => 'required|string',
-            'contact_number' => 'required|string',
-            'contact_name'   => 'required|string',
-            'email'          => 'required|string',
             'vendor_type'    => 'required|string',
             'hospital_id'    => 'required',
         ]);
@@ -100,21 +96,12 @@ class ServiceVendorController extends Controller
      * @param  \App\Service_Vendor  $service_Vendor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Service_Vendor $vendor)
     {
         $request->validate([
             'name'           => 'required',
-            'address'        => 'required',
-            'contact_number' => 'required',
-            'contact_name'   => 'required',
-            'email'          => 'required',
             'vendor_type'    => 'required',
         ]);
-        /*$status = $service_Vendor->update(
-            $request->only(['name', 'contact_number'])
-        );*/
-
-        $vendor = Service_Vendor::find($request->id)->first();
 
         $vendor->name           = $request->name;
         $vendor->address        = $request->address;

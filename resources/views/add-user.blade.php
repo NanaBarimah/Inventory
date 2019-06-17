@@ -2,7 +2,7 @@
 @extends('layouts.user-dashboard', ['page_title' => 'Add user'])
 @section('content')
     <div class="content">
-        <div class="col-md-10 mr-auto ml-auto">
+        <div class="col-md-12 mr-auto ml-auto">
             <div>
                 <div class="card" data-color="primary">
                     <form method="post" action="#" id="add_user_form" class="p=4">

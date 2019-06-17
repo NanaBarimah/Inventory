@@ -1,3 +1,6 @@
+@php
+    $user = Auth::user();
+@endphp
 @extends('layouts.user-dashboard', ['page_title' => 'Service Vendors'])
 @section('content')
     <div class="content">
@@ -6,7 +9,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="inline-block">Service Vendors List</h4>
-                        <a href="#" class="btn btn-purple pull-right" data-toggle="modal" data-target="#addVendorModal">Add New</a>
                     </div>
                     <div class="card-body">
                         <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -45,11 +47,9 @@
                                     <td>{{$vendor->address !== null ? $vendor->address : 'N/A'}}</td>
                                     <td>{{$vendor->website !== null ? $vendor->website : 'N/A'}}</td>
                                     <td>
-                                        <span data-toggle="modal" data-target="#editVendorModal" data-id="{{$vendor->id}}" data-name="{{$vendor->name}}" data-contact="{{$vendor->contact_number}}">
-                                            <a href="#" class="btn btn-round btn-info btn-icon btn-sm edit" data-placement="left" title="Edit" data-toggle="tooltip">
-                                                <i class="now-ui-icons design-2_ruler-pencil"></i>
-                                            </a>
-                                        </span>
+                                        <a href="javascript:void(0)" class="edit" data-placement="left" title="Edit" data-toggle="tooltip" onclick = "edit({{$vendor}})">
+                                            <i class="fas fa-pen text-muted"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -72,7 +72,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label><b>Vendor Name</b> <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control resetable" name="name">
+                        <input type="text" class="form-control resetable" name="name" required/>
                     </div>
                 </div>
                 <div class="form-row">
@@ -98,7 +98,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label><b>Vendor Type</b> <span class="text-danger">*</span></label>
-                        <select class="selectpicker col-md-12" title="Vendor Type" data-style="btn btn-purple" name="vendor_type">
+                        <select class="selectpicker col-md-12" title="Vendor Type" data-style="btn btn-purple" name="vendor_type" required>
                             <option>Maintenance Contractors</option>
                             <option>Purchase equipment</option>
                         </select>
@@ -118,7 +118,7 @@
     </div>
     <div class="modal fade" id="editVendorModal" tabindex="-1" role="dialog" aria-labelledby="editVendorLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
-        <form method = "post" id="add_new_vendor_form">
+        <form method = "post" id="edit_new_vendor_form">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
@@ -128,7 +128,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label><b>Vendor Name</b> <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control resetable" name="name">
+                        <input type="text" class="form-control resetable" name="name" required/>
                     </div>
                 </div>
                 <div class="form-row">
@@ -154,7 +154,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label><b>Vendor Type</b> <span class="text-danger">*</span></label>
-                        <select class="selectpicker col-md-12" title="Vendor Type" data-style="btn btn-purple" name="vendor_type">
+                        <select class="selectpicker col-md-12" title="Vendor Type" data-style="btn btn-purple" name="vendor_type" required>
                             <option>Maintenance Contractors</option>
                             <option>Purchase equipment</option>
                         </select>
@@ -166,79 +166,47 @@
                 </div>
             </div>
             <div class="modal-footer mt-4">
-                <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_edit" disabled>Update</button>
+                <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_edit">Update</button>
             </div>
         </div>
     </form>
         </div>
     </div>
+    <a href="javascript:void(0)" data-toggle="modal" data-target="#addVendorModal">
+        <div class="fab">
+            <i class="fas fa-plus"></i>
+        </div>
+    </a>
 @endsection
 @section('scripts')
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script>
+        let temp_edit_id;
         $(document).ready(function () {
             
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip()
             });
 
-            let table = $('#datatable').DataTable({
-                "pagingType": "full_numbers",
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                responsive: true,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Search for vendor",
-                }
-
-            });
+            let table = generateDtbl('#datatable', undefined, "Search for a vendor");
         });
 
         $('#add_new_vendor_form').on('submit', function(e){
             e.preventDefault();
             
-            $('#btn_submit').html('<i class="now-ui-icons loader_refresh spin"></i>');
-            var data = $(this).serialize();
-            $(this).find('input').prop('disabled', true);
+            let btn = $('#btn_submit');
+            let data = $(this).serialize() + "&hospital_id={{$user->hospital_id}}";
 
-            $request = $.ajax({
-                url: '/api/vendors/add',
-                method: 'post',
-                data: data+'&hospital_id='+{{Auth::user()->hospital_id}},
-                success: function(data, status){
-                    $('#btn_submit').html('Save');
-                    $('#add_new_vendor_form').find('input').prop('disabled', false);
-
-                    if(data.error){
-                        presentNotification(data.message+". Try again.", 'danger', 'top', 'right');
-                    }else{
-                        var table = $('#datatable').DataTable();
-                        table.row.add([
-                            $('#vendor_name').val(),
-                            $('#vendor_contact').val(),
-                            '<a href="#" class="btn btn-round btn-info btn-icon btn-sm edit" data-toggle="tooltip" data-placement="left" title="Edit"><i class="now-ui-icons design-2_ruler-pencil"></i></a>'
-                        ]).draw(true);
-                        $('#add_new_vendor_form').find('input').val('');
-                        presentNotification(data.message, 'success', 'top', 'right');
-                    }
-                },
-                error: function(xhr, desc, err){
-                    $('#btn_submit').html('Save');
-                    $('#add_new_vendor_form').find('input').prop('disabled', false);
-                    presentNotification('Could not save the vendor. Try again.', 'danger', 'top', 'right');
-                }
-            });
+            submit_form("/api/vendors/add", "post", data, undefined, btn, true);
         });
-
-        .
         
         $('#editVendorModal').on('hide.bs.modal', function(e){
             $('#btn_edit').prop('disabled', true);
         });
 
-        $('#edit_cat_form').on('submit', function(e){
+        /*$('#edit_cat_form').on('submit', function(e){
             e.preventDefault();
             form_data = $(this).serialize();
             var id = $('#edit_vendor_id').val();
@@ -264,10 +232,31 @@
                     presentNotification('Could not update the category', 'danger', 'top', 'right');
                 }
             });
-        });
+        });*/
 
         $('#edit_cat_form input').on('input', function(){
             $('#btn_edit').prop('disabled', false);
+        });
+
+        let edit = (vendor) => {
+            temp_edit_id = vendor.id;
+            
+            $.each(Object.keys(vendor), function(index, key){
+                $("#edit_new_vendor_form").find(`[name="${key}"]`).val(vendor[`${key}`]);
+            });
+
+            $("#edit_new_vendor_form").find(`[name="vendor_type"]`).selectpicker("refresh");
+            
+            $("#editVendorModal").modal("show");
+        }
+
+        $("#edit_new_vendor_form").on("submit", function(e){
+            e.preventDefault();
+
+            let data  = $(this).serialize();
+            let btn = $(this).find('[type="submit"]');
+
+            submit_form("/api/vendors/update/"+temp_edit_id, "put", data, undefined, btn, true);
         });
     </script>
 @endsection
