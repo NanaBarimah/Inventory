@@ -9,6 +9,10 @@ class Hospital extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+    
+    public $incrementing = false;
+
     protected $fillable = [
         'name', 'address', 'district_id', 'contact_number'
     ];

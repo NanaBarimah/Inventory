@@ -14,7 +14,7 @@ class CreateServiceVendorsTable extends Migration
     public function up()
     {
         Schema::create('service_vendors', function (Blueprint $table) {
-            $table->increments('id');
+            $table->string('id')->primary();
             $table->string('name');
             $table->string('address');
             $table->string('contact_number');
@@ -22,7 +22,7 @@ class CreateServiceVendorsTable extends Migration
             $table->string('email')->unique();
             $table->string('vendor_type');
             $table->string('website')->nullable();
-            $table->integer('hospital_id')->unsigned();
+            $table->string('hospital_id');
             $table->timestamps();
             $table->softDeletes();
 

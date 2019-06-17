@@ -20,10 +20,9 @@ class CreateAdminsTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone_number');
-            $table->integer('region_id')->unsigned();
+            $table->string('region_id');
             $table->string('role');
             $table->boolean('active')->default(1);
-            //$table->string('api_token', 60)->unique();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

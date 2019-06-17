@@ -9,6 +9,10 @@ class Department extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+    
+    public $incrementing = false;
+
     protected $fillable = [
         'name', 'hospital_id', 'user_id', 'location', 'phone_number'
     ];

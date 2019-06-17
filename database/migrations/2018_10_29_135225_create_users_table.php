@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('phone_number')->nullable();
             $table->string('job_title')->nullable();
             $table->boolean('completed')->default(false);
-            $table->integer('hospital_id')->unsigned();
+            $table->string('hospital_id');
             $table->boolean('active')->default(1);
             $table->rememberToken();
             $table->timestamps();

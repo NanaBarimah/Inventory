@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AssetCategory;
+use App\Asset;
 use Illuminate\Http\Request;
 
 class AssetCategoryController extends Controller
@@ -110,6 +111,15 @@ class AssetCategoryController extends Controller
      */
     public function destroy(AssetCategory $assetCategory)
     {
-        //
+        $status = Asset::where('asset_id', $assetCategory->id)->get()->count() < 1;
+
+        if($status){
+            $status = $assetCategory->delete();
+        }
+
+         return response()->json([
+            'error'  => !$status,
+            'message' => $status ? 'Asset category deleted' : 'The selected asset category already has items under it.'
+         ]);
     }
 }

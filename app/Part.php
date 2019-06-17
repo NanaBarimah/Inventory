@@ -9,6 +9,10 @@ class Part extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+    
+    public $incrementing = false;
+    
     protected $fillable = ['name', 'cost', 'part_categories_id'];
 
     public function part_category()

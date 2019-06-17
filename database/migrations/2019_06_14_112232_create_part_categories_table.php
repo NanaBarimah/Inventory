@@ -16,7 +16,7 @@ class CreatePartCategoriesTable extends Migration
         Schema::create('part_categories', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name');
-            $table->integer('hospital_id')->unsigned();
+            $table->string('hospital_id');
             $table->timestamps();
             $table->softDeletes();
 

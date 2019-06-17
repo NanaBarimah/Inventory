@@ -9,6 +9,10 @@ class Service_Vendor extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+    
+    public $incrementing = false;
+
     protected $fillable = [
         'name', 'address', 'contact_number', 'contact_name', 'email', 'vendor_type', 'website', 'hospital_id'
     ];

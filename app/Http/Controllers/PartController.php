@@ -51,6 +51,26 @@ class PartController extends Controller
         $part->part_categories_id = $request->part_categories_id;
         $part->description        = $request->description;
         $part->manufacturer_year  = date($request->manufacturer_year);
+
+        if($request->image != null){
+            $fileName        = Utils::saveBase64Image($request->image, microtime().'-'.$part->name, 'assets/images/parts/');
+            $part->image = $fileName;
+         }else{
+            return response()->json(["error" => true,"message" => 'no-image']);
+         }
+
+         if($part->save()) {
+             return response()->json([
+                 'error'   => false,
+                 'data'    => $part,
+                 'message' => 'Spare part saved successfully!'
+             ]);
+         } else {
+             return response()->json([
+                 'error'   => true,
+                 'message' => 'Could not save spare part. Try Again!'
+             ]);
+         }
     }
 
     /**
@@ -82,9 +102,42 @@ class PartController extends Controller
      * @param  \App\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Part $part)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'name'               => 'required',
+            'quantity'           => 'required',
+            'min_quantity'       => 'required',
+            'cost'               => 'required',
+            'area'               => 'required',
+            'part_categories_id' => 'required',
+            'description'        => 'required',
+            'manufacturer_year'  => 'required'
+        ]);
+
+        $part = Part::where('id', $request->id)->first();
+
+        $part->name               = $request->name;
+        $part->quantity           = $request->quantity;
+        $part->min_quantity       = $request->min_quantity;
+        $part->cost               = $request->cost;
+        $part->area               = $request->area;
+        $part->part_categories_id = $request->part_categories_id;
+        $part->description        = $request->description;
+        $part->manufacturer_year  = date($request->manufacturer_year);
+
+        if($part->update()) {
+            return response()->json([
+                'error' => false,
+                'data'  => $part,
+                'message' => 'Spare part updated successfully!'
+            ]);
+        } else {
+            return response()->json([
+                'error' => true,
+                'message' => 'Could not update spare part. Try Again!'
+            ]);
+        }
     }
 
     /**
@@ -95,6 +148,18 @@ class PartController extends Controller
      */
     public function destroy(Part $part)
     {
-        //
+        $delete = $part->delete();
+
+        if($delete) {
+            return response()->json([
+                'error' => false,
+                'message' => 'Spare part deleted successfully!'
+            ]);
+        } else {
+            return response()->json([
+                'error' => true,
+                'message' => 'Could not delete spare part. Try Again!'
+            ]);
+        }
     }
 }

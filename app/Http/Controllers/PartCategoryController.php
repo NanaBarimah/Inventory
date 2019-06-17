@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\PartCategory;
+use App\Part;
 use Illuminate\Http\Request;
 
 class PartCategoryController extends Controller
@@ -110,6 +111,15 @@ class PartCategoryController extends Controller
      */
     public function destroy(PartCategory $partCategory)
     {
-        //
+        $status = Part::where('part_categories_id', $partCategory->id)->get()->count() < 1;
+
+        if($status){
+            $status = $partCategory->delete();
+        }
+
+         return response()->json([
+            'error'  => !$status,
+            'message' => $status ? 'Part Category deleted' : 'The selected part category already has items under it.'
+         ]);
     }
 }
