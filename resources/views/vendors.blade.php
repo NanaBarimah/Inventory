@@ -117,21 +117,59 @@
         </div>
     </div>
     <div class="modal fade" id="editVendorModal" tabindex="-1" role="dialog" aria-labelledby="editVendorLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h5 class="modal-title margin-bottom-10" id="editVendorLabel">Edit Vendor</h5>
-                    <form method="post" action="#" id="edit_cat_form">
-                        <div class="form-group">
-                            <input type="text" class="form-control normal-radius" placeholder="Vendor Name" name="name" id="edit_vendor_name"/>
-                            <input type="text" class="form-control normal-radius" placeholder="Vendor Contact" name="contact_number " id="edit_vendor_contact"/>
-                            <input type="hidden" id="edit_vendor_id" name="id"/>
-                            <input type="hidden" name="hospital_id" value="{{Auth::user()->hospital_id}}"/>
-                            <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_edit" disabled>Save</button>
-                        </div>
-                    </form>
+        <div class="modal-dialog modal-lg" role="document">
+        <form method = "post" id="add_new_vendor_form">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h6 class="header">Edit Vendor</h6>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label><b>Vendor Name</b> <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control resetable" name="name">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label><b>Contact Person Name</b></label>
+                        <input type="text" class="form-control resetable" name="contact_name">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label><b>Contact Number</b></label>
+                        <input type="tel" class="form-control resetable" name="contact_number">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label><b>Email</b></label>
+                        <input type="email" class="form-control resetable" name="email">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label><b>Website</b></label>
+                        <input type="url" class="form-control resetable" name="website">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label><b>Vendor Type</b> <span class="text-danger">*</span></label>
+                        <select class="selectpicker col-md-12" title="Vendor Type" data-style="btn btn-purple" name="vendor_type">
+                            <option>Maintenance Contractors</option>
+                            <option>Purchase equipment</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label><b>Address</b></label>
+                        <input type="text" class="form-control resetable" name="address">
+                    </div>
                 </div>
             </div>
+            <div class="modal-footer mt-4">
+                <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_edit" disabled>Update</button>
+            </div>
+        </div>
+    </form>
         </div>
     </div>
 @endsection
@@ -194,15 +232,7 @@
             });
         });
 
-        $('#editVendorModal').on('show.bs.modal', function(e){
-            var vendor_id = $(e.relatedTarget).data('id');
-            var vendor_contact = $(e.relatedTarget).data('contact');
-            var vendor_name = $(e.relatedTarget).data('name');
-
-            $('#edit_vendor_name').val(vendor_name);
-            $('#edit_vendor_contact').val(vendor_contact);
-            $('#edit_vendor_id').val(vendor_id);
-        });
+        .
         
         $('#editVendorModal').on('hide.bs.modal', function(e){
             $('#btn_edit').prop('disabled', true);
