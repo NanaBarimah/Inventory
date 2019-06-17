@@ -98,7 +98,8 @@ class PartCategoryController extends Controller
 
         return response()->json([
             'data' => $partCategory,
-            'message' => $status ? 'Part Category updated' : 'Error updating part category'
+            'message' => $status ? 'Part Category updated' : 'Error updating part category',
+            'error' => !$status
         ]);
     }
 

@@ -37,43 +37,24 @@
                             </ul>
                         </div>
                     </li>
+                    <li>
+                        <a href="/spare-parts">
+                            <i class="now-ui-icons loader_gear"></i>
+                            <p>Spare Parts</p>
+                        </a>
+                    </li>
                     @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'storekeeper')
                     <li>
-                        <a data-toggle="collapse" href="#categoryList">
+                        <a href="/departments">
                             <i class="now-ui-icons health_ambulance"></i>
-                            <p>My Hospital
-                                <b class="caret"></b>
-                            </p>
+                            <p>Departments & Units</p>
                         </a>
-                        <div class="collapse" id="categoryList">
-                            <ul class="nav">
-                                {{--<li>
-                                    <a href="/departments">
-                                        <span class="sidebar-normal">Departments</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/units">
-                                        <span class="sidebar-normal">Units</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" data-toggle="modal" data-target="#hospitalDetailsModal">
-                                        <p>Hospital Info</p>
-                                    </a>
-                                </li>--}}
-                                <li>
-                                    <a href="/departments">
-                                        <span class="sidebar-normal">Departments & Units</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/vendors">
-                                        <span class="sidebar-normal">Service Vendors</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                    </li>
+                    <li>
+                        <a href="/vendors">
+                            <i class="now-ui-icons shopping_cart-simple"></i>
+                            <p>Service Vendors</p>
+                        </a>
                     </li>
                     @endif
                     @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head')

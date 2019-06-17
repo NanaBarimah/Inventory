@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Part;
+use App\PartCategory;
 use Illuminate\Http\Request;
+
+use Auth;
 
 class PartController extends Controller
 {
@@ -15,6 +18,9 @@ class PartController extends Controller
     public function index()
     {
         //
+        $parts = Part::with("part_category")->where('hospital_id', Auth::user()->hospital_id)->get();
+        $part_categories = PartCategory::where('hospital_id', Auth::user()->hospital_id)->get();
+        return view('spare-parts', compact("parts", "part_categories"));
     }
 
     /**
@@ -48,9 +54,23 @@ class PartController extends Controller
         $part->min_quantity       = $request->min_quantity;
         $part->cost               = $request->cost;
         $part->area               = $request->area;
-        $part->part_categories_id = $request->part_categories_id;
+        $part->part_category_id = $request->part_category_id;
         $part->description        = $request->description;
-        $part->manufacturer_year  = date($request->manufacturer_year);
+        $part->hospital_id        = $request->hospital_id;
+        $part->manufacturer_year  = date('Y-m-d', $request->manufacturer_year);
+
+        if($part->save()){
+            return response()->json([
+                'error' => false,
+                'data' => $part,
+                'message' => "Spare part saved successfully"
+            ]);
+        }
+
+        return response()->json([
+            'error' => true,
+            'message' => "Could not save this spare part"
+        ]);
     }
 
     /**
@@ -59,9 +79,18 @@ class PartController extends Controller
      * @param  \App\Part  $part
      * @return \Illuminate\Http\Response
      */
-    public function show(Part $part)
+    public function show($part)
     {
         //
+        $user = Auth::user();
+        $part = Part::with('part_category')->where('id', $part)->where('hospital_id', $user->hospital_id)->first();
+        $part_categories = PartCategory::where('hospital_id', $user->hospital_id)->get();
+        
+        if($part == null){
+            return abort(403);
+        }
+
+        return view('part-details', compact("part", "part_categories"));
     }
 
     /**

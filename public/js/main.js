@@ -439,3 +439,52 @@ appFunctions = {
             }
         })
     }
+
+    let submit_file_form = (url, method, data = null, success = null, action_button = null, should_reload = false) => {
+            
+        const button = $(action_button);
+        const initial_text = button.html();
+
+        button.prop('disabled', true);
+        button.html('<i class="now-ui-icons education_atom spin"></i>');
+        
+        $.ajax({
+            'url' : url,
+            'method' : method,
+            'data' : data,
+            'contentType' : false,
+            'processData' : false, 
+            success : (data) => {
+                button.prop('disabled', false);
+                button.html(initial_text);
+
+                if(success == null){
+                    if(!data.error){
+                        presentNotification(data.message, 'info', 'top', 'right');
+                        if(should_reload){
+                            setTimeout(() => {
+                                location.reload();
+                            }, 500);
+                        }
+                    }else{
+                        presentNotification(data.message, 'danger', 'top', 'right');
+                    }
+                    
+                }else{
+                    success(data);
+                    if(should_reload){
+                        setTimeout(() => {
+                            location.reload();
+                        }, 500);
+                    }
+                }
+
+            },
+            error: (xhr) => {
+                button.prop('disabled', false);
+                button.html(initial_text);
+                
+                presentNotification(xhr.responseText, 'danger', 'top', 'right');       
+            }
+        })
+    }

@@ -54,6 +54,8 @@ Route::middleware('auth')->group(function(){
     Route::get('/markAsRead', 'NotificationController@markAllAsRead')->name('mark-as-read');
     Route::get('/approve', 'MaintenanceController@approve')->name('approve');
     Route::get('/categories', 'CategoryController@index')->name('categories');
+    Route::get('/spare-parts', 'PartController@index')->name('spare-parts');
+    Route::get('/spare-part/{part}', 'PartController@show')->name('spare-part.show');
 });
 
 

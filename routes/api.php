@@ -25,11 +25,14 @@ Route::middleware('auth:api')->group(function(){
     Route::post('asset-category/add', 'AssetCategoryController@store');
     Route::post('fault-category/add', 'FaultCategoryController@store');
     Route::post('priority/add', 'PriorityController@store');
+    Route::post('part-category/add', 'PartCategoryController@store');
 
     Route::put('asset-category/update/{assetCategory}', 'AssetCategoryController@update');
     Route::put('fault-category/update/{faultCategory}', 'FaultCategoryController@update');
+    Route::put('part-category/update/{partCategory}', 'PartCategoryController@update');
     Route::put('priority/update/{priority}', 'PriorityController@update');
 
+    Route::post('spare-part/add', 'PartController@store');
     Route::get('equipment/', 'EquipmentController@index');
     Route::post('equipment/add_equipment', 'EquipmentController@store');
     Route::get('equipment/{equipment}', 'EquipmentController@show');

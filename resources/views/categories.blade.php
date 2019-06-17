@@ -118,7 +118,7 @@
                             </table>
                         </div>
                         <div class="tab-pane" id="spare-parts">
-                            <h6 class="header">Work Order Priorities <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#spare-part-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
+                            <h6 class="header">Spare Part Types <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#spare-part-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "spare_parts_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>
@@ -141,7 +141,7 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    @foreach($priority_categories as $category)
+                                    @foreach($part_categories as $category)
                                         <tr>
                                             <td>
                                                 {{$category->name}}
@@ -641,7 +641,7 @@
             data.name = $(this).find('[name="name"]').val();
             
             let btn = $(this).find('[type=submit]');
-            submit_form("/api/priority/update/"+temp_priority_id, "put", data, undefined, btn, true);
+            submit_form("/api/part-category/update/"+temp_priority_id, "put", data, undefined, btn, true);
         });
 
         $('#new_spare_part_category').on('submit', function(e){
@@ -652,7 +652,7 @@
 
             data.name = $(this).find('[name="name"]').val();
             let btn = $(this).find('[type=submit]');
-            submit_form("/api/priority/add", "post", data, undefined, btn, true);
+            submit_form("/api/part-category/add", "post", data, undefined, btn, true);
         });
 
         let edit_spare_part = (name, id) => {
@@ -672,7 +672,7 @@
             data.name = $(this).find('[name="name"]').val();
             
             let btn = $(this).find('[type=submit]');
-            submit_form("/api/spare-part/update/"+temp_priority_id, "put", data, undefined, btn, true);
+            submit_form("/api/part-category/update/"+temp_spare_part_id, "put", data, undefined, btn, true);
         });
     </script>
 @endsection
