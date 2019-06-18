@@ -47,6 +47,7 @@ class ServiceVendorController extends Controller
             
         $service_vendor  = new Service_vendor();
 
+        $service_vendor->id             = md5($request->name.microtime());
         $service_vendor->name           = $request->name;
         $service_vendor->address        = $request->address;
         $service_vendor->contact_number = $request->contact_number;
@@ -61,8 +62,8 @@ class ServiceVendorController extends Controller
         }
 
         return response()->json([
-            'error' => $result,
-            'data' => $service_vendor,
+            'error'   => $result,
+            'data'    => $service_vendor,
             'message' => !$result ? 'Service Vendor created successfully' : 'Error creating service vendor'
           ]);
     }
@@ -114,8 +115,8 @@ class ServiceVendorController extends Controller
         $status = $vendor->update();
 
         return response()->json([
-            'error' => !$status,
-            'data' => $vendor,
+            'error'   => !$status,
+            'data'    => $vendor,
             'message' => $status ? 'Service Vendor Updated' : 'Error updating service vendor'
         ]);
     }

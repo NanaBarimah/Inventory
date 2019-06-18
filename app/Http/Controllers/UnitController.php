@@ -55,13 +55,14 @@ class UnitController extends Controller
 
         if(Unit::where([['name', $request->name], ['department_id', $request->department_id]])->get()->count() > 0){
             return response()->json([
-                'error' => $result,
+                'error'   => $result,
                 'message' => 'Unit name already exists in this department'
             ]);
         }
         
         $unit  = new Unit();
 
+        $unit->id            = md5($request->unit.microtime());
         $unit->name          = $request->name;
         $unit->department_id = $request->department_id;
         $unit->user_id       = $request->user_id;
@@ -69,8 +70,8 @@ class UnitController extends Controller
         $unit->phone_number  = $request->phone_number;   
         
         return response()->json([
-            'error' => $result,
-            'data' => $unit,
+            'error'   => $result,
+            'data'    => $unit,
             'message' => !$result ? 'Unit created successfully' : 'Error creating unit'
         ]);
         
@@ -112,7 +113,7 @@ class UnitController extends Controller
         );
 
         return response()->json([
-            'data' => $unit,
+            'data'    => $unit,
             'message' => $status ? 'Unit Updated' : 'Error updating unit'
         ]);
     }

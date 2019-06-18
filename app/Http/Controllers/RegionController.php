@@ -44,6 +44,7 @@ class RegionController extends Controller
 
         $region  = new Region();
 
+        $region->id   = md5($request->name.microtime());
         $region->name = $request->name;
 
         if($region->save()){
@@ -51,8 +52,8 @@ class RegionController extends Controller
         }
 
         return response()->json([
-            'error' => $result,
-            'data' => $region,
+            'error'   => $result,
+            'data'    => $region,
             'message' => !$result ? 'Region created successfully' : 'Error creating region'
           ]);
     }
@@ -91,7 +92,7 @@ class RegionController extends Controller
         $status = $region->update($request->all());
 
         return response()->json([
-            'data' => $region,
+            'data'    => $region,
             'message' => $status ? 'Region Updated' : 'Error updating region'
         ]);
     }

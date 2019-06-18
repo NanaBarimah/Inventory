@@ -45,9 +45,10 @@ class AssetCategoryController extends Controller
 
         $assetCategory = new AssetCategory();
 
+        $assetCategory->id          = md5($request->name.microtime());
         $assetCategory->name        = $request->name;
         $assetCategory->hospital_id = $request->hospital_id;
-        $assetCategory->parent_id = $request->parent_id;
+        $assetCategory->parent_id   = $request->parent_id;
 
         if($assetCategory->save()){
             return response()->json([
@@ -94,12 +95,12 @@ class AssetCategoryController extends Controller
      */
     public function update(Request $request, AssetCategory $assetCategory)
     {
-        $assetCategory->name = $request->name;
+        $assetCategory->name      = $request->name;
         $assetCategory->parent_id = $request->parent_id;
-        $status = $assetCategory->update();
+        $status                   = $assetCategory->update();
 
         return response()->json([
-            'data' => $assetCategory,
+            'data'    => $assetCategory,
             'message' => $status ? 'Asset category updated' : 'Error updating asset category'
         ]);
     }
@@ -119,7 +120,7 @@ class AssetCategoryController extends Controller
         }
 
          return response()->json([
-            'error'  => !$status,
+            'error'   => !$status,
             'message' => $status ? 'Asset category deleted' : 'The selected asset category already has items under it.'
          ]);
     }

@@ -35,7 +35,38 @@ class FileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'asset_id' => 'required',
+            'name'     => 'required',
+            'name.*'   => 'mimes:doc, pdf, docx, zip'
+        ]);
+
+        if($request->hasFile('name')) {
+            foreach($request->file('name') as $file){
+                $fileName = $file->getClientOriginalName();
+                $fileName = time(). '-' . $fileName->hashName();
+                $file->move('files', $fileName);
+                $data[] = $fileName;
+            }
+        }
+
+        $file = new File();
+
+        $file->asset_id = $request->asset_id;
+        $file->name     = json_encode($data);
+
+        if($file->save()) {
+            return response()->json([
+                'error'   => false,
+                'data'    => $file,
+                'message' => 'File uploaded successfully!'
+            ]);
+        } else {
+            return response()->json([
+                'error'   => true,
+                'message' => 'Could not upload file. Try Again!'
+            ]);
+        }
     }
 
     /**
@@ -80,6 +111,18 @@ class FileController extends Controller
      */
     public function destroy(File $file)
     {
-        //
+        $delete = $file->delete();
+
+        if($delete) {
+            return response()->json([
+                'error'   => false,
+                'message' => 'File deleted successfully!'
+            ]);
+        } else {
+            return response()->json([
+                'error'   => true,
+                'message' => 'Error deleting file. Try Again!'
+            ]);
+        }
     }
 }

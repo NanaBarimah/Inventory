@@ -62,13 +62,14 @@ class DepartmentController extends Controller
 
         if(Department::where([['hospital_id', $request->hospital_id], ['name', $request->name]])->get()->count() > 0){
             return response()->json([
-                'error' => $result,
+                'error'   => $result,
                 'message' => 'Department name already exists'
             ]);
         }
 
         $department = new Department;
 
+        $department->id           = md5($request->name.microtime());
         $department->name         = $request->name;
         $department->hospital_id  = $request->hospital_id;
         $department->user_id      = $request->user_id;
@@ -80,8 +81,8 @@ class DepartmentController extends Controller
         }
 
         return response()->json([
-            'error' => $result,
-            'data' => $department,
+            'error'   => $result,
+            'data'    => $department,
             'message' => !$result ? 'Department created successfully' : 'Error creating department'
         ]);
     }
@@ -122,7 +123,7 @@ class DepartmentController extends Controller
         );
 
         return response()->json([
-            'data' => $department,
+            'data'    => $department,
             'message' => $status ? 'Department Updated' : 'Error updating department'
         ]);
     }
