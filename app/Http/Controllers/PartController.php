@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Part;
+use App\Utils;
 use App\PartCategory;
 use Illuminate\Http\Request;
 
@@ -60,8 +61,12 @@ class PartController extends Controller
         $part->manufacturer_year  = date('Y-m-d', $request->manufacturer_year);
 
         if($request->image != null){
-            $fileName        = Utils::saveBase64Image($request->image, microtime().'-'.$part->name, 'img/assets/parts/');
-            $part->image = $fileName;
+            $file = $request->file('image');
+
+            $name = md5($file->getClientOriginalName()).'.'.$file->getClientOriginalExtension();
+            $file->move(public_path().'/img/assets/parts/', $name);
+            
+            $part->image = $name;
         }
 
 
@@ -121,10 +126,9 @@ class PartController extends Controller
     {
         $request->validate([
             'name'               => 'required',
-            'quantity'           => 'required',
             'min_quantity'       => 'required',
             'cost'               => 'required',
-            'part_categories_id' => 'required',
+            'part_category_id' => 'required',
         ]);
         
         $part->name              = $request->name;
@@ -137,8 +141,12 @@ class PartController extends Controller
         $part->manufacturer_year  = date('Y-m-d', $request->manufacturer_year);
 
         if($request->image != null){
-            $fileName        = Utils::saveBase64Image($request->image, microtime().'-'.$part->name, 'img/assets/parts/');
-            $part->image = $fileName;
+            $file = $request->file('image');
+
+           $name = md5($file->getClientOriginalName()).'.'.$file->getClientOriginalExtension();
+           $file->move(public_path().'/img/assets/parts/', $name);
+           
+           $part->image = $name;
         }
 
 

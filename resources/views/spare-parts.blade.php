@@ -45,7 +45,7 @@
                                 <td><span class="{{$part->quantity <= $part->min_quantity ? 'badge badge-danger' : ''}}">{{$part->quantity}}</span>  <span class="text-danger text-small"> Requires restock</span></td>
                                 <td>{{$part->cost}}</td>
                                 <td>{{$part->area}}</td>
-                                <td>{{$part->part_category->name}}</td>
+                                <td>{{$part->part_category != null ? $part->part_category->name : 'N/A'}}</td>
                                 <td class="text-right">
                                     <div class="dropdown">
                                         <button type="button"
@@ -85,13 +85,13 @@
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label><b>Part Name</b> <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control resetable" name="name" required/>
+                            <input type="text" class="form-control resetable" name="name" required="true"/>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label><b>Unit Price</b> <span class="text-danger">*</span></label>
-                            <input type="number" step="0.01" class="form-control resetable" name="cost" required>
+                            <input type="number" step="0.01" class="form-control resetable" name="cost" required="true"/>
                         </div>
                         <div class="form-group col-md-4">
                             <label><b>Quantity In Stock</b></label>
@@ -99,7 +99,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label><b>Minimum Quantity</b> <span class="text-danger">*</span></label>
-                            <input type="number" step="0.01" class="form-control resetable" name="min_quantity" required>
+                            <input type="number" step="0.01" class="form-control resetable" name="min_quantity" required="true"/>
                         </div>
                     </div>
                     <div class="form-row">
@@ -113,7 +113,7 @@
                         </div>
                         <div class="form-group col-md-4 col-sm-12">
                             <label><b>Category</b></label>
-                            <select class="selectpicker col-sm-12" title="Category" data-style="btn btn-purple" name="part_categories_id" required>
+                            <select class="selectpicker col-sm-12" title="Category" data-style="btn btn-purple" name="part_categories_id" required="true">
                                 @foreach($part_categories as $category)
                                     <option value="{{$category->id}}">{{$category->name}}</option>
                                 @endforeach
@@ -160,6 +160,7 @@
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/jasny-bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/jquery.validate.min.js')}}"></script>
     <script>
         document
         let parts_table = generateDtbl('#datatable', 'No parts specified', 'Search for part');

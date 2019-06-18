@@ -93,7 +93,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="description-label">Description</label>
-                                                <p class="">{{$part->description != null ? $part->area : 'No description for this part yet'}}</p>
+                                                <p class="">{{$part->description != null ? $part->description : 'No description for this part yet'}}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -145,7 +145,7 @@
                                     </div>
                                     <div class="form-group col-md-4 col-sm-12">
                                         <label><b>Category</b></label>
-                                        <select class="selectpicker col-sm-12" title="Category" data-style="btn btn-purple" name="part_categories_id" required>
+                                        <select class="selectpicker col-sm-12" title="Category" data-style="btn btn-purple" name="part_category_id" required>
                                             @foreach($part_categories as $category)
                                                 <option value="{{$category->id}}" <?php if($part->part_category_id == $category->id){echo 'selected';}?>>{{$category->name}}</option>
                                             @endforeach
@@ -165,7 +165,7 @@
                                                 <label style="display:block;"><b>Image</b></label>
                                                 <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                                     <div class="fileinput-new thumbnail">
-                                                        <img src="{{asset('img/assets/parts/'.$part->image)}}" onerror = "this.src = '{{asset('img/image_placeholder.jpg')}}'"/>
+                                                        <img src="{{asset('img/assets/parts/'.$part->image)}}"/>
                                                     </div>
                                                     <div class="fileinput-preview fileinput-exists thumbnail"></div>
                                                     <div>
@@ -206,9 +206,12 @@
             e.preventDefault();
 
             let data = new FormData(this);
+            
             data.append("hospital_id", '{{Auth::user()->hospital_id}}');
+            data.append("_method", "put");
+
             let btn = $(this).find('[type="submit"]');
-            submit_file_form("/api/spare-part/update/{{$part->id}}", "put", data, undefined, btn, true);
+            submit_file_form("/api/spare-part/update/{{$part->id}}", "post", data, undefined, btn, true);
         });
     </script>
 @endsection
