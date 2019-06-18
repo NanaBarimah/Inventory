@@ -24,4 +24,9 @@ class Part extends Model
     {
         return $this->belongsToMany('App\Asset', 'asset_parts')->withTimestamps();
     }
+
+    public function hospital()
+    {
+        return $this->belongsTo('App\Hospital');
+    }
 }

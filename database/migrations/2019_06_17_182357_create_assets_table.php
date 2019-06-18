@@ -38,6 +38,8 @@ class CreateAssetsTable extends Migration
             $table->string('hospital_id');
             $table->text('reason')->nullable();
             $table->date('warranty_expiration')->nullable();
+            $table->string('procurement_type');
+            $table->string('donor')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

@@ -43,12 +43,9 @@ class Hospital extends Model
         return $this->hasMany('App\PartCategory');
     }
 
-    /**
-     * Get the equipment for the hospital.
-     */
-    public function equipments()
+    public function asset_categories()
     {
-        return $this->hasMany('App\Equipment');
+        return $this->hasMany('App\AssetCategory');
     }
 
     /**
@@ -67,5 +64,15 @@ class Hospital extends Model
     public function assets()
     {
         return $this->hasMany('App\Asset');
+    }
+
+    public function departments()
+    {
+        return $this->hasMany('App\Department');
+    }
+
+    public function parts()
+    {
+        return $this->hasMany('App\Part');
     }
 }
