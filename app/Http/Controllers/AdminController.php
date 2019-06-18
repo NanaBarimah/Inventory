@@ -93,7 +93,7 @@ class AdminController extends Controller
             'lastname'     => $request->lastname,
             'email'        => $request->email,
             'phone_number' => $request->phone_number,
-            'password'     => bcrypt($request->password),
+            'password'     => $request->password,
             'region_id'    => $request->region_id,
             'role'         => $request->role,
             'id'           => md5($request->email.microtime())

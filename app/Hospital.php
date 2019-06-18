@@ -75,4 +75,9 @@ class Hospital extends Model
     {
         return $this->hasMany('App\Part');
     }
+
+    public function purchase_orders()
+    {
+        return $this->hasMany('App\PurchaseOrder');
+    }
 }

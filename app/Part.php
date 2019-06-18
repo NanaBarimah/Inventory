@@ -29,4 +29,9 @@ class Part extends Model
     {
         return $this->belongsTo('App\Hospital');
     }
+
+    public function purchase_orders()
+    {
+        return $this->belongsToMany('App\PurchaseOrder', 'part_purchases')->withTimestamps();
+    }
 }
