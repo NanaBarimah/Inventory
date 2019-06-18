@@ -44,25 +44,26 @@ class HospitalController extends Controller
     {
         $result = true;
         $request->validate([
-            'name' => 'required|string',
-            'address' => 'required|string',
-            'district_id' => 'required',
+            'name'           => 'required|string',
+            'address'        => 'required|string',
+            'district_id'    => 'required',
             'contact_number' => 'required'
         ]);
 
         $hospital  = new Hospital();
 
-        $hospital->name = $request->name;
-        $hospital->address = $request->address;
-        $hospital->district_id = $request->district_id;
+        $hospital->id             = md5($request->name.microtime());
+        $hospital->name           = $request->name;
+        $hospital->address        = $request->address;
+        $hospital->district_id    = $request->district_id;
         $hospital->contact_number = $request->contact_number;
 
         if($d = $hospital->save()){
             $service = new Service_Vendor();
 
-            $service->name = 'None';
+            $service->name           = 'None';
             $service->contact_number = 'No contact';
-            $service->hospital_id = $hospital->id;
+            $service->hospital_id    = $hospital->id;
 
             $ghs = new Service_Vendor();
 
@@ -73,14 +74,14 @@ class HospitalController extends Controller
             if($service->save() && $ghs->save()){
                 $user = new User();
 
-                $user->id        = md5($request->username.microtime());
-                $user->firstname = $request->firstname;
-                $user->lastname  = $request->lastname;
-                $user->username  = $request->username;
+                $user->id           = md5($request->username.microtime());
+                $user->firstname    = $request->firstname;
+                $user->lastname     = $request->lastname;
+                $user->username     = $request->username;
                 $user->phone_number = $request->phone_number;
-                $user->password  = bcrypt('Password');
-                $user->hospital_id = $hospital->id;
-                $user->role = 'Admin';
+                $user->password     = bcrypt('Password');
+                $user->hospital_id  = $hospital->id;
+                $user->role         = 'Admin';
     
                 if($user->save()){
                     $result = false;
@@ -90,8 +91,8 @@ class HospitalController extends Controller
         
 
         return response()->json([
-            'error' => $result,
-            'data' => $hospital,
+            'error'   => $result,
+            'data'    => $hospital,
             'message' => !$result ? 'Hospital created successfully' : 'Error creating hospital'
           ]);
     }
@@ -132,7 +133,7 @@ class HospitalController extends Controller
         );
 
         return response()->json([
-            'data' => $hospital,
+            'data'    => $hospital,
             'message' => $status ? 'Hospital Updated' : 'Error updating hospital'
         ]);
     }

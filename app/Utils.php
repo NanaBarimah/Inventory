@@ -39,7 +39,7 @@
       public static function saveImageFromDz (Request $request, String $key = 'file', String $saveDir = 'img'): string
       {
          $file     = $request->file($key);
-         $file  = $file[0];
+         $file     = $file[0];
          $fileName = time() . '-' . $file->hashName();
 
          $file->move($saveDir, $fileName);

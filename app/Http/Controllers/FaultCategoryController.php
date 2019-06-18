@@ -42,6 +42,7 @@ class FaultCategoryController extends Controller
 
         $faultCategory = new FaultCategory();
 
+        $faultCategory->id          = md5($request->name.microtime());
         $faultCategory->name        = $request->name;
         $faultCategory->hospital_id = $request->hospital_id;
 
@@ -95,7 +96,7 @@ class FaultCategoryController extends Controller
         );
 
         return response()->json([
-            'data' => $faultCategory,
+            'data'    => $faultCategory,
             'message' => $status ? 'Fault category updated' : 'Error updating fault category'
         ]);
     }
@@ -108,6 +109,19 @@ class FaultCategoryController extends Controller
      */
     public function destroy(FaultCategory $faultCategory)
     {
-        //
+        $delete = $faultCategory->delete();
+
+        if($delete) {
+            return response()->json([
+                'error'   => false,
+                'data'    => $delete,
+                'message' => 'Fault category deleted successfully!'
+            ]);
+        } else {
+            return response()->json([
+                'error'   => true,
+                'message' => 'Error deleting fault category. Try Again!'
+            ]);
+        }
     }
 }

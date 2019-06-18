@@ -42,6 +42,7 @@ class PriorityController extends Controller
 
         $priority = new Priority();
 
+        $priority->id          = md5($request->name.microtime());
         $priority->name        = $request->name;
         $priority->hospital_id = $request->hospital_id;
 
@@ -95,7 +96,7 @@ class PriorityController extends Controller
         );
 
         return response()->json([
-            'data' => $priority,
+            'data'    => $priority,
             'message' => $status ? 'Priority updated' : 'Error updating priority'
         ]);
     }
@@ -108,6 +109,19 @@ class PriorityController extends Controller
      */
     public function destroy(Priority $priority)
     {
-        //
+        $delete = $priority->delete();
+
+        if($delete) {
+            return response()->json([
+                'error'   => false,
+                'data'    => $delete,
+                'message' => 'Priority deleted successfully!'
+            ]);
+        } else {
+            return response()->json([
+                'error'   => true,
+                'message' => 'Error deleting priority. Try Again!'
+            ]);
+        }
     }
 }

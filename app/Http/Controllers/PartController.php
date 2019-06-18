@@ -138,7 +138,7 @@ class PartController extends Controller
 
         if($request->image != null){
             $fileName        = Utils::saveBase64Image($request->image, microtime().'-'.$part->name, 'img/assets/parts/');
-            $part->image = $fileName;
+            $part->image     = $fileName;
         }
 
 

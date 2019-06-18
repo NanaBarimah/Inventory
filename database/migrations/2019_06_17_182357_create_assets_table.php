@@ -19,7 +19,7 @@ class CreateAssetsTable extends Migration
             $table->string('name');
             $table->string('asset_code');
             $table->string('asset_category_id')->nullable();
-            $table->decimal('purchase_price', 10, 2);
+            $table->decimal('purchase_price', 10, 2)->nullable();
             $table->date('purchase_date')->nullable();
             $table->string('image')->nullable();
             $table->string('user_id')->nullable();

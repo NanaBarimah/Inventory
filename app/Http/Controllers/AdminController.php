@@ -78,41 +78,36 @@ class AdminController extends Controller
         $result = true;
         $request->validate(
             [
-            'firstname' => 'required|string',
-            'lastname'  => 'required|string',
-            'email'  => 'required|string',
-            'password'  => 'required|string|min:6|confirmed',
-            'region_id' => 'required|string',
+            'firstname'    => 'required|string',
+            'lastname'     => 'required|string',
+            'email'        => 'required|string',
+            'password'     => 'required|string|min:6|confirmed',
+            'region_id'    => 'required|string',
             'phone_number' => 'required|string',
-            'role' => 'required'
+            'role'         => 'required'
             ]
         );
         
-        $admin = new Admin(
-            [
-            'firstname' => $request->firstname,
-            'lastname'  => $request->lastname,
-            'email'  => $request->email,
+        $admin = new Admin([
+            'firstname'    => $request->firstname,
+            'lastname'     => $request->lastname,
+            'email'        => $request->email,
             'phone_number' => $request->phone_number,
-            'password'  => bcrypt($request->password),
-            'region_id' => $request->region_id,
-            'role'      => $request->role,
-            'id'        => md5($request->email.microtime())
-            ]
-        );
+            'password'     => bcrypt($request->password),
+            'region_id'    => $request->region_id,
+            'role'         => $request->role,
+            'id'           => md5($request->email.microtime())
+            ]);
 
         if($admin->save()){
             $result = false;
         }
 
-        return response()->json(
-            [
+        return response()->json([
             'error'   => $result,
             'data'    => $admin,
             'message' => !$result ? 'Successfully created Admin' : 'Error creating admin'
-            ],
-            201
-        );
+            ],201);
     }
 
     /**
@@ -146,12 +141,12 @@ class AdminController extends Controller
      */
     public function update(Request $request)
     {
-        $admin = Admin::where('id', $request->admin)->first();
+        $admin  = Admin::where('id', $request->admin)->first();
         $status = true;
 
         $request->validate([
             'firstname' => 'required',
-            'lastname' => 'required',
+            'lastname'  => 'required',
         ]);
         
         if(request('password_reset') == 'yes'){
@@ -159,25 +154,23 @@ class AdminController extends Controller
                 $admin->password = bcrypt(request('new_password'));
             }else{
                 return response()->json([
-                    'error' => true,
+                    'error'   => true,
                     'message' => 'The old password you provided is wrong'
                 ]);
             }
         }
         
         $admin->firstname = $request->firstname;
-        $admin->lastname = $request->lastname;
+        $admin->lastname  = $request->lastname;
 
         if($admin->update()){
             $status = false;
         }
        
-        return response()->json(
-            [
-            'error' => $status,
+        return response()->json([
+            'error'   => $status,
             'message' => !$status ? 'admin Updated Successfully!' : 'Could not update admin'
-            ]
-        );
+            ]);
     }
 
     /**
@@ -204,19 +197,19 @@ class AdminController extends Controller
     {
         $admin = Admin::where('id', '=', $request->admin_id)->first();
 
-        $isactive = $request->active;
+        $isactive      = $request->active;
         $admin->active = $isactive;
 
         if($admin->save()){
             return response()->json([
-                'data' => $admin,
+                'data'    => $admin,
                 'message' => 'Biomedical Engineer updated',
-                'error' => false
+                'error'   => false
             ]);
         }else{
             return response()->json([
                 'message' => 'Could not update the Biomedical engineer',
-                'error' => true
+                'error'   => true
             ]);
         }
     }

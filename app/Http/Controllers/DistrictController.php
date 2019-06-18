@@ -41,13 +41,14 @@ class DistrictController extends Controller
         $result = true;
 
         $request->validate([
-            'name' => 'required|string',
+            'name'      => 'required|string',
             'region_id' => 'required'
         ]);
 
         $district = new District();
 
-        $district->name = $request->name;
+        $district->id        = md5($request->name.microtime());
+        $district->name      = $request->name;
         $district->region_id = $request->region_id;
 
         if(District::where('name', '=', $request->name)->get()->count() > 0){
@@ -62,8 +63,8 @@ class DistrictController extends Controller
         }
 
         return response()->json([
-            'error' => $result,
-            'data' => $district,
+            'error'   => $result,
+            'data'    => $district,
             'message' => !$result ? 'District created successfully' : 'Error creating district'
         ]);
     }
