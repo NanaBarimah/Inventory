@@ -24,24 +24,16 @@
                             <ul class="nav">
                                 <li>
                                     <a href="/inventory">
-                                        <span class="sidebar-normal">All Inventory Items</span>
+                                        <span class="sidebar-normal">Equipment</span>
                                     </a>
                                 </li>
-                                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'storekeeper')
                                 <li>
-                                    <a href="/inventory/add">
-                                        <span class="sidebar-normal">Add New Item</span>
+                                    <a href="/spare-parts">
+                                        <span class="sidebar-normal">Spare Parts</span>
                                     </a>
                                 </li>
-                                @endif
                             </ul>
                         </div>
-                    </li>
-                    <li>
-                        <a href="/spare-parts">
-                            <i class="now-ui-icons loader_gear"></i>
-                            <p>Spare Parts</p>
-                        </a>
                     </li>
                     @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'storekeeper')
                     <li>

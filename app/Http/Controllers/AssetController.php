@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Asset;
-use App\Service_Vendor;
-use App\AssetCategory;
-use App\Department;
-use App\Part;
+use App\Hospital;
 
 use Auth;
 use Illuminate\Http\Request;
@@ -21,6 +18,8 @@ class AssetController extends Controller
     public function index()
     {
         //
+        $assets = Asset::with('asset_category')->where('hospital_id', Auth::user()->hospital_id)->get();
+        return view("assets", compact("assets"));
     }
 
     /**
@@ -32,8 +31,10 @@ class AssetController extends Controller
     {
         //
         $user = Auth::user();
+        
         $hospital = Hospital::with("assets", "asset_categories", "departments",
-         "departments.units", "services", "parts", "users")->where("id", $user->hospital_id);
+         "departments.units", "services", "parts", "users")->where("id", $user->hospital_id)->first();
+        
         return view('add-item', compact("hospital"));
     }
 
@@ -60,30 +61,43 @@ class AssetController extends Controller
          $asset->asset_code          = $request->asset_code;
          $asset->asset_category_id   = $request->asset_category_id;
          $asset->purchase_price      = $request->purchase_price;
-         $asset->purchase_date       = $request->purchase_date;
+         $asset->purchase_date       = $request->purchase_date != null ? date('Y-m-d', strtotime($request->purchase_date)) : null;
          $asset->user_id             = $request->user_id;
-         $asset->installation_date   = $request->installation_date;
+         $asset->installation_date   = $request->installation_date != null ? date('Y-m-d', strtotime($request->installation_date)) : null;
          $asset->status              = $request->status;
          $asset->availability        = $request->availability;
          $asset->description         = $request->description;
          $asset->area                = $request->area;
          $asset->department_id       = $request->department_id;
          $asset->unit_id             = $request->unit_id;
-         $asset->pos_rep_date        = $request->pos_rep_date;
+         $asset->pos_rep_date        = $request->pos_rep_date != null ? date('Y-m-d', strtotime($request->pos_rep_date)) : null;
          $asset->serial_number       = $request->serial_number;
          $asset->model_number        = $request->model_number;
          $asset->manufacturer_name   = $request->manufacturer_name;
          $asset->service_vendor_id   = $request->service_vendor_id;
          $asset->hospital_id         = $request->hospital_id;
          $asset->reason              = $request->reason;
-         $asset->warranty_expiration = $request->warranty_expiration;
+         $asset->warranty_expiration = $request->warranty_expiration != null ? date('Y-m-d', strtotime($request->warranty_expiration)) : null;
 
          if($request->image != null) {
-             $fileName     = Util::saveBase64Image($request->image, microtime().'-'.$asset->name, 'img/assets/asset/');
-             $asset->image = $fileName;
+            $request->validate([
+                'image'   => 'mimes:png, jpg, jpeg'
+            ]);
+
+            $file = $request->file('image');
+
+            $name = md5($file->getClientOriginalName()).'.'.$file->getClientOriginalExtension();
+            $file->move(public_path().'/img/assets/equipment/', $name);
+            
+            $asset->image = $name;
          }
 
         if($asset->save()) {
+
+            if($request->parts != null){
+                $asset->parts()->attach($request->parts);
+            }
+
             return response()->json([
                 'error'   => false,
                 'data'    => $asset,
@@ -106,6 +120,7 @@ class AssetController extends Controller
     public function show(Asset $asset)
     {
         //
+        return view("asset-details", compact("asset"));
     }
 
     /**

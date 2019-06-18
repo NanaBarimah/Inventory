@@ -28,9 +28,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/users/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
 Route::middleware('auth')->group(function(){
-    Route::get('/inventory', 'EquipmentController@index')->name('inventory');
+    Route::get('/inventory', 'AssetController@index')->name('inventory');
     Route::get('/inventory/add', 'AssetController@create')->name('add-item');
-    Route::get('/inventory/{code}', 'EquipmentController@show')->name('show-item');
+    Route::get('/inventory/{asset}', 'AssetController@show')->name('show-item');
     Route::get('/inventory/edit/{code}', 'EquipmentController@editEquipment')->name('edit-item');
     Route::get('/maintenance', 'MaintenanceController@presentUnscheduled')->name('maintenance');
     Route::get('/maintenance/history', 'MaintenanceController@presentHistoryTable')->name('history');

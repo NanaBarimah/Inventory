@@ -42,7 +42,9 @@
                                 <td>
                                     <a href="/spare-part/{{$part->id}}">{{$part->name}}</a>
                                 </td>
-                                <td><span class="{{$part->quantity <= $part->min_quantity ? 'badge badge-danger' : ''}}">{{$part->quantity}}</span>  <span class="text-danger text-small"> Requires restock</span></td>
+                                <td><span class="{{$part->quantity <= $part->min_quantity ? 'badge badge-danger' : ''}}">{{$part->quantity}}</span>&nbsp
+                                    @if($part->quantity <= $part->min_quantity)<span class="text-danger text-small"><i>Requires restock</i></span>@endif
+                                </td>
                                 <td>{{$part->cost}}</td>
                                 <td>{{$part->area}}</td>
                                 <td>{{$part->part_category != null ? $part->part_category->name : 'N/A'}}</td>

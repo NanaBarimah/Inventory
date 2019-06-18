@@ -89,7 +89,7 @@
                                                 <div class="form-group form-file-upload form-file-simple col-md-6">
                                                     <label><b>Image</b></label>
                                                     <input type="text" class="form-control inputFileVisible" placeholder="Select file..." readonly>
-                                                    <input type="file" class="inputFileHidden">
+                                                    <input type="file" class="inputFileHidden" name="image">
                                                 </div>
                                             </div>
                                         </div>
@@ -105,19 +105,19 @@
                                                     <div class="input-group">
                                                         <select class="col-md-12 selectpicker" data-style="btn btn-purple"
                                                             title="Equipment type" name="category_id">
-                                                            @foreach($asset_categories as $category)
+                                                            @foreach($hospital->asset_categories as $category)
                                                             <option value="{{$category->id}}">{{$category->name}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-12">
-                                                    <label><b>Unit</b></label>
+                                                    <label><b id="ud_label">Unit</b></label>
                                                     <div class="input-group">
                                                         <div id="unit_div" class="col-md-12">    
                                                             <select class="col-md-12 selectpicker" data-style="btn btn-purple"
                                                                 title="Unit" name="unit_id">
-                                                                @foreach($departments as $department)
+                                                                @foreach($hospital->departments as $department)
                                                                 <optgroup label="{{$department->name}}">
                                                                     @foreach($department->units as $unit)
                                                                     <option value="{{$unit->id}}">{{$unit->name}}</option>
@@ -129,7 +129,7 @@
                                                         <div id="department_div" class="col-md-12" style="display:none">
                                                             <select class="col-md-12 selectpicker" data-style="btn btn-purple"
                                                                 title="Department" name="department_id">
-                                                                @foreach($departments as $department)
+                                                                @foreach($hospital->departments as $department)
                                                                     <option value="{{$department->id}}">{{$department->name}}</option>
                                                                 @endforeach
                                                             </select>
@@ -172,7 +172,7 @@
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b>Purchase Date</b></label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="purchasess_date"/>
+                                                        <input type="text" class="form-control datepicker" name="purchase_date"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -184,7 +184,7 @@
                                                     <div class="input-group">
                                                         <select class="col-md-12 selectpicker" data-style="btn btn-purple"
                                                             title="Parent Equipment" name="parent_id" data-live-search="true">
-                                                            @foreach($assets as $asset)
+                                                            @foreach($hospital->assets as $asset)
                                                             <option value="{{$asset->id}}" data-subtext="{{$asset->code}}">{{$asset->name}}</option>
                                                             @endforeach
                                                         </select>
@@ -213,14 +213,14 @@
                                                 <div class="form-group col-md-4">
                                                     <label><b>Specific Location</b></label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" name="purchase_price"/>
+                                                        <input type="text" class="form-control" name="area"/>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label><b>Procurement Type</b> <span class="text-danger">*</span></label>
                                                     <div class="input-group">
                                                         <select class="col-md-12 selectpicker" data-style="btn btn-purple"
-                                                            title="Procurement Type" name="procurement_type" required="true">
+                                                            title="Procurement Type" name="procurement_type" id="procurement_type" required="true">
                                                             <option>Self Purchase</option>
                                                             <option>Donation</option>
                                                         </select>
@@ -243,32 +243,49 @@
                                                 maintenance </h5>
                                         </div>
                                         <div class="col-lg-11">
-                                        <div class="row">
-                                            <div class="col-sm-12 col-md-6">
-                                                <select class="col-md-12 selectpicker" data-style="btn btn-purple btn-round"
-                                                    title="Associated Parts" name="parts"> 
-                                                    <option value="1">1 month</option>
-                                                    <option value="2">2 months</option>
-                                                    <option value="3">3 months</option>
-                                                    <option value="4">4 months</option>
-                                                    <option value="5">5 months</option>
-                                                    <option value="6">6 months</option>
-                                                    <option value="7">7 months</option>
-                                                    <option value="8">8 months</option>
-                                                    <option value="9">9 months</option>
-                                                    <option value="10">10 months</option>
-                                                    <option value="11">11 months</option>
-                                                    <option value="12">12 months</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-12 col-md-6">
-                                                    <div class="input-group form-control-lg">
-                                                        <input type="text" class="form-control datepicker" name="pos_rep_date"
-                                                            required="true" placeholder="Possible replacement date"/>
+                                            <div class="row">
+                                                <div class="form-group col-md-5">
+                                                    <label><b>Associated Parts</b></label>
+                                                    <div class="input-group">
+                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                            title="Associated Parts" name="parts[]" multiple data-live-search="true"> 
+                                                            @foreach($hospital->parts as $part)
+                                                            <option value="{{$part->id}}">{{$part->name}}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <input type="hidden" value="{{Auth::user()->id}}" name="user_id"/>
-                                        </div>
+                                                <div class="form-group col-md-5">
+                                                    <label><b>Primary Technician</b></label>
+                                                    <div class="input-group">
+                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                            title="Primary Technician" name="user_id" multiple data-live-search="true"> 
+                                                            @foreach($hospital->users as $user)
+                                                            <option value="{{$user->id}}">{{$user->firstname.' '.$user->lastname}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label><b>Service Vendor</b></label>
+                                                    <div class="input-group">
+                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                            title="Service Vendor" name="vendor_id" multiple data-live-search="true"> 
+                                                            @foreach($hospital->services as $vendor)
+                                                            <option value="{{$vendor->id}}">{{$vendor->name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-5">
+                                                    <label><b>Warranty Expiration</b></label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control datepicker" name="warranty_expiration"/>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -307,26 +324,11 @@
     <script>
         $('#add_new_item').on('submit', function(e){
             e.preventDefault();
-            $('#btn_save').html('<i class="now-ui-icons loader_refresh spin"></i>');
-            var form_data = $(this).serialize();
-            $(this).find('input, textarea, select').prop('disabled',true);
-            request = $.ajax({
-                url: '/api/equipment/add_equipment',
-                method: 'post',
-                data: form_data+'&hospital_id={{Auth::user()->hospital_id}}',
-                success: function(data, status){
-                    $('#btn_save').html('Save');
-                    $('#add_new_item').find('input, textarea, select').prop('disabled', false);
-                    $('#add_new_item').find('.resetable').val(null);
-                    $('#btn_reset').val('Reset');
-                    presentNotification('Item successfully added', 'info', 'top', 'right');
-                },
-                error: function(xhr, desc, err){
-                    $('#btn_save').html('Save');
-                    $('#add_new_item').find('input, textarea, select').prop('disabled', false);
-                    presentNotification('Could not save the item. Try again.', 'danger', 'top', 'right');
-                }
-            });
+
+            let data = new FormData(this);
+            data.append("hospital_id", '{{Auth::user()->hospital_id}}');
+            let btn = $(this).find('[type="submit"]');
+            submit_file_form("/api/asset/add", "post", data, undefined, btn, true);
         });
 
         $(document).ready(function () {
@@ -336,5 +338,30 @@
 
         demo.initDateTimePicker();
         });
+
+        $('.form-check-input').on("change", function(){
+            if($(this).prop("checked") == false){
+                $('#ud_label').html('Unit');
+                $("#department_div").css("display", "none");
+                $("#unit_div").css("display", "block");
+                $('[name="unit_id"]').val(null);
+                $('[name="unit_id"]').selectpicker("refresh");
+            }else{
+                $('#ud_label').html('Department');
+                $("#department_div").css("display", "block");
+                $("#unit_div").css("display", "none");
+                $('[name="department_id"]').val(null);
+                $('[name="department_id"]').selectpicker("refresh");
+            }
+        });
+
+        $('#procurement_type').on("change", function(){
+            if($(this).val() == "Donation"){
+                $("#div_donor").css("display", "block");
+            }else{
+                $("#div_donor").css("display", "none");
+                $('[name="donation"]').val(null);
+            }   
+        })
     </script>
 @endsection

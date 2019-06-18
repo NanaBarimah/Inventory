@@ -34,8 +34,8 @@ Route::middleware('auth:api')->group(function(){
 
     Route::post('spare-part/add', 'PartController@store');
     Route::put('spare-part/update/{part}', 'PartController@update');
-    Route::get('equipment/', 'EquipmentController@index');
-    Route::post('equipment/add_equipment', 'EquipmentController@store');
+    Route::get('assets', 'AssetController@index');
+    Route::post('asset/add', 'AssetController@store');
     Route::get('equipment/{equipment}', 'EquipmentController@show');
     Route::put('equipment/update/{equipment}', 'EquipmentController@update');
 
