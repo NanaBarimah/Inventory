@@ -26,4 +26,9 @@ class Department extends Model
     {
         return $this->hasMany('App\Asset');
     }
+
+    public function hospital()
+    {
+        return $this->belongsTo('App\Hospital');
+    }
 }
