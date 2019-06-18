@@ -6,6 +6,7 @@ use App\Asset;
 use App\Service_Vendor;
 use App\AssetCategory;
 use App\Department;
+use App\Part;
 
 use Auth;
 use Illuminate\Http\Request;
@@ -31,12 +32,9 @@ class AssetController extends Controller
     {
         //
         $user = Auth::user();
-
-        $vendors = Service_Vendor::where('hospital_id', $user->hospital_id)->get();
-        $assets = Asset::where('hospital_id', $user->hospital_id)->get();
-        $asset_categories = AssetCategory::where('hospital_id', $user->hospital_id)->get();
-        $departments = Department::with('units')->where('hospital_id', $user->hospital_id)->get();
-        return view('add-item', compact("vendors", "asset_categories", "departments"));
+        $hospital = Hospital::with("assets", "asset_categories", "departments",
+         "departments.units", "services", "parts", "users")->where("id", $user->hospital_id);
+        return view('add-item', compact("hospital"));
     }
 
     /**

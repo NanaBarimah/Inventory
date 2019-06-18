@@ -122,7 +122,7 @@
             $request = $.ajax({
                 url: '/api/departments/add',
                 method: 'post',
-                data: data+'&hospital_id='+{{Auth::user()->hospital_id}},
+                data: data+'&hospital_id={{Auth::user()->hospital_id}}',
                 success: function(data, status){
                     $('#btn_submit').html('Save');
                     $('#add_new_dept_form').find('input').prop('disabled', false);

@@ -98,7 +98,7 @@
                                 <div class="tab-pane fade" id="account">
                                     <h5 class="info-text">Now provide further information that will help locate this device</h5>
                                     <div class="row justify-content-center">
-                                        <div class="col-lg-11 mb-2">
+                                        <div class="col-lg-11 mb-3">
                                             <div class="row">
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b>Category</b></label>
@@ -144,14 +144,18 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-12">
-                                                    <label><b>Purchase Date</b></label>
+                                                    <label><b>Status</b> <span class="text-danger">*</span></label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="purchasess_date"/>
+                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                            title="Status" name="status" required="true">
+                                                            <option>Good</option>
+                                                            <option>Bad</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-11">
+                                        <div class="col-lg-11 mb-3">
                                             <div class="row">
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b>Installation Date</b></label>
@@ -166,14 +170,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-12">
-                                                    <label><b>Purchase Price (in GHS)</b></label>
+                                                    <label><b>Purchase Date</b></label>
                                                     <div class="input-group">
-                                                        <input type="number" step="0.01" class="form-control datepicker" name="purchase_price"/>
+                                                        <input type="text" class="form-control datepicker" name="purchasess_date"/>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-11">
+                                        <div class="col-lg-11 mb-3">
                                             <div class="row">
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b>Parent Equipment</b></label>
@@ -187,20 +191,49 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-12">
-                                                    <label><b>Possible Replacement Date</b></label>
+                                                    <label><b>Availability</b> <span class="text-danger">*</span></label>
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control datepicker" name="pos_rep_date"/>
+                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                            title="Availablity" name="availability" required="true">
+                                                            <option>Operational</option>
+                                                            <option>Not Operational</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b>Purchase Price (in GHS)</b></label>
                                                     <div class="input-group">
-                                                        <input type="number" step="0.01" class="form-control datepicker" name="purchase_price"/>
+                                                        <input type="number" step="0.01" class="form-control" name="purchase_price"/>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+                                        <div class="col-lg-11 mb-3">
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label><b>Specific Location</b></label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="purchase_price"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label><b>Procurement Type</b> <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                            title="Procurement Type" name="procurement_type" required="true">
+                                                            <option>Self Purchase</option>
+                                                            <option>Donation</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4" id="div_donor" style="display:none;">
+                                                    <label><b>Donor</b></label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" name="donor"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="address">
@@ -209,11 +242,11 @@
                                             <h5 class="info-text"> Finally, a little information to help with
                                                 maintenance </h5>
                                         </div>
-                                        <div class="col-lg-8">
+                                        <div class="col-lg-11">
                                         <div class="row">
                                             <div class="col-sm-12 col-md-6">
-                                                    <select class="col-md-12 selectpicker" data-style="btn btn-purple btn-round"
-                                                    title="Maintenance Frequency" name="maintenance_frequency"> 
+                                                <select class="col-md-12 selectpicker" data-style="btn btn-purple btn-round"
+                                                    title="Associated Parts" name="parts"> 
                                                     <option value="1">1 month</option>
                                                     <option value="2">2 months</option>
                                                     <option value="3">3 months</option>
@@ -280,7 +313,7 @@
             request = $.ajax({
                 url: '/api/equipment/add_equipment',
                 method: 'post',
-                data: form_data+'&hospital_id='+{{Auth::user()->hospital_id}},
+                data: form_data+'&hospital_id={{Auth::user()->hospital_id}}',
                 success: function(data, status){
                     $('#btn_save').html('Save');
                     $('#add_new_item').find('input, textarea, select').prop('disabled', false);

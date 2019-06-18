@@ -169,7 +169,7 @@
             e.preventDefault();
 
             let data = new FormData(this);
-            data.append("hospital_id", {{Auth::user()->hospital_id}});
+            data.append("hospital_id", '{{Auth::user()->hospital_id}}');
             let btn = $(this).find('[type="submit"]');
             submit_file_form("/api/spare-part/add", "post", data, undefined, btn, true);
         });
