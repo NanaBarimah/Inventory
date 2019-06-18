@@ -25,7 +25,7 @@ class CreateAssetsTable extends Migration
             $table->string('user_id')->nullable();
             $table->date('installation_date')->nullable();
             $table->string('status');
-            $table->string('availabilty');
+            $table->string('availability');
             $table->text('description')->nullable();
             $table->string('area')->nullable();
             $table->string('department_id')->nullable();

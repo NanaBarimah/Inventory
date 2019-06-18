@@ -36,6 +36,13 @@ class Admin extends Authenticatable
 
     public $incrementing  = false;
 
+    public function setPasswordAttribute($password)
+    {
+        if ( !empty($password) ) {
+            $this->attributes['password'] = bcrypt($password);
+        }
+    }
+
     /**
      * Get the region that has these admins.
      */

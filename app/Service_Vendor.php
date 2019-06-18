@@ -33,4 +33,9 @@ class Service_Vendor extends Model
     {
         return $this->hasMany('App\Asset');
     }
+
+    public function purchase_orders()
+    {
+        return $this->hasMany('App\PurchaseOrder');
+    }
 }
