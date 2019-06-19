@@ -24,4 +24,9 @@ class Priority extends Model
     {
         return $this->hasMany('App\WorkOrder');
     }
+
+    public function requests()
+    {
+        return $this->hasMany('App\Requests');
+    }
 }

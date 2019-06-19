@@ -45,7 +45,7 @@ class FileController extends Controller
             foreach($request->file('name') as $file){
                 $fileName = $file->getClientOriginalName();
                 $fileName = time(). '-' . $fileName->hashName();
-                $file->move('files', $fileName);
+                $file->move(public_path().'/files/assets/file/', $fileName);
                 $data[] = $fileName;
             }
         }

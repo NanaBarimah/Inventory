@@ -48,15 +48,6 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Hospital');
     }
-    
-    /**
-     * Get the records for the user.
-     */
-    public function records()
-    {
-        return $this->hasMany('App\Record');
-    }
-
 
     /**
      * Get the maintenances by the user.
@@ -71,10 +62,11 @@ class User extends Authenticatable
     {
         return $this->where('email', $email)->first();
     }
-
-    /*public function unit(){
-       return $this->belongsTo('App\Unit', 'user_id');
-    }*/
+    
+    public function unit()
+    {
+        return $this->hasMany('App\Unit');
+    }
 
     public function asset()
     {
@@ -84,5 +76,10 @@ class User extends Authenticatable
     public function purchase_orders()
     {
         return $this->hasMany('App\PurchaseOrder');
+    }
+
+    public function requests()
+    {
+        return $this->hasMany('App\Requests');
     }
 }

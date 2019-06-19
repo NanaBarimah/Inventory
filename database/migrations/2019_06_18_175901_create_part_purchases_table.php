@@ -18,6 +18,7 @@ class CreatePartPurchasesTable extends Migration
             $table->string('purchase_order_id');
             $table->string('part_name')->nullable();
             $table->integer('quantity')->default(1);
+            $table->decimal('unit_cost', 10, 2);
             $table->timestamps();
             $table->softDeletes();
 

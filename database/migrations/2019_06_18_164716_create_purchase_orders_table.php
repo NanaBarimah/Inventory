@@ -34,6 +34,7 @@ class CreatePurchaseOrdersTable extends Migration
             $table->string('contact_number')->nullable();
             $table->string('contact_name')->nullable();
             $table->smallInteger('status')->default(2);
+            $table->smallInteger('is_fulfilled')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

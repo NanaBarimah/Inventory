@@ -76,40 +76,69 @@ class RequestsController extends Controller
      */
     public function store(Request $request)
     {
-        $result = true;
         $request->validate([
-            'maintenance_type' => 'required',
-            'description' => 'required',
-            'region_id' => 'required'
+            'title'       => 'required',
+            'hospital_id' => 'required'
         ]);
 
-        $requests  = new Requests();
+        $work_request  = new Requests();
         
-        $requests->maintenance_type = $request->maintenance_type;
-        $requests->description = $request->description;
-        $equipment_codes = $request->equipment_codes;
+        $work_request->title         = $request->title;
+        $work_request->description   = $request->description;
+        $work_request->priority_id   = $request->priority_id;
+        $work_request->department_id = $request->department_id;
+        $work_request->unit_id       = $request->unit_id;
+        $work_request->asset_id      = $request->asset_id;
+        $work_request->hospital_id   = $request->hospital_id;
 
-        if($requests->save()){
-            $result = false;
-            foreach($equipment_codes as $single){
-                $equipment_request = new Equipment_request();
-
-                $equipment_request->requests_id = $requests->id;
-                $equipment_request->equipment_code = $single;
-
-                $equipment_request->save();
-            }
-
-            $admin = Admin::where([['role', '=', 'Admin'], ['region_id', '=', $request->region_id]])->first();
-
-            $admin->notify(new RequestReceived($requests));
+        if($request->requested_by != null) {
+            $work_request->requested_by = $request->requested_by;
+        } else {
+            $work_request->requester_name   = $request->requester_name;
+            $work_request->requester_number = $request->requester_number;
+            $work_request->requester_email  = $request->requester_email;
         }
 
+        if($request->image != null) {
+            $request->validate([
+                'image'   => 'mimes:png,jpg,jpeg'
+            ]);
+
+            $file = $request->file('image');
+
+            $name = md5($file->getClientOriginalName()).'.'.$file->getClientOriginalExtension();
+            $file->move(public_path().'/img/assets/request/', $name);
+            
+            $work_request->image = $name;
+         }
+
+         if($request->fileName != null) {
+             $request->validate([
+                'fileName'   => 'required',
+                'fileName' => 'mime:doc,pdf,docx,zip'
+             ]);
+            $name = $file->getClientOriginalName();
+            $name = time(). '-' . $name;
+            $file->move(public_path().'/file/assets/RequestFile', $name);
+            $work_request->fileName = $name;
+         }
+
+         if($work_request->save()) {
+             if(User::where([['role', 'Admin'], ['id', $request->requested_by]])->first() == null) {
+                $user = User::where([['role', 'Admin'], ['hospital_id', $request->hospital_id]])->first();
+                $user->notify(new RequestReceived($work_request));
+             }
+            
+            return response()->json([
+                'error' => false,
+                'data' => $work_request,
+                'message' => 'Request created successfully'
+            ]);
+         }
+
         return response()->json([
-            'error' => $result,
-            'data' => $requests,
-            'equipment' => $equipment_codes,
-            'message' => !$result ? 'Requests created successfully' : 'Error creating requests'
+            'error' => true,
+            'message' => 'Error creating request'
         ]);
     }
 
@@ -158,7 +187,52 @@ class RequestsController extends Controller
         //
     }
 
-    public function adminIndex(){
+    public function approve(Requests $work_request, Request $request)
+    {
+        $work_request->approve();
+
+        $work_request->response = $request->response;
+
+        if($work_request->save()) {
+            $work_order = new WorkOrder();
+
+            if($work_order->save()) {
+
+            } else {
+                
+            }
+            return response()->json([
+                'error'   => false,
+                'message' => 'Work order request approved'
+            ]);
+        } 
+
+        return response()->json([
+            'error'   => true,
+            'message' => 'Could not approve work order request. Try Again!'
+        ]);
+    }
+
+    public function decline(Requests $work_request, Request $request)
+    {
+        $work_request->decline();
+
+        $work_request->reason = $request->reason;
+
+        if($work_request->save()) {
+            return response()->json([
+                'error'   => false,
+                'message' => 'Work order request declined'
+            ]);
+        } 
+
+        return response()->json([
+            'error'   => true,
+            'message' => 'Could not decline work order request. Try Again!'
+        ]);
+    }
+
+    /*public function adminIndex(){
         $requests = Requests::with('equipments', 'equipments.hospital')->whereHas('equipments', function($q){
             $q->whereHas('hospital', function($qr){
                 $qr->whereHas('district', function($qry){
@@ -168,7 +242,7 @@ class RequestsController extends Controller
         })->orderBy('is_checked', 'desc')->get();
         $engineers = Admin::where('role', '=', 'Biomedical Engineer')->get();
         return view('admin.requests')->with('requests', $requests)->with('engineers', $engineers);
-    }
+    }*/
 
     public function assign(Request $request){
 

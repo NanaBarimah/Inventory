@@ -28,4 +28,19 @@ class PurchaseOrder extends Model
     {
         return $this->belongsToMany('App\Part', 'part_purchases')->withTimestamps();
     }
+
+    public function approve()
+    {
+        $this->attribute['status'] = 1;
+    }
+
+    public function decline()
+    {
+        $this->attribute['status'] = 0;
+    }
+
+    public function order_items()
+    {
+        return $this->hasMany('App\OrderItem');
+    }
 }

@@ -58,9 +58,9 @@ class RequestReceived extends Notification
     {
         return [
             'title' => 'New maintenance request',
-            'message' => 'You have received a new request to carry out '.$this->request->maintenance_type,
+            'message' => 'You have received a new work order request from '. $this->request->requested_by ? $this->request->requested_by : $this->request->requester_name.' (Requester User)',
             'data' => $this->request,
-            'action' => '/admin/requests'
+            'action' => '/requests'
         ];
     }
 }
