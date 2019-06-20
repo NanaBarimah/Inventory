@@ -7,12 +7,44 @@
             </div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
-                    <li>
-                        <a href="/home">
-                            <i class="now-ui-icons business_bank"></i>
-                            <p>Dashboard</p>
-                        </a>
                     </li>
+                    @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head')
+                    <li>
+                        <a data-toggle="collapse" href="#maintenanceList">
+                            <i class="now-ui-icons ui-2_settings-90"></i>
+                            <p>Work Orders
+                                <b class="caret"></b>
+                            </p>
+                        </a>
+                        <div class="collapse" id="maintenanceList">
+                            <ul class="nav">
+                                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer')
+                                <li>
+                                    <a href="/maintenance">
+                                        <span class="sidebar-normal">New Maintenance Report</span>
+                                    </a>
+                                </li>
+                                @endif
+                                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head' || strtolower(Auth::user()->role) == 'engineer')
+                                <li>
+                                    <a href="/request-maintenance">
+                                        <span class="sidebar-normal">Request Maintenance</span>
+                                    </a>
+                                </li>
+                                @endif
+                                <li>
+                                    <a href="/maintenance/history">
+                                        <span class="sidebar-normal">Maintenance History</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/schedule">
+                                        <p>Scheduler</p></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    @endif
                     <li>
                         <a data-toggle="collapse" href="#inventoryList">
                             <i class="now-ui-icons design_bullet-list-67"></i>
@@ -44,49 +76,15 @@
                     </li>
                     <li>
                         <a href="/vendors">
-                            <i class="now-ui-icons shopping_cart-simple"></i>
+                            <i class="now-ui-icons shopping_box"></i>
                             <p>Service Vendors</p>
                         </a>
                     </li>
-                    @endif
-                    @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head')
                     <li>
-                        <a data-toggle="collapse" href="#maintenanceList">
-                            <i class="now-ui-icons ui-2_settings-90"></i>
-                            <p>Maintenance
-                                <b class="caret"></b>
-                            </p>
+                        <a href="/purchase-orders">
+                            <i class="now-ui-icons shopping_cart-simple"></i>
+                            <p>Purchase Orders</p>
                         </a>
-                        <div class="collapse" id="maintenanceList">
-                            <ul class="nav">
-                                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer')
-                                <li>
-                                    <a href="/maintenance">
-                                        <span class="sidebar-normal">New Maintenance Report</span>
-                                    </a>
-                                </li>
-                                @endif
-                                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head' || strtolower(Auth::user()->role) == 'engineer')
-                                <li>
-                                    <a href="/request-maintenance">
-                                        <span class="sidebar-normal">Request Maintenance</span>
-                                    </a>
-                                </li>
-                                @endif
-                                <li>
-                                    <a href="/maintenance/history">
-                                        <span class="sidebar-normal">Maintenance History</span>
-                                    </a>
-                                </li>
-                                @if(strtolower(Auth::user()->role) == 'unit head' || strtolower(Auth::user()->is_unit_head) == 1)
-                                <li>
-                                    <a href="/approve">
-                                        <span class="sidebar-normal">Maintenance Approvals</span>
-                                    </a>
-                                </li>
-                                @endif
-                            </ul>
-                        </div>
                     </li>
                     @endif
                     @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin')
@@ -95,13 +93,6 @@
                             <i class="now-ui-icons business_chart-pie-36"></i>
                             <p>Reports</p>
                         </a>
-                    </li>
-                    @endif
-                    @if(strtolower(Auth::user()->role) == 'admin' && strtolower(Auth::user()->role) != 'engineer')
-                    <li>
-                        <a href="/schedule">
-                            <i class="now-ui-icons ui-1_calendar-60"></i>
-                            <p>Scheduler</p></a>
                     </li>
                     @endif
                     @if(strtolower(Auth::user()->role) == 'admin')

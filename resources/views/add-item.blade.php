@@ -88,7 +88,7 @@
                                                 </div>
                                                 <div class="form-group form-file-upload form-file-simple col-md-6">
                                                     <label><b>Image</b></label>
-                                                    <input type="text" class="form-control inputFileVisible" placeholder="Select file..." readonly>
+                                                    <input type="text" class="form-control inputFileVisible" placeholder="Select file...">
                                                     <input type="file" class="inputFileHidden" name="image">
                                                 </div>
                                             </div>

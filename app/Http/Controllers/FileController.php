@@ -38,22 +38,21 @@ class FileController extends Controller
         $request->validate([
             'asset_id' => 'required',
             'name'     => 'required',
-            'name.*'   => 'mimes:doc, pdf, docx, zip'
+            'name'   => 'mimes:pdf,docx,doc,xls,xlsx,epub'
         ]);
 
         if($request->hasFile('name')) {
-            foreach($request->file('name') as $file){
-                $fileName = $file->getClientOriginalName();
-                $fileName = time(). '-' . $fileName->hashName();
-                $file->move(public_path().'/files/assets/file/', $fileName);
-                $data[] = $fileName;
-            }
+            $file = $request->file('name');
+            $fileName = $file->getClientOriginalName();
+            $fileName = time(). '-' . $fileName;
+            $file->move('files', $fileName);
         }
 
         $file = new File();
 
         $file->asset_id = $request->asset_id;
-        $file->name     = json_encode($data);
+        $file->name     = $fileName;
+        $file->id = md5($file->nam.microtime());
 
         if($file->save()) {
             return response()->json([
