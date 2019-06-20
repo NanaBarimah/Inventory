@@ -78,7 +78,7 @@ class User extends Authenticatable
 
     public function asset()
     {
-        return $this->belongsTo('App\User');
+        return $this->hasMany('App\User');
     }
 
     public function purchase_orders()

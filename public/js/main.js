@@ -422,8 +422,22 @@ appFunctions = {
             error: (xhr) => {
                 button.prop('disabled', false);
                 button.html(initial_text);
+                let msg;
                 
-                presentNotification(xhr.responseText, 'danger', 'top', 'right');       
+                switch(xhr.statusCode){
+                    case 404:
+                        msg = "The requested URL was not found on this server";
+                        break;
+                    case 500:
+                        msg = "Internal Server error";
+                        break;
+                    case 422:
+                        msg = "Could not process your request. Try again";
+                        break;
+                    default:
+                        msg = "Error processing your request"
+                }
+                presentNotification(msg, 'danger', 'top', 'right');       
             }
         })
     }
@@ -484,7 +498,20 @@ appFunctions = {
                 button.prop('disabled', false);
                 button.html(initial_text);
                 
-                presentNotification(xhr.responseText, 'danger', 'top', 'right');       
+                switch(xhr.statusCode){
+                    case 404:
+                        msg = "The requested URL was not found on this server";
+                        break;
+                    case 500:
+                        msg = "Internal Server error";
+                        break;
+                    case 422:
+                        msg = "Could not process your request. Try again";
+                        break;
+                    default:
+                        msg = "Error processing your request"
+                }
+                presentNotification(msg, 'danger', 'top', 'right');       
             }
         })
     }

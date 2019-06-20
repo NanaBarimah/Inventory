@@ -34,8 +34,19 @@ Route::middleware('auth:api')->group(function(){
 
     Route::post('spare-part/add', 'PartController@store');
     Route::put('spare-part/update/{part}', 'PartController@update');
+    
     Route::get('assets', 'AssetController@index');
     Route::post('asset/add', 'AssetController@store');
+    Route::put('asset/{asset}/update', 'AssetController@update');
+    Route::delete('asset/{asset}/delete', 'AssetController@delete');
+    Route::get('asset/{asset}/get-parts', 'AssetController@getParts');
+    Route::get('asset/{asset}/get-files', 'AssetController@getFiles');
+    Route::get('asset/{asset}/get-children', 'AssetController@getChildren');
+    Route::get('asset/{asset}/depreciation', 'AssetController@depreciation');
+    Route::post('asset/{asset}/toggle', 'AssetController@toggle');
+    
+    Route::post('file/add', 'FileController@store');
+    
     Route::get('equipment/{equipment}', 'EquipmentController@show');
     Route::put('equipment/update/{equipment}', 'EquipmentController@update');
 

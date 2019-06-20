@@ -443,3 +443,15 @@ input[type=number]::-webkit-outer-spin-button {
   transform: scale(1.05);
   transition: .5s;
 }
+
+.operational{
+  width: 24px;
+  height: 24px;
+  background-color: red;
+}
+
+.non_operational{
+  width: 24px;
+  height: 24px;
+  background-color: green;
+}

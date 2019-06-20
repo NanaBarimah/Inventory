@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Asset;
 use App\Hospital;
+use App\AssetCategory;
 
 use Auth;
 use Illuminate\Http\Request;
+
+use DB;
+use Carbon;
 
 class AssetController extends Controller
 {
@@ -117,10 +121,17 @@ class AssetController extends Controller
      * @param  \App\Asset  $asset
      * @return \Illuminate\Http\Response
      */
-    public function show(Asset $asset)
+    public function show($asset)
     {
         //
-        return view("asset-details", compact("asset"));
+        $asset = Asset::with("unit", "department", "asset_category", "service_vendor")->where("id", $asset)->first();
+        
+        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with(["assets" => function($q) use ($asset){
+            $q->where("id", "<>", $asset->id);
+        }])->with("asset_categories", 
+        "departments", "departments.units", "services", "users")->first();
+
+        return view("asset-details", compact("asset", "hospital"));
     }
 
     /**
@@ -143,20 +154,33 @@ class AssetController extends Controller
      */
     public function update(Request $request, Asset $asset)
     {
-        $request->installation_time = $this->formatDate($request->installation_time);
-        $request->pos_rep_date = $this->formatDate($request->pos_rep_date);
+        if($request->image != null){
+            $file = $request->file('image');
 
-        $equipment->installation_time = $request->installation_time;
-        $equipment->pos_rep_date = $request->pos_rep_date;
-        $status = $equipment->update(
-            $request->only(['name', 'parent_id', 'availability','asset_code', 'serial_number', 
-            'model_number', 'manufacturer_name', 'description', 'asset_category_id', 
-            'department_id', 'unit_id', 'status', 'area', 'purchase_date', 'purchase_price', 
-            'service_vendor_id', 'reason', 'warranty_expiration'])
-        );
+            $name = md5($file->getClientOriginalName()).'.'.$file->getClientOriginalExtension();
+            $file->move(public_path().'/img/assets/equipment/', $name);
+            
+            $asset->image = $name;
+        }
+
+        $asset->name = $request->name;
+        $asset->parent_id = $asset->parent_id;
+        $asset->serial_number = $asset->serial_number;
+        $asset->model_number = $asset->model_number;
+        $asset->manufacturer_name = $request->manufacturer_name;
+        $asset->description = $request->description;
+        $asset->asset_category_id = $request->asset_category_id;
+        $asset->area = $request->area;
+        $asset->service_vendor_id = $request->service_vendor_id;
+        $asset->installation_date = date('Y-m-d', strtotime($request->installation_date));
+        $asset->pos_rep_date = date('Y-m-d' , strtotime($request->pos_rep_date));
+        $asset->purchase_date = date('Y-m-d', strtotime($request->purchase_date));
+        $asset->warranty_expiration = date('Y-m-d', strtotime($request->warranty_expiration));
+        
+        $status = $asset->update();
 
         return response()->json([
-            'data' => $equipment,
+            'data' => $asset,
             'message' => $status ? 'Equipment Updated' : 'Error updating equipment'
         ]);
     }
@@ -170,9 +194,88 @@ class AssetController extends Controller
     public function destroy(Asset $asset)
     {
         //
+        if($asset->delete()){
+            return response()->json([
+                "error" => false,
+                "message" => "Asset deleted" 
+            ]);
+        }
+
+        return response()->json([
+            "error" => true,
+            "message" => "Could not delete asset deleted"
+        ]);
+    }
+
+    public function getParts(Asset $asset){
+        return response()->json($asset->parts()->get());
+    }
+
+    public function getFiles(Asset $asset){
+        return response()->json($asset->files()->get());
+    }
+
+    public function getChildren(Asset $asset){
+        return response()->json($asset->children()->get());
+    }
+
+    public function assignChildren(Requet $request, Asset $asset){
+        $request->validate([
+            "children" => "required"
+        ]);
+
+        $asset->children()->attach($request->children);
+        
+        return response()->json([
+            "error" => false,
+            "message" => "Child assets assigned"
+        ]);
+    }
+
+    public function depreciation(Asset $asset){
+        $downtime = DB::select(DB::raw("SELECT SUM(TIMESTAMPDIFF(hour, time_up, time_down)) as downtime from down_time where asset_id = '$asset->id'"))[0];
+        $running_time = Carbon\Carbon::parse($asset->created_at)->diffInHours(Carbon\Carbon::now());
+        return response()->json([
+            "downtime" => $downtime,
+            "running_time" => $running_time
+        ]);
+    }
+
+    public function toggle(Request $request, Asset $asset){
+        $request->validate([
+            "availability" => "required",
+            "status" => "required"
+        ]);
+
+        $asset->availability = $request->availability;
+        $asset->status = $request->status;
+
+        if($asset->save()){
+            $query = DB::select(DB::raw("SELECT COUNT(id) as kount FROM down_time where asset_id = '$asset->id' AND time_up IS NULL"))[0];
+            if(strtolower($asset->availability) == "operational"){
+               if($query->kount > 0){
+                    $query = DB::statement("UPDATE down_time SET time_up = NOW() where asset_id = '$asset->id' and time_up IS NULL");
+               }
+            }else{
+               if($query->kount == 0){
+                    $query = DB::statement("INSERT INTO down_time(time_down, asset_id) VALUES (NOW(), '$asset->id')");
+               }
+            }
+
+            return response()->json([
+                "error" => false,
+                "message" => "Asset updated"
+            ]);
+        }
+
+        return response()->json([
+            "error" => true,
+            "message" => "Update failed"
+        ]);
     }
 
     private function formatDate($date){
         return date("Y-m-d H:i:s", strtotime(stripslashes($date)));
     }
+    
 }

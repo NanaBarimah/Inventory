@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/categories', 'CategoryController@index')->name('categories');
     Route::get('/spare-parts', 'PartController@index')->name('spare-parts');
     Route::get('/spare-part/{part}', 'PartController@show')->name('spare-part.show');
+    Route::get('/purchase-orders', 'PurchaseOrderController@index')->name('purchase-orders');
 });
 
 
