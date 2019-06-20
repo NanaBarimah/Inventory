@@ -69,4 +69,9 @@ class Asset extends Model
     {
         return $this->belongsTo('App\Hospital');
     }
+
+    public function requests()
+    {
+        return $this->hasMany('App\Requests');
+    }
 }

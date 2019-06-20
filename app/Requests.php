@@ -10,20 +10,43 @@ class Requests extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'maintenance_type', 'description', 'assigned_to', 'scheduled_for'
+        'title', 'description', 'priority_id', 'image', 'department_id', 'unit_id',
+        'asset_id', 'requested_by', 'fileName', 'requester_name', 'requester_number',
+        'requester_email', 'reason', 'response',
     ];
 
-    public function equipment_requests()
+    public function approve()
     {
-        return $this->hasMany('App\Equipment_request');
+        $this->attributes['status'] = 1;
     }
 
-    public function equipments()
+    public function decline()
     {
-        return $this->belongsToMany('App\Equipment', 'equipment_requests')->withTimestamps();
+        $this->attributes['status'] = 0;
     }
 
-    public function engineer(){
-        return $this->hasOne('App\Admin', 'id', 'assigned_to');
+    public function priority()
+    {
+       return $this->belongsTo('App\Priority');
+    }
+
+    public function department()
+    {
+       return $this->belongsTo('App\Department');
+    }
+
+    public function unit()
+    {
+       return $this->belongsTo('App\Unit');
+    }
+
+    public function asset()
+    {
+       return $this->belongsTo('App\Asset');
+    }
+
+    public function user()
+    {
+       return $this->belongsTo('App\User');
     }
 }

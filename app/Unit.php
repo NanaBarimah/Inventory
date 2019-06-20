@@ -22,17 +22,18 @@ class Unit extends Model
         return $this->belongsTo('App\Department');
     }
 
-    public function equipments()
+    public function user()
     {
-        return $this->hasMany('App\Equipment');
-    }
-
-    public function user(){
         return $this->belongsTo('App\User');
     }
 
     public function assets()
     {
         return $this->hasMany('App\Asset');
+    }
+
+    public function requests()
+    {
+        return $this->hasMany('App\Requests');
     }
 }

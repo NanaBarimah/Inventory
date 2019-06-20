@@ -72,7 +72,28 @@ class PurchaseOrderController extends Controller
             $purchaseOrder->PO_number = $last_PO_number->PO_number + 1;
         }
 
+        if(User::where([['id', $request->added_by], ['role', 'Admin']])->first() != null) {
+            $purchaseOrder->approve();
+        } else {
+            $purchaseOrder->status = 2;
+        }
+
         if($purchaseOrder->save()) {
+            if($request->orderitems != null) {
+                $orderItems = array();
+                foreach($request->orderitems as $item){
+                    $orderItem = new OrderItem();
+                    $orderItem->purchase_order_id = $purchaseOrder->id;
+                    $orderItem->part_id = $item['part_id'];
+                    $orderItem->quantity = $item['quantity'];
+                    $orderItem->unit_cost = $item['unit_cost'];
+                    $orderItem->part_name = $item['part_name'];
+
+                    array_push($orderItems, $orderItem);
+                }
+
+                OrderItem::insert($orderItems);
+            }
             return response()->json([
                 'error'   => false,
                 'data'    => $purchaseOrder,
@@ -129,5 +150,65 @@ class PurchaseOrderController extends Controller
     public function destroy(PurchaseOrder $purchaseOrder)
     {
         //
+    }
+
+    public function approve(PurchaseOrder $purchaseOrder) 
+    {
+        $purchaseOrder->approve();
+        
+        if($purchaseOrder->save()){
+            return response()->json([
+                'error' => false,
+                'message' => "Purchase order approved"
+            ]);
+        }
+
+        return response()->json([
+            'error' => true,
+            'message' => "Could not approve purchase order, try again!"
+        ]);
+    }
+
+    public function fulfill(Request $request)
+    {
+        $purchaseOrder = PurchaseOrder::with("order_items")->where('id', $request->id)->first();
+
+        $purchaseOrder->is_fulfilled = 1;
+
+        if($purchaseOrder->save()){
+            foreach($purchaseOrder->order_items as $item){
+                if($item->part_id == null){
+                    $part = new Part();
+                    $part->name = $item->name;
+                    $part->id = md5($part->name.microtime());
+                    $part->quantity = $item->quantity;
+                    $part->min_quantity = 0;
+                    $part->hospital_id = $purchaseOrder->hospital_id;
+                }else{
+                    $part = Part::where('id', $item->part_id)->first();
+                    $part->quantity += $item->quantity;
+                }
+
+                $part->save();
+            }
+        }
+
+    }
+
+    public function decline(PurchaseOrder $purchaseOrder)
+    {
+        $purchaseOrder->decline();
+
+        if($purchaseOrder->save()) {
+            return response()->json([
+                'error'   => false,
+                'message' => 'Purchase order declined'
+            ]);
+        }
+
+        return response()->json([
+            'error'   => true,
+            'message' => 'Could not decline purchase order, try again!'
+        ]);
     }
 }
