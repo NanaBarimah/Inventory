@@ -9,6 +9,10 @@ class PurchaseOrder extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+
+    public $incrementing = false;
+
     public function service_vendor()
     {
         return $this->belongsTo('App\Service_Vendor');
@@ -42,5 +46,10 @@ class PurchaseOrder extends Model
     public function order_items()
     {
         return $this->hasMany('App\OrderItem');
+    }
+
+    public function work_order()
+    {
+        return $this->belongsTo('App\WorkOrder');
     }
 }

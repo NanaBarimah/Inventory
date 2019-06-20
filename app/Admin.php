@@ -12,7 +12,11 @@ class Admin extends Authenticatable
 {
     use Notifiable, SoftDeletes, HasApiTokens;
 
-    protected $guard = 'admin';  
+    protected $guard = 'admin'; 
+    
+    protected $primaryKey = 'id';
+
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
@@ -59,4 +63,8 @@ class Admin extends Authenticatable
         // return $this->where('username', $username)->where('is_admin', 1)->first();
     }
 
+    public function work_orders()
+    {
+        return $this->hasMany('App\WorkOrder');
+    }
 }

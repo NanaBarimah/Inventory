@@ -36,4 +36,9 @@ class Unit extends Model
     {
         return $this->hasMany('App\Requests');
     }
+
+    public function work_orders()
+    {
+        return $this->hasMany('App\WorkOrder');
+    }
 }

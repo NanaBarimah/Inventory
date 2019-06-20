@@ -64,12 +64,12 @@ class PurchaseOrderController extends Controller
         $purchaseOrder->contact_number    = $request->contact_number;
         $purchaseOrder->contact_name      = $request->contact_name;
  
-        $last_PO_number = PurchaseOrder::where('hospital_id', Auth::user()->id)->latest()->first();
+        $last_po_number = PurchaseOrder::where('hospital_id', Auth::user()->id)->latest()->first();
 
-        if($last_PO_number == null) {
-            $purchaseOrder->PO_number = 1;
+        if($last_po_number == null) {
+            $purchaseOrder->po_number = 1;
         } else {
-            $purchaseOrder->PO_number = $last_PO_number->PO_number + 1;
+            $purchaseOrder->po_number = $last_po_number->po_number + 1;
         }
 
         if(User::where([['id', $request->added_by], ['role', 'Admin']])->first() != null) {

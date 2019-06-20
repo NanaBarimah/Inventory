@@ -80,4 +80,9 @@ class Hospital extends Model
     {
         return $this->hasMany('App\PurchaseOrder');
     }
+
+    public function work_orders()
+    {
+        return $this->hasMany('App\WorkOrder');
+    }
 }

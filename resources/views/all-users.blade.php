@@ -31,16 +31,17 @@
                                     <th class="disabled-sorting text-right">Action</th>
                                 </tr>
                             </tfoot>
+                            @foreach($users as $user)
                             <tbody>
                                 <tr class="uppercase">
                                     <td>
-                                        Kwame Gyan
+                                        {{$user->firstname.' '. $user->lastname}}
                                     </td>
-                                    <td style="text-transform:lowercase;">kwamegyan@codbitgh.com</td>
-                                    <td>Admin</td>
-                                    <td>0244111666</td>
-                                    <td>Senior Engineer</td>
-                                    <td><span class="badge badge-success">Active</span></td>
+                                    <td style="text-transform:lowercase;">{{$user->email}}</td>
+                                    <td>{{$user->role}}</td>
+                                    <td>{{$user->phone_number}}</td>
+                                    <td>{{$user->job_title}}</td>
+                                    <td><span class="badge badge-success" onclick="setActive('{{$user->id}}', this)">Active</span></td>
                                     <td class="text-right">
                                         <div class="dropdown">
                                             <button type="button"
@@ -56,6 +57,7 @@
                                     </td>
                                 </tr>
                             </tbody>
+                            @endforeach
                         </table>
                     </div>
                 </div>

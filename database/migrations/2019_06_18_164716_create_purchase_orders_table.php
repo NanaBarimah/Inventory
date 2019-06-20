@@ -16,7 +16,7 @@ class CreatePurchaseOrdersTable extends Migration
         Schema::create('purchase_orders', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('title');
-            $table->integer('PO_number');
+            $table->integer('po_number');
             $table->date('due_date');
             $table->string('service_vendor_id');
             $table->string('added_by');
@@ -35,6 +35,7 @@ class CreatePurchaseOrdersTable extends Migration
             $table->string('contact_name')->nullable();
             $table->smallInteger('status')->default(2);
             $table->smallInteger('is_fulfilled')->default(0);
+            $table->string('work_order_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
@@ -43,6 +44,8 @@ class CreatePurchaseOrdersTable extends Migration
             $table->foreign('added_by')->references('id')->on('users')
                   ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('hospital_id')->references('id')->on('hospitals')
+                  ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('work_order_id')->references('id')->on('work_orders')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
     }

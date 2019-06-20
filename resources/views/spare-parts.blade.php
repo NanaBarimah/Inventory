@@ -115,7 +115,7 @@
                         </div>
                         <div class="form-group col-md-4 col-sm-12">
                             <label><b>Category</b></label>
-                            <select class="selectpicker col-sm-12" title="Category" data-style="btn btn-purple" name="part_categories_id" required="true">
+                            <select class="selectpicker col-sm-12" title="Category" data-style="btn btn-purple" name="part_category_id" required="true">
                                 @foreach($part_categories as $category)
                                     <option value="{{$category->id}}">{{$category->name}}</option>
                                 @endforeach

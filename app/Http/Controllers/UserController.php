@@ -170,7 +170,7 @@ class UserController extends Controller
                'data'    => $user,
                'message' => 'User updated',
                'error' => false
-            ]);
+            ]); 
          }
          else
          {

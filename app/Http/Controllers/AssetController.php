@@ -76,12 +76,13 @@ class AssetController extends Controller
          $asset->manufacturer_name   = $request->manufacturer_name;
          $asset->service_vendor_id   = $request->service_vendor_id;
          $asset->hospital_id         = $request->hospital_id;
+         $asset->procurement_type    = $request->procurement_type;
          $asset->reason              = $request->reason;
          $asset->warranty_expiration = $request->warranty_expiration != null ? date('Y-m-d', strtotime($request->warranty_expiration)) : null;
 
          if($request->image != null) {
             $request->validate([
-                'image'   => 'mimes:png, jpg, jpeg'
+                'image'   => 'mimes:png,jpg,jpeg'
             ]);
 
             $file = $request->file('image');

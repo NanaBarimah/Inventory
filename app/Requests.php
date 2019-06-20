@@ -9,6 +9,10 @@ class Requests extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+
+    public $incrementing = false;
+
     protected $fillable = [
         'title', 'description', 'priority_id', 'image', 'department_id', 'unit_id',
         'asset_id', 'requested_by', 'fileName', 'requester_name', 'requester_number',

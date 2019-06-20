@@ -82,4 +82,19 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Requests');
     }
+
+    public function work_orders()
+    {
+        return $this->hasMany('App\WorkOrder');
+    }
+
+    public function work_order_teams()
+    {
+        return $this->belongsToMany('App\WorkOrder', 'teams', 'work_order_id', 'additional_workers')->withTimestamps();
+    }
+
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
 }
