@@ -71,4 +71,9 @@ class WorkOrder extends Model
     {
         return $this->hasMany('App\Comment');
     }
+
+    public function request()
+    {
+        return $this->belongsTo('App\Requests');
+    }
 }
