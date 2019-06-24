@@ -31,6 +31,7 @@ class CreateWorkOrdersTable extends Migration
             $table->string('department_id')->nullable();
             $table->string('unit_id')->nullable();
             $table->string('service_vendor_id')->nullable();
+            $table->string('request_id')->nullable();
             $table->string('fileName')->nullable();
             $table->smallInteger('is_local')->default(1);
             $table->timestamps();
@@ -51,6 +52,8 @@ class CreateWorkOrdersTable extends Migration
             $table->foreign('unit_id')->references('id')->on('units')
                   ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('service_vendor_id')->references('id')->on('service_vendors')
+                  ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('request_id')->references('id')->on('requests')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
     }

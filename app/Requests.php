@@ -53,4 +53,9 @@ class Requests extends Model
     {
        return $this->belongsTo('App\User');
     }
+
+    public function work_orders()
+    {
+        return $this->hasMany('App\WorkOrder');
+    }
 }
