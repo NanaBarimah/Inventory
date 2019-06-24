@@ -14,6 +14,7 @@ class CreatePartPurchasesTable extends Migration
     public function up()
     {
         Schema::create('part_purchases', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('part_id')->nullable();
             $table->string('purchase_order_id');
             $table->string('part_name')->nullable();

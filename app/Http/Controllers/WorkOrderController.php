@@ -35,7 +35,79 @@ class WorkOrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->vaildate([
+            'id'          => 'required',
+            'title'       => 'required',
+            'wo_number'   => 'required',
+            'hospital_id' => 'required'
+        ]);
+
+        $workOrder = new WorkOrder();
+
+        $workOrder->id                  = md5($request->title.microtime());
+        $workOrder->title               = $request->title;
+        $workOrder->description         = $request->description;
+        $workOrder->due_date            = date('Y-m-d', strtotime($request->due_date));
+        $workOrder->frequency           = $request->frequency;
+        $workOrder->estimated_durartion = $request->estimated_duration; 
+        $workOrder->priority_id         = $request->priority_id;
+        $workOrder->hospital_id         = $request->hospital_id;
+        $workOrder->fault_category_id   = $request->fault_category_id;
+        $workOrder->assigned_to         = $request->assigned_to;
+        $workOrder->admin_id            = $request->admin_id;
+        $workOrder->department_id       = $request->department_id;
+        $workOrder->unit_id             = $request->unit_id;
+        $workOrder->service_vendor_id   = $request->service_vendor_id;
+        $workOrder->request_id          = $request->request_id;
+
+        $last_wo_number = WorkOrder::where('hospital_id', Auth::user()->hospital_id)->latest()->get();
+        if($last_wo_number == null) {
+            $workOrder->wo_number = 1;
+        } else {
+            $workOrder->wo_number = $last_wo_number->wo_number + 1;
+        }
+
+        if($request->image != null) {
+            $request->validate([
+                'image' => 'required|mime:png,jpg,jpeg'
+            ]);
+
+            $file = $request->file('image');
+            $name = md5($file->getClientOriginalName()).'.'.$file->getClientOriginalExtension();
+            $file->move(public_path().'/img/assets/work_orders', $name);
+
+            $workOrder->image = $name;
+        }
+
+        if($request->hasFile('fileName')) {
+            $request->validate([
+                'fileName' => 'required|mime:doc,pdf,docx,zip'
+            ]);
+
+            $file = $request->file('fileName');
+            $name = time().'-'.md5($file->getClientOriginalName());
+            $file->move('files/work_orders', $name);
+
+            $workOrder->fileName = $name;
+        }
+
+        if($workOrder->save()) {
+            if($request->additionalWorkers != null) {
+                $workOrder->teams()->attach($request->additionalWorkers);
+            }
+
+            return response()->json([
+                'error'      => false,
+                'work_order' => $workOrder,
+                'message'    => 'New work order created successfully!'
+            ]);
+        }
+
+        return response()->json([
+            'error'   => true,
+            'message' => 'Could not create a new work order. Try Again!'
+        ]);
+
     }
 
     /**
