@@ -50,13 +50,15 @@ Route::middleware('auth')->group(function(){
     Route::get('/settings', 'SettingController@index')->name('settings');
     Route::get('/vendors', 'ServiceVendorController@index')->name('vendors');
     Route::get('/request-maintenance', 'RequestsController@index')->name('request');
-    Route::get('/requests', 'RequestsController@viewAll')->name('request');
+    Route::get('/requests', 'RequestsController@index')->name('request');
     Route::get('/markAsRead', 'NotificationController@markAllAsRead')->name('mark-as-read');
     Route::get('/approve', 'MaintenanceController@approve')->name('approve');
     Route::get('/categories', 'CategoryController@index')->name('categories');
     Route::get('/spare-parts', 'PartController@index')->name('spare-parts');
     Route::get('/spare-part/{part}', 'PartController@show')->name('spare-part.show');
     Route::get('/purchase-orders', 'PurchaseOrderController@index')->name('purchase-orders');
+    Route::get('/purchase-orders/add', 'PurchaseOrderController@create')->name('purchase-order.add');
+    Route::get('/purchase-order/{purchaseOrder}', 'PurchaseOrderController@show')->name('purchase-order.show');
 });
 
 

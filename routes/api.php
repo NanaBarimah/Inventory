@@ -44,6 +44,9 @@ Route::middleware('auth:api')->group(function(){
     Route::get('asset/{asset}/get-children', 'AssetController@getChildren');
     Route::get('asset/{asset}/depreciation', 'AssetController@depreciation');
     Route::post('asset/{asset}/toggle', 'AssetController@toggle');
+
+    Route::post("purchase-order/add", 'PurchaseOrderController@store');
+    Route::post("purchase-order/{purchaseOrder}/update", 'PurchaseOrderController@update');
     
     Route::post('file/add', 'FileController@store');
     

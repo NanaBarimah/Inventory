@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\PurchaseOrder;
+use App\Hospital;
+use App\User;
+use App\OrderItem;
 use Illuminate\Http\Request;
+
+use Auth;
 
 class PurchaseOrderController extends Controller
 {
@@ -15,6 +20,8 @@ class PurchaseOrderController extends Controller
     public function index()
     {
         //
+        $orders = PurchaseOrder::with("user", "order_items", "service_vendor")->where("hospital_id", Auth::user()->hospital_id)->get();
+        return view("purchase-orders", compact("orders"));
     }
 
     /**
@@ -25,6 +32,8 @@ class PurchaseOrderController extends Controller
     public function create()
     {
         //
+        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("parts", "services")->first();
+        return view("purchase-order-add", compact("hospital"));
     }
 
     /**
@@ -47,9 +56,10 @@ class PurchaseOrderController extends Controller
         $purchaseOrder = new PurchaseOrder();
         
         $purchaseOrder->id                = md5($request->title.microtime());
+        $purchaseOrder->title             = $request->title;
         $purchaseOrder->service_vendor_id = $request->service_vendor_id;
         $purchaseOrder->added_by          = $request->added_by;
-        $purchaseOrder->due_date          = $request->due_date;
+        $purchaseOrder->due_date          = date("Y-m-d", strtotime($request->due_date));
         $purchaseOrder->item_cost         = $request->item_cost;
         $purchaseOrder->sales_tax         = $request->sales_tax;
         $purchaseOrder->shipping_cost     = $request->shipping_cost;
@@ -64,7 +74,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder->contact_number    = $request->contact_number;
         $purchaseOrder->contact_name      = $request->contact_name;
  
-        $last_po_number = PurchaseOrder::where('hospital_id', Auth::user()->id)->latest()->first();
+        $last_po_number = PurchaseOrder::where('hospital_id', Auth::user()->hospital_id)->latest()->first();
 
         if($last_po_number == null) {
             $purchaseOrder->po_number = 1;
@@ -72,26 +82,22 @@ class PurchaseOrderController extends Controller
             $purchaseOrder->po_number = $last_po_number->po_number + 1;
         }
 
-        if(User::where([['id', $request->added_by], ['role', 'Admin']])->first() != null) {
+        if(User::where([['id', $request->added_by], ['role', 'Hospital Head']])->first() != null) {
             $purchaseOrder->approve();
         } else {
             $purchaseOrder->status = 2;
         }
 
         if($purchaseOrder->save()) {
-            if($request->orderitems != null) {
+            if($request->orderItems != null) {
+                $items = json_decode($request->orderItems, false);
+                
                 $orderItems = array();
-                foreach($request->orderitems as $item){
-                    $orderItem = new OrderItem();
-                    $orderItem->purchase_order_id = $purchaseOrder->id;
-                    $orderItem->part_id = $item['part_id'];
-                    $orderItem->quantity = $item['quantity'];
-                    $orderItem->unit_cost = $item['unit_cost'];
-                    $orderItem->part_name = $item['part_name'];
-
-                    array_push($orderItems, $orderItem);
+                foreach($items as $item){
+                    array_push($orderItems, array("purchase_order_id" => $purchaseOrder->id, 
+                    "part_id" => $item->part_id, "quantity" => $item->quantity, "unit_cost" => $item->unit_cost, 
+                    "part_name" => $item->name, "created_at" => date("Y-m-d H:i:s")));
                 }
-
                 OrderItem::insert($orderItems);
             }
             return response()->json([
@@ -113,9 +119,12 @@ class PurchaseOrderController extends Controller
      * @param  \App\PurchaseOrder  $purchaseOrder
      * @return \Illuminate\Http\Response
      */
-    public function show(PurchaseOrder $purchaseOrder)
+    public function show($purchaseOrder)
     {
         //
+        $order = PurchaseOrder::with("service_vendor", "order_items")->where("id", $purchaseOrder)->first();
+        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("parts", "services")->first();
+        return view("purchase-details", compact("order", "hospital"));
     }
 
     /**
@@ -139,6 +148,47 @@ class PurchaseOrderController extends Controller
     public function update(Request $request, PurchaseOrder $purchaseOrder)
     {
         //
+        $purchaseOrder->title             = $request->title;
+        $purchaseOrder->service_vendor_id = $request->service_vendor_id;
+        $purchaseOrder->due_date          = date("Y-m-d", strtotime($request->due_date));
+        $purchaseOrder->item_cost         = $request->item_cost;
+        $purchaseOrder->sales_tax         = $request->sales_tax;
+        $purchaseOrder->shipping_cost     = $request->shipping_cost;
+        $purchaseOrder->other_cost        = $request->other_cost;
+        $purchaseOrder->description       = $request->description;
+        $purchaseOrder->shipping_method   = $request->shipping_method;
+        $purchaseOrder->terms             = $request->terms;
+        $purchaseOrder->notes             = $request->notes;
+        $purchaseOrder->address           = $request->address;
+        $purchaseOrder->contact_number    = $request->contact_number;
+        $purchaseOrder->contact_name      = $request->contact_name;
+
+        if($purchaseOrder->update()){
+            $purchaseOrder->order_items()->delete();
+
+            if($request->orderItems != null) {
+                $items = json_decode($request->orderItems, false);
+                
+                $orderItems = array();
+                foreach($items as $item){
+                    array_push($orderItems, array("purchase_order_id" => $purchaseOrder->id, 
+                    "part_id" => $item->part_id, "quantity" => $item->quantity, "unit_cost" => $item->unit_cost, 
+                    "part_name" => $item->name, "created_at" => date("Y-m-d H:i:s")));
+                }
+                OrderItem::insert($orderItems);
+            }
+
+            return response()->json([
+                'error'   => false,
+                'data'    => $purchaseOrder,
+                'message' => 'Purchase order updated successfully!'
+            ]);
+        }else{
+            return response()->json([
+                'error'   => true,
+                'message' => 'Could not update purchase order. Try Again!'
+            ]);
+        }
     }
 
     /**

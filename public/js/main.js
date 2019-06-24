@@ -442,16 +442,18 @@ appFunctions = {
         })
     }
 
-    let generateDtbl = (table, empty_table = "No data to display", search = "Search table") => {
+    let generateDtbl = (table, empty_table = "No data to display", search = "Search table", paginator = false) => {
         return $(table).DataTable({
             "pagingType": "full_numbers",
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "searching" : !paginator,
+            "bLengthChange" : !paginator,
             language: {
                 search: "_INPUT_",
                 searchPlaceholder: search,
                 sEmptyTable: empty_table
             }
-        })
+        });
     }
 
     let submit_file_form = (url, method, data = null, success = null, action_button = null, should_reload = false) => {
