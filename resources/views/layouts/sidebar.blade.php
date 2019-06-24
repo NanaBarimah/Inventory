@@ -7,8 +7,6 @@
             </div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
-                    </li>
-                    @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head')
                     <li>
                         <a data-toggle="collapse" href="#maintenanceList">
                             <i class="now-ui-icons ui-2_settings-90"></i>
@@ -18,20 +16,16 @@
                         </a>
                         <div class="collapse" id="maintenanceList">
                             <ul class="nav">
-                                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer')
                                 <li>
                                     <a href="/maintenance">
                                         <span class="sidebar-normal">New Maintenance Report</span>
                                     </a>
                                 </li>
-                                @endif
-                                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head' || strtolower(Auth::user()->role) == 'engineer')
                                 <li>
                                     <a href="/request-maintenance">
                                         <span class="sidebar-normal">Request Maintenance</span>
                                     </a>
                                 </li>
-                                @endif
                                 <li>
                                     <a href="/maintenance/history">
                                         <span class="sidebar-normal">Maintenance History</span>
@@ -44,7 +38,12 @@
                             </ul>
                         </div>
                     </li>
-                    @endif
+                    <li>
+                        <a href="/requests">
+                            <i class="now-ui-icons travel_info"></i>
+                            <p>Requests</p>
+                        </a>
+                    </li>
                     <li>
                         <a data-toggle="collapse" href="#inventoryList">
                             <i class="now-ui-icons design_bullet-list-67"></i>
@@ -67,7 +66,6 @@
                             </ul>
                         </div>
                     </li>
-                    @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'storekeeper')
                     <li>
                         <a href="/departments">
                             <i class="now-ui-icons health_ambulance"></i>
@@ -76,7 +74,7 @@
                     </li>
                     <li>
                         <a href="/vendors">
-                            <i class="now-ui-icons shopping_box"></i>
+                            <i class="now-ui-icons shopping_delivery-fast"></i>
                             <p>Service Vendors</p>
                         </a>
                     </li>
@@ -86,16 +84,12 @@
                             <p>Purchase Orders</p>
                         </a>
                     </li>
-                    @endif
-                    @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin')
                     <li>
                         <a href="/reports">
                             <i class="now-ui-icons business_chart-pie-36"></i>
                             <p>Reports</p>
                         </a>
                     </li>
-                    @endif
-                    @if(strtolower(Auth::user()->role) == 'admin')
                     <li>
                         <a data-toggle="collapse" href="#usersList">
                             <i class="now-ui-icons users_single-02"></i>
@@ -128,7 +122,6 @@
                             <i class="now-ui-icons ui-1_settings-gear-63"></i>
                             <p>Reminder Settings</p></a>
                     </li>
-                    @endif
                 </ul>
             </div>
         </div>

@@ -21,12 +21,12 @@ class Requests extends Model
 
     public function approve()
     {
-        $this->attributes['status'] = 1;
+        $this->status = 1;
     }
 
     public function decline()
     {
-        $this->attributes['status'] = 0;
+        $this->status = 0;
     }
 
     public function priority()

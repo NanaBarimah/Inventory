@@ -146,7 +146,7 @@
                                 </div>
                                 <p class="text-danger text-center" style="font-size: 11px; display: none;">The passwords you have entered do not match</p> 
                                 </div>
-                            </div>                       
+                        </div>                       
                         <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_submit">Save</button>
                     </form>
                 </div>

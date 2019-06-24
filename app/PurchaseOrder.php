@@ -20,7 +20,7 @@ class PurchaseOrder extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'added_by');
     }
 
     public function hospital()
@@ -35,7 +35,7 @@ class PurchaseOrder extends Model
 
     public function approve()
     {
-        $this->attribute['status'] = 1;
+        $this->status = 1;
     }
 
     public function decline()
