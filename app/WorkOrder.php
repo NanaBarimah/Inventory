@@ -106,4 +106,9 @@ class WorkOrder extends Model
     {
         return $this->belongsTo('App\Asset');
     }
+
+    public function parts()
+    {
+        return $this->belongsToMany('App\Part', 'part_work_orders', 'part_id', 'work_order_id')->withTimestamps();
+    }
 }
