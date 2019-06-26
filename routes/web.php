@@ -31,16 +31,9 @@ Route::middleware('auth')->group(function(){
     Route::get('/inventory', 'AssetController@index')->name('inventory');
     Route::get('/inventory/add', 'AssetController@create')->name('add-item');
     Route::get('/inventory/{asset}', 'AssetController@show')->name('show-item');
-    Route::get('/inventory/edit/{code}', 'EquipmentController@editEquipment')->name('edit-item');
-    Route::get('/maintenance', 'MaintenanceController@presentUnscheduled')->name('maintenance');
-    Route::get('/maintenance/history', 'MaintenanceController@presentHistoryTable')->name('history');
-    Route::get('/maintenance/history/{code}', 'MaintenanceController@presentHistory')->name('history');
-    Route::get('/maintenance/scheduled', 'MaintenanceController@plannedMaintenances')->name('scheduled');
-    Route::get('/maintenance/scheduled/{code}', 'MaintenanceController@presentScheduledMaintenanceForm')->name('scheduled');
     Route::get('/profile', 'UserController@index')->name('profile');
     Route::get('/users', 'UserController@listAll')->name('users');
     Route::get('/users/add', 'UserController@addNew')->name('users');
-    Route::post('/users/activate', 'UserController@is_active')->name('users');
     Route::get('/reports', 'RecordController@showReports')->name('reports');
     Route::get('/schedule', 'ScheduleController@index')->name('schedule');
     Route::get('/schedule/fetch_all', 'ScheduleController@fetchAll')->name('schedule');
@@ -49,16 +42,18 @@ Route::middleware('auth')->group(function(){
     Route::get('/units', 'UnitController@viewAll')->name('units');
     Route::get('/settings', 'SettingController@index')->name('settings');
     Route::get('/vendors', 'ServiceVendorController@index')->name('vendors');
-    Route::get('/request-maintenance', 'RequestsController@index')->name('request');
     Route::get('/requests', 'RequestsController@index')->name('request');
+    Route::get('/request/add', 'RequestsController@create');
     Route::get('/markAsRead', 'NotificationController@markAllAsRead')->name('mark-as-read');
-    Route::get('/approve', 'MaintenanceController@approve')->name('approve');
     Route::get('/categories', 'CategoryController@index')->name('categories');
     Route::get('/spare-parts', 'PartController@index')->name('spare-parts');
     Route::get('/spare-part/{part}', 'PartController@show')->name('spare-part.show');
     Route::get('/purchase-orders', 'PurchaseOrderController@index')->name('purchase-orders');
     Route::get('/purchase-orders/add', 'PurchaseOrderController@create')->name('purchase-order.add');
     Route::get('/purchase-order/{purchaseOrder}', 'PurchaseOrderController@show')->name('purchase-order.show');
+    Route::get('/request/{request}', 'RequestsController@show')->name('request');
+    Route::get('/work-orders', 'WorkOrderController@index')->name('work-orders');
+    Route::get('/work-order/{workOrder}', 'WorkOrderController@show')->name('work-order.show');
 });
 
 

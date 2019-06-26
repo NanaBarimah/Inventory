@@ -428,8 +428,6 @@
                 data.append("added_by", "{{Auth::user()->id}}");
 
                 let btn = $(this).find('[type="submit"]');
-                
-                //console.log(data);
                 submit_file_form("/api/purchase-order/{{$order->id}}/update", "post", data, undefined, btn, false);
             }
         })

@@ -39,7 +39,7 @@
                             <tbody>
                             @foreach($vendors as $vendor)
                                 <tr>
-                                    <td>{{$vendor->name}}</td>
+                                    <td><b>{{$vendor->name}}</b></td>
                                     <td>{{$vendor->contact_name !== null ? $vendor->contact_name : 'N/A'}}</td>
                                     <td>{{$vendor->contact_number !== null ? $vendor->contact_number : 'N/A'}}</td>
                                     <td>{{$vendor->email !== null ? $vendor->email : 'N/A'}}</td>

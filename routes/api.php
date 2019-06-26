@@ -65,6 +65,10 @@ Route::middleware('auth:api')->group(function(){
     Route::post('units/add', 'UnitController@store');
     Route::put('units/update/{unit}', 'UnitController@update');
 
+    Route::post('requests/add', 'RequestsController@store');
+    Route::put('request/{work_request}/decline', 'RequestsController@decline');
+    Route::put('request/{work_request}/approve', 'RequestsController@approve');
+
     Route::post('schedule/add', 'ScheduleController@store');
 
     Route::post('settings/save', 'SettingController@saveReceivers');
@@ -72,7 +76,6 @@ Route::middleware('auth:api')->group(function(){
     Route::post('vendors/add', 'ServiceVendorController@store');
     Route::put('vendors/update/{vendor}', 'ServiceVendorController@update');
 
-    Route::post('requests/add', 'RequestsController@store');
 });
 
 Route::middleware('passport:admin-api')->group(function(){

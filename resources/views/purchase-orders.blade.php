@@ -11,9 +11,9 @@
                     <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th>Order Number</th>
                                 <th>Title</th>
-                                <th># of Items</th>
+                                <th>Order #</th>
+                                <th>Item Count</th>
                                 <th>Total Cost</th>
                                 <th>Requester</th>
                                 <th>Vendor</th>
@@ -22,9 +22,9 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Order Number</th>
                                 <th>Title</th>
-                                <th># of Items</th>
+                                <th>Order #</th>
+                                <th>Item Count</th>
                                 <th>Total Cost</th>
                                 <th>Requester</th>
                                 <th>Vendor</th>
@@ -34,8 +34,8 @@
                         <tbody>
                             @foreach($orders as $order)
                             <tr>
-                                <td><b><a href="/purchase-order/{{$order->id}}">{{$order->PO_number}}</b></a></td>
-                                <td>{{$order->title}}</td>
+                                <td><b><a href="/purchase-order/{{$order->id}}">{{$order->title}}</a></b></td>
+                                <td>{{$order->PO_number}}</td>
                                 <td>{{$order->order_items->count()}}</td>
                                 <td>GHS {{$order->item_cost + $order->sales_tax + $order->shipping_cost + $order->other_cost}}</td>
                                 <td>{{$order->user->firstname.' '.$order->user->lastname}}</td>

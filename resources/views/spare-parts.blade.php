@@ -40,7 +40,7 @@
                             @foreach($parts as $part)
                             <tr class="uppercase">
                                 <td>
-                                    <a href="/spare-part/{{$part->id}}">{{$part->name}}</a>
+                                    <a href="/spare-part/{{$part->id}}"><b>{{$part->name}}</b></a>
                                 </td>
                                 <td><span class="{{$part->quantity <= $part->min_quantity ? 'badge badge-danger' : ''}}">{{$part->quantity}}</span>&nbsp
                                     @if($part->quantity <= $part->min_quantity)<span class="text-danger text-small"><i>Requires restock</i></span>@endif

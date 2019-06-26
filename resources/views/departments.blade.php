@@ -24,9 +24,9 @@
                 <div class="card card-contributions text-center">
                     <div class="card-body ">
                         <h3 class="card-title">{{$department->name}}</h3>
-                        <h5 class="card-category"><i class="fas fa-location"></i> Department Location</h5>
+                        <h5 class="card-category"><i class="fas fa-location"></i> {{$department->location == null ? 'N/A' : $department->location}} </h5>
                         <p class="card-description">
-                            <i class="fas fa-phone"></i> Phone
+                            <i class="fas fa-phone"></i> {{$department->phone_number == null ? 'N/A' : $department->phone_number}}
                         </p>
                     </div>
                     <hr>

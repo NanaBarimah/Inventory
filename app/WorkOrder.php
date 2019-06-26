@@ -76,4 +76,9 @@ class WorkOrder extends Model
     {
         return $this->belongsTo('App\Requests');
     }
+
+    public function asset()
+    {
+        return $this->belongsTo('App\Asset');
+    }
 }

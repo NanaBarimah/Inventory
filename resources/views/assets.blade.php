@@ -93,7 +93,7 @@
                                 @foreach($assets as $item)
                                     <tr class="uppercase">
                                         <td>
-                                            <a href="/inventory/{{$item->id}}">{{$item->name}}</a>
+                                            <a href="/inventory/{{$item->id}}"><b>{{$item->name}}</b></a>
                                         </td>
                                         <td>{{$item->asset_code}}</td>
                                         <td>{{$item->category != null ? $item->category->name : "N/A"}}</td>

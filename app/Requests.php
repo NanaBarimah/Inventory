@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\WorkOrder;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -51,11 +52,23 @@ class Requests extends Model
 
     public function user()
     {
-       return $this->belongsTo('App\User');
+       return $this->belongsTo('App\User', 'requested_by');
     }
 
     public function work_orders()
     {
         return $this->hasMany('App\WorkOrder');
+    }
+
+    public function toWorkOrder(){
+        $work_order = new WorkOrder();
+
+        $work_order->request_id = $this->id;
+        $work_order->title = $this->title;
+        $work_order->id = md5($work_order->title.time());
+        $work_order->hospital_id = $this->hospital_id;
+        $work_order->asset_id = $this->asset_id;
+
+        return $work_order;
     }
 }

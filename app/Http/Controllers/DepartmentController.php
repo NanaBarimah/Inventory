@@ -140,12 +140,8 @@ class DepartmentController extends Controller
     }
 
     public function viewAll(){
-        if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'storekeeper'){
-            $departments = Department::with('units', 'units.equipments')->where('hospital_id', Auth::user()->hospital_id)->orderBy('name', 'DESC')->paginate(20);
-            return view('departments')->with('departments', $departments);
-        }else{
-            return abort(403);
-        }
+        $departments = Department::with('units')->where('hospital_id', Auth::user()->hospital_id)->orderBy('name', 'ASC')->paginate(20);
+        return view('departments')->with('departments', $departments);
     }
     
     public function view($department){

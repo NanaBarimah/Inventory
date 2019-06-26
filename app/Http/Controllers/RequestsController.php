@@ -3,14 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Requests;
-use App\Equipment;
-use App\Equipment_request;
-use App\Admin;
-use App\User;
-use App\Unit;
-use App\Department;
+use App\WorkOrder;
 use Auth;
-use DB;
 use App\Notifications\RequestReceived;
 use App\Notifications\RequestAssigned;
 use App\Notifications\AssignedToEngineer;
@@ -25,7 +19,7 @@ class RequestsController extends Controller
      */
     public function index()
     {
-        $requests = Requests::where('hospital_id', Auth::user()->hospital_id)->with("priority", "user")->paginate(10);
+        $requests = Requests::where('hospital_id', Auth::user()->hospital_id)->with("priority", "user")->get();
         return view('requests', compact("requests"));
     }
 
@@ -37,6 +31,8 @@ class RequestsController extends Controller
     public function create()
     {
         //
+        $hospital = Hospital::where('id', Auth::user()->hospital_id)->with("priorities", "departments", "departments.units", "assets")->first();
+        return view('request-add', compact("hospital"));
     }
 
     /**
@@ -55,6 +51,7 @@ class RequestsController extends Controller
         $work_request  = new Requests();
         
         $work_request->title         = $request->title;
+        $work_request->id            = md5(microtime().$request->title);
         $work_request->description   = $request->description;
         $work_request->priority_id   = $request->priority_id;
         $work_request->department_id = $request->department_id;
@@ -90,13 +87,13 @@ class RequestsController extends Controller
              ]);
             $name = $file->getClientOriginalName();
             $name = time(). '-' . $name;
-            $file->move(public_path().'/file/assets/RequestFile', $name);
+            $file->move('files', $name);
             $work_request->fileName = $name;
          }
 
          if($work_request->save()) {
-             if(User::where([['role', 'Admin'], ['id', $request->requested_by]])->first() == null) {
-                $user = User::where([['role', 'Admin'], ['hospital_id', $request->hospital_id]])->first();
+             $user = User::where([['role', 'Admin'], ['hospital_id', $request->hospital_id]])->first();
+             if($user != null) {
                 $user->notify(new RequestReceived($work_request));
              }
             
@@ -119,9 +116,11 @@ class RequestsController extends Controller
      * @param  \App\Requests  $requests
      * @return \Illuminate\Http\Response
      */
-    public function show(Requests $requests)
+    public function show($request)
     {
         //
+        $request = Requests::where('id', $request)->with("priority", "user", "asset", "unit", "department")->first();
+        return view("request-details", compact("request"));
     }
 
     /**
@@ -163,18 +162,31 @@ class RequestsController extends Controller
         $work_request->approve();
 
         $work_request->response = $request->response;
+        $work_request->reason = null;
 
         if($work_request->save()) {
-            $work_order = new WorkOrder();
+            $last_order = WorkOrder::where("hospital_id", $request->hospital_id)->latest()->first();
+            $work_order = $work_request->toWorkOrder();
+
+            
+            if($last_order == null){
+             $work_order->wo_number = 1;   
+            }else{
+                $work_order->wo_number = $last_order->wo_number ++;
+            }
+            $work_order->user_admin = $request->user_id;
 
             if($work_order->save()) {
-
-            } else {
-                
+                return response()->json([
+                    'error'   => false,
+                    'work_order' => $work_order,
+                    'message' => 'Request approved. A work order has been generated'
+                ]);   
             }
+            
             return response()->json([
                 'error'   => false,
-                'message' => 'Work order request approved'
+                'message' => 'Request approved. Could not create a work order. Create a new work order.'
             ]);
         } 
 
@@ -201,69 +213,6 @@ class RequestsController extends Controller
             'error'   => true,
             'message' => 'Could not decline work order request. Try Again!'
         ]);
-    }
-
-    /*public function adminIndex(){
-        $requests = Requests::with('equipments', 'equipments.hospital')->whereHas('equipments', function($q){
-            $q->whereHas('hospital', function($qr){
-                $qr->whereHas('district', function($qry){
-                    $qry->where('region_id', '=', Auth::guard('admin')->user()->region_id);
-                });
-            });
-        })->orderBy('is_checked', 'desc')->get();
-        $engineers = Admin::where('role', '=', 'Biomedical Engineer')->get();
-        return view('admin.requests')->with('requests', $requests)->with('engineers', $engineers);
-    }*/
-
-    public function assign(Request $request){
-
-        $request->validate([
-            'id' => 'required',
-            'assigned_to' => 'required',
-            'scheduled_for' => 'required',
-            'hospital_id' => 'required'
-        ]);
-
-        /*$requests = Requests::find($request->id)->first();
-        $requests->assigned_to = $request->assigned_to;
-        $requests->scheduled_for = $this->formatDate($request->scheduled_for);
-
-        $status = $requests->save();*/
-        $request->scheduled_for = $this->formatDate($request->scheduled_for);
-        $status = DB::table('requests')->where('id', $request->id)->update(['assigned_to' => $request->assigned_to, 'scheduled_for' => $request->scheduled_for, 'is_checked' => 1]);
-
-        if($status){
-            $temp = new Requests;
-            $temp->id = $request->id;
-            $temp->assigned_to = $request->assigned_to;
-            $temp->scheduled_for = $request->scheduled_for;
-
-
-            $admin = Admin::where('id', $request->assigned_to)->first();
-
-            $admin->notify(new AssignedToEngineer($temp));   
-
-            $user = User::where([['hospital_id', '=', $request->hospital_id], ['role', '=', 'Admin']])->first();
-
-            $user->notify(new RequestAssigned($temp));
-        }
-
-        return response()->json([
-            'error' => !$status,
-            'message' => $status ? 'Request updated' : 'Could not update request'
-        ]);
-    }
-
-    public function presentEngineerJobs(){
-        $requests = Requests::where('assigned_to', '=', Auth::guard('admin')->user()->id)->with('equipments', 'equipments.hospital')->get();
-        return view('admin.engineer-requests')->with('requests', $requests);
-    }
-
-    public function handleMaintenance($equipment, $job){
-        $requests = Requests::where('id', '=', $job)->first();
-        $hospital = Equipment::with('unit', 'unit.department')->where('code', '=', $equipment)->first();
-        $hospital = $hospital->unit->department->hospital_id;
-        return view('admin.maintenance-form')->with('equipment', $equipment)->with('requests', $requests)->with('hospital', $hospital);
     }
 
     private function formatDate($date){

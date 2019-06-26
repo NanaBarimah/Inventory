@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\WorkOrder;
 use Illuminate\Http\Request;
 
+use Auth;
+
 class WorkOrderController extends Controller
 {
     /**
@@ -15,6 +17,8 @@ class WorkOrderController extends Controller
     public function index()
     {
         //
+        $work_orders = WorkOrder::where("hospital_id", Auth::user()->hospital_id)->with("priority", "user", "asset")->get();
+        return view("work-orders", compact("work_orders"));
     }
 
     /**
@@ -44,9 +48,11 @@ class WorkOrderController extends Controller
      * @param  \App\WorkOrder  $workOrder
      * @return \Illuminate\Http\Response
      */
-    public function show(WorkOrder $workOrder)
+    public function show($workOrder)
     {
         //
+        $work_order = WorkOrder::with("user", "users", "priority", "asset" )->where("id", $workOrder)->first();
+        return view("work-order-details", compact("work_order"));
     }
 
     /**
