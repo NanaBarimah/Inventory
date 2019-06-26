@@ -85,4 +85,9 @@ class Hospital extends Model
     {
         return $this->hasMany('App\WorkOrder');
     }
+
+    public function pm_schedules()
+    {
+        return $this->hasMany('App\PmSchedule');
+    }
 }

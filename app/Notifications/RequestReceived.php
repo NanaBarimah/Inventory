@@ -57,7 +57,7 @@ class RequestReceived extends Notification
     public function toArray($notifiable)
     {
         return [
-            'title' => 'New maintenance request',
+            'title' => 'New work order request',
             'message' => 'You have received a new work order request from '. $this->request->requested_by ? $this->request->requested_by : $this->request->requester_name.' (Requester User)',
             'data' => $this->request,
             'action' => '/requests'

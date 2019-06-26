@@ -641,7 +641,7 @@
             data.name = $(this).find('[name="name"]').val();
             
             let btn = $(this).find('[type=submit]');
-            submit_form("/api/part-category/update/"+temp_priority_id, "put", data, undefined, btn, true);
+            submit_form("/api/priority/update/"+temp_priority_id, "put", data, undefined, btn, true);
         });
 
         $('#new_spare_part_category').on('submit', function(e){

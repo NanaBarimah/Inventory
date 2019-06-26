@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\WorkOrder;
 use Illuminate\Http\Request;
 
@@ -33,7 +34,7 @@ class WorkOrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, WorkOrder $work_order)
     {
         $request->vaildate([
             'id'          => 'required',
@@ -47,8 +48,7 @@ class WorkOrderController extends Controller
         $workOrder->id                  = md5($request->title.microtime());
         $workOrder->title               = $request->title;
         $workOrder->description         = $request->description;
-        $workOrder->due_date            = date('Y-m-d', strtotime($request->due_date));
-        $workOrder->frequency           = $request->frequency;
+        $workOrder->due_date            = date('Y-m-d', strtotime($request->due_date)); 
         $workOrder->estimated_durartion = $request->estimated_duration; 
         $workOrder->priority_id         = $request->priority_id;
         $workOrder->hospital_id         = $request->hospital_id;
@@ -89,6 +89,14 @@ class WorkOrderController extends Controller
             $file->move('files/work_orders', $name);
 
             $workOrder->fileName = $name;
+        }
+
+        $user = User::where("role", "Regular Technician")->orWhere("role", "Limited Technician")->get();
+
+        if($user) {
+            $work_order->pending();
+        } else {
+            $work_order->open();
         }
 
         if($workOrder->save()) {
@@ -153,5 +161,66 @@ class WorkOrderController extends Controller
     public function destroy(WorkOrder $workOrder)
     {
         //
+    }
+
+    public function on_hold(WorkOrder $workOrder)
+    {
+        $workOrder->on_hold();
+
+        if($workOrder->save()){
+            $users = User::where([['role', 'Admin'], ['hospital_id', $workOrder->hospital_id]])->get();
+            Notification::send($users, new WorkOrderStatus($workOrder));
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Work Order is on hold'
+            ]);
+        }
+
+        return response()->json([
+            'error' => true,
+            'message' => 'Error changing the status of work order. Try again!'
+        ]);
+    }
+
+    public function in_progress(WorkOrder $workOrder)
+    {
+        $workOrder->in_progress();
+
+        if($workOrder->save()){
+            $users = User::where([['role', 'Admin'], ['hospital_id', $workOrder->hospital_id]])->get();
+            Notification::send($users, new WorkOrderStatus($workOrder));
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Work Order is in progress'
+            ]);
+        }
+
+        return response()->json([
+            'error' => true,
+            'message' => 'Error changing the status of work order. Try again!'
+        ]);
+    }
+
+    public function complete(WorkOrder $workOrder)
+    {
+        $workOrder->complete();
+
+        if($workOrder->save()){
+
+            $users = User::where([['role', 'Admin'], ['hospital_id', $workOrder->hospital_id]])->get();
+            Notification::send($users, new WorkOrderStatus($workOrder));
+
+            return response()->json([
+                'error' => false,
+                'message' => 'Work Order completed'
+            ]);
+        }
+
+        return response()->json([
+            'error' => true,
+            'message' => 'Error changing the status of work order. Try again!'
+        ]);
     }
 }

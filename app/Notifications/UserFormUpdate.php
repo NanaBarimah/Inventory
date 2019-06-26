@@ -7,10 +7,11 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class RequestAssigned extends Notification
+class UserFormUpdate extends Notification
 {
     use Queueable;
     private $request;
+
     /**
      * Create a new notification instance.
      *
@@ -55,10 +56,10 @@ class RequestAssigned extends Notification
     public function toArray($notifiable)
     {
         return [
-            'title' => 'Maintenance request accepted',
-            'message' => 'Your maintenance request has been assigned to a biomedical engineer. The maintenance is scheduled for '.\Carbon\Carbon::parse($this->request->scheduled_for)->format('jS F Y'),
+            'title' => 'User Form Update',
+            'message' => 'User has completed the registration form successfully',
             'data' => $this->request,
-            'action' => '/requests'
+            'action' => '/home'
         ];
     }
 }

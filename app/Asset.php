@@ -74,4 +74,9 @@ class Asset extends Model
     {
         return $this->hasMany('App\Requests');
     }
+    
+    public function pm_schedules()
+    {
+        return $this->belongsToMany('App\PmSchedule', 'asset_pm_schedules', 'pm_schedule_id', 'asset_id')->withTimestamps();
+    }
 }

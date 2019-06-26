@@ -164,69 +164,8 @@ class RequestsController extends Controller
         $work_request->response = $request->response;
 
         if($work_request->save()) {
-            $work_order = new WorkOrder();
-
-            $work_order->id                 = md5($request->title.microtime());
-            $work_order->title              = $request->title;
-            $work_order->description        = $request->description;
-            $work_order->due_date           = date('Y-m-d', strtotime($request->due_date));
-            $work_order->frequency          = $request->frequency;
-            $work_order->estimated_duration = $request->estimated_duration;
-            $work_order->priority_id        = $request->priority_id;
-            $work_order->hospital_id        = $request->hospital_id;
-            $work_order->fault_category_id  = $request->fault_category_id;
-            $work_order->assigned_to        = $request->assigned_to;
-            $work_order->admin_id           = $request->admin_id;
-            $work_order->department_id      = $request->department_id;
-            $work_order->unit_id            = $request->unit_id;
-            $work_order->service_vendor_id  = $request->service_vendor_id;
-            $work_order->request_id         = $request->request_id;
-
-            $last_wo_number = WorkOrder::where('hospital_id', Auth::user()->hospital_id)->latest()->get();
-
-            if($last_wo_number == null) {
-                $work_order->wo_number = 1;
-            } else {
-                $work_order->wo_number = $last_wo_number->wo_number + 1;
-            }
-
-            if($request->image != null) {
-                $request->validate([
-                    'image' => 'required|mime:png,jpg,jpeg'
-                ]);
-
-                $file = $request->file('image');
-                $name = md5($file->getClientOriginalName()).'.'.$file->getClientOriginalExtension();
-                $file->move(public_path().'/img/assets/work_orders', $name);
-
-                $work_order->image = $name;
-            }
-
-            if($request->hasFile('fileName')) {
-                $request->validate([
-                    'fileName' => 'required|mime:doc,pdf,docx,zip'
-                ]);
-
-                $file = $request->file('fileName');
-
-                $name = time().'-'.md5($file->getClientOriginalName());
-                $file->move('files/work_orders', $name);
-
-                $work_order->fileName = $name;
-            }
-
-            if($work_order->save()) {
-                return response()->json([
-                    'error'      => false,
-                    'work_order' => $work_order,
-                    'message'    => 'New work order created successfully!'
-                ]);
-            } else {
-                return response()->json([
-                    'error'   => true,
-                    'message' => 'Could not create a new work order. Try Again!' 
-                ]);
-            }
+            $work_order = $work_request->toWorkOrder();
+            $work_order->save();
             return response()->json([
                 'error'   => false,
                 'message' => 'Work order request approved'
