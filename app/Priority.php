@@ -29,4 +29,9 @@ class Priority extends Model
     {
         return $this->hasMany('App\Requests');
     }
+
+    public function pm_schedules()
+    {
+        return $this->hasMany('App\PmSchedule');
+    }
 }

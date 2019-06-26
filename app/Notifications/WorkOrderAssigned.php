@@ -7,10 +7,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class AssignedToEngineer extends Notification
+class WorkOrderAssigned extends Notification
 {
     use Queueable;
-
     private $request;
     /**
      * Create a new notification instance.
@@ -19,7 +18,6 @@ class AssignedToEngineer extends Notification
      */
     public function __construct($request)
     {
-        //
         $this->request = $request;
     }
 
@@ -57,10 +55,10 @@ class AssignedToEngineer extends Notification
     public function toArray($notifiable)
     {
         return [
-            'title' => 'New work order assignment',
-            'message' => 'A new work order has been assigned to you',
+            'title' => 'Work order accepted',
+            'message' => 'Work order has been assigned to a biomedical engineer.',
             'data' => $this->request,
-            'action' => '/admin/assigned'
+            'action' => '/requests'
         ];
     }
 }

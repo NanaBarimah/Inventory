@@ -80,11 +80,11 @@ class RequestsController extends Controller
             $work_request->image = $name;
          }
 
-         if($request->fileName != null) {
+         if($request->hasFile('fileName')) {
              $request->validate([
-                'fileName'   => 'required',
-                'fileName' => 'mime:doc,pdf,docx,zip'
+                'fileName'   => 'required|mime:doc,pdf,docx,zip'
              ]);
+            $file = $request->file('fileName');
             $name = $file->getClientOriginalName();
             $name = time(). '-' . $name;
             $file->move('files', $name);

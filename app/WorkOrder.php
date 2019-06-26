@@ -14,8 +14,33 @@ class WorkOrder extends Model
     public $incrementing = false;
     
     protected $fillable = [
-
+        
     ];
+
+    public function pending()
+    {
+        $this->status = 5;
+    }
+
+    public function open()
+    {
+        $this->status = 4;
+    }
+
+    public function on_hold()
+    {
+        $this->status = 3;
+    }
+
+    public function in_progress()
+    {
+        $this->status = 2;
+    }
+
+    public function complete()
+    {
+        $this->status = 1;
+    }
 
     public function priority()
     {

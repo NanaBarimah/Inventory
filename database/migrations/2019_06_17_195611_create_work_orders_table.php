@@ -17,26 +17,30 @@ class CreateWorkOrdersTable extends Migration
             $table->string('id')->primary();
             $table->string('title');
             $table->integer('wo_number');
-            $table->smallInteger('status')->default(4);
+            $table->smallInteger('status')->default(5);
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->date('due_date')->nullable();
-            $table->string('frequency')->nullable();
+            $table->string('asset_id')->nullable();
             $table->integer('estimated_duration')->nullable();
             $table->string('priority_id')->nullable();
             $table->string('hospital_id');
             $table->string('fault_category_id')->nullable();
             $table->string('assigned_to')->nullable();
             $table->string('admin_id')->nullable();
+            $table->string('user_admin')->nullable();
             $table->string('department_id')->nullable();
             $table->string('unit_id')->nullable();
             $table->string('service_vendor_id')->nullable();
             $table->string('request_id')->nullable();
+            $table->string('part_id')->nullable();
             $table->string('fileName')->nullable();
             $table->smallInteger('is_local')->default(1);
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('asset_id')->references('id')->on('assets')
+                  ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('priority_id')->references('id')->on('priorities')
                   ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('hospital_id')->references('id')->on('hospitals')
@@ -44,6 +48,8 @@ class CreateWorkOrdersTable extends Migration
             $table->foreign('fault_category_id')->references('id')->on('fault_categories')
                   ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('assigned_to')->references('id')->on('users')
+                  ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('user_admin')->references('id')->on('users')
                   ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('admin_id')->references('id')->on('admins')
                   ->onUpdate('cascade')->onDelete('cascade');
@@ -54,6 +60,8 @@ class CreateWorkOrdersTable extends Migration
             $table->foreign('service_vendor_id')->references('id')->on('service_vendors')
                   ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('request_id')->references('id')->on('requests')
+                  ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('part_id')->references('id')->on('parts')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
     }

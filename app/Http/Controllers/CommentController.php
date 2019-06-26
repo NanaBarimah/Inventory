@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
+use App\WorkOrder;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -44,12 +45,27 @@ class CommentController extends Controller
         ]);
 
         $comment = new Comment();
-
+        
+        $comment->id            = md5($request->comment.microtime());
         $comment->comment       = $request->comment;
         $comment->work_order_id = $request->work_order_id;
         $comment->user_id       = $request->user_id;
 
         if($comment->save()) {
+            $work_order = WorkOrder::with(['users', function($q) use ($comment){
+                $q->where("id", "<>", $comment->user_id);
+            }], 'user')->where('id', $comment->work_order_id)->first();
+
+            $primary_user = $work_order->user;
+            $work_order->users->push($primary_user);
+
+            /*foreach($work_order->users as $user){
+                if($user->id != $comment->user_id){
+                    $user->notify(new CommentCreated($comment));
+                }
+            }*/
+            Notification::send($work_order->users, new CommentCreated($comment));
+
             return response()->json([
                 'error'   => false,
                 'data'    => $comment,

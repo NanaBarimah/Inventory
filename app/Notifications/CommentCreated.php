@@ -7,20 +7,21 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class AssignedToEngineer extends Notification
+class CommentCreated extends Notification
 {
     use Queueable;
-
     private $request;
+    private $user;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct($request, $user)
     {
-        //
         $this->request = $request;
+        $this->user = $user;
     }
 
     /**
@@ -57,10 +58,10 @@ class AssignedToEngineer extends Notification
     public function toArray($notifiable)
     {
         return [
-            'title' => 'New work order assignment',
-            'message' => 'A new work order has been assigned to you',
+            'title' => 'New Comment',
+            'message' => ucwords($user->firstname.' '.$user->lastname).' commented on work order with number #'.$request->work_order->wo_number,
             'data' => $this->request,
-            'action' => '/admin/assigned'
+            'action' => '/'
         ];
     }
 }

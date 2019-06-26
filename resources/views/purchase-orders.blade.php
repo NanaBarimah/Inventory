@@ -35,7 +35,7 @@
                             @foreach($orders as $order)
                             <tr>
                                 <td><b><a href="/purchase-order/{{$order->id}}">{{$order->title}}</a></b></td>
-                                <td>{{$order->PO_number}}</td>
+                                <td>{{$order->po_number}}</td>
                                 <td>{{$order->order_items->count()}}</td>
                                 <td>GHS {{$order->item_cost + $order->sales_tax + $order->shipping_cost + $order->other_cost}}</td>
                                 <td>{{$order->user->firstname.' '.$order->user->lastname}}</td>

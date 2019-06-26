@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePartPurchasesTable extends Migration
+class CreateAssetPmSchedulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,16 @@ class CreatePartPurchasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('part_purchases', function (Blueprint $table) {
+        Schema::create('asset_pm_schedules', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('part_id')->nullable();
-            $table->string('purchase_order_id');
-            $table->string('part_name')->nullable();
-            $table->integer('quantity')->default(1);
-            $table->decimal('unit_cost', 10, 2);
+            $table->string('pm_schedule_id');
+            $table->string('asset_id'); 
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('part_id')->references('id')->on('parts')
+            $table->foreign('pm_schedule_id')->references('id')->on('pm_schedules')
                   ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('purchase_order_id')->references('id')->on('purchase_orders')
+            $table->foreign('asset_id')->references('id')->on('assets')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
     }
@@ -37,6 +34,6 @@ class CreatePartPurchasesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('part_purchases');
+        Schema::dropIfExists('asset_pm_schedules');
     }
 }

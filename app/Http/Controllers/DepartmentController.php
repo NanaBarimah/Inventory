@@ -31,7 +31,7 @@ class DepartmentController extends Controller
 
     public function getAll()
     {
-        $department = Department::with(['units', 'equipments'])->get();
+        $department = Department::with(['units', 'assets'])->get();
 
         return response()->json($department, 200);
     }
