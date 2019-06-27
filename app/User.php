@@ -97,4 +97,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Comment');
     }
+
+    public function messages()
+    {
+        return $this->belongsToMany('App\WorkOrder', 'work_order_messages', 'work_order_id', 'user_id')->withPivot('action_taken')->withTimestamps();
+    }
 }

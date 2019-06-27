@@ -41,7 +41,7 @@ class PurchaseOrder extends Model
 
     public function decline()
     {
-        $this->attribute['status'] = 0;
+        $this->status = 0;
     }
 
     public function order_items()

@@ -21,6 +21,7 @@ class CreateWorkOrdersTable extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->date('due_date')->nullable();
+            $table->decimal('cost', 10, 2)->default(0.00);
             $table->string('asset_id')->nullable();
             $table->integer('estimated_duration')->nullable();
             $table->string('priority_id')->nullable();
@@ -33,7 +34,6 @@ class CreateWorkOrdersTable extends Migration
             $table->string('unit_id')->nullable();
             $table->string('service_vendor_id')->nullable();
             $table->string('request_id')->nullable();
-            $table->string('part_id')->nullable();
             $table->string('fileName')->nullable();
             $table->smallInteger('is_local')->default(1);
             $table->timestamps();
@@ -60,8 +60,6 @@ class CreateWorkOrdersTable extends Migration
             $table->foreign('service_vendor_id')->references('id')->on('service_vendors')
                   ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('request_id')->references('id')->on('requests')
-                  ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('part_id')->references('id')->on('parts')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
     }

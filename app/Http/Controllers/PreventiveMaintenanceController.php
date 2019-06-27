@@ -35,7 +35,29 @@ class PreventiveMaintenanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'pm_schedule_id' => 'required'
+        ]);
+
+        $preventiveMaintenance = new PreventiveMaintenance();
+
+        $preventiveMaintenance->pm_schedule_id = $request->pm_schedule_id;
+        $preventiveMaintenance->observation    = $request->observation;
+        $preventiveMaintenance->recommendation = $request->recommendation;
+        $preventiveMaintenance->action_taken   = $request->action_taken;
+
+        if($preventiveMaintenance->save()) {
+            return response()->json([
+                'error'   => false,
+                'data'    => $preventiveMaintenance,
+                'message' => 'Preventive Maintenance created successfully.'
+            ]);
+        }
+
+        return response()->json([
+            'error'   => true,
+            'message' => 'Could not create preventive maintenance. Try Again!'
+        ]);
     }
 
     /**

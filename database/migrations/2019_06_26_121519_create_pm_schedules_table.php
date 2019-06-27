@@ -19,6 +19,7 @@ class CreatePmSchedulesTable extends Migration
             $table->string('recurringSchedule');
             $table->date('due_date');
             $table->date('endDueDate');
+            $table->decimal('cost', 10, 2)->nullable();
             $table->string('department_id')->nullable();
             $table->string('unit_id')->nullable();
             $table->string('priority_id')->nullable();
