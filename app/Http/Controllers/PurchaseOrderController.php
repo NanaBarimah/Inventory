@@ -267,4 +267,37 @@ class PurchaseOrderController extends Controller
             'message' => 'Could not decline purchase order, try again!'
         ]);
     }
+
+    public function createLink(Request $request, PurchaseOrder $purchaseOrder)
+    {
+        $request->validate([
+            'user_id' => 'required',
+        ]);
+
+        $user = User::where('id', $request->user_id)->first();
+    
+        $data = array('link' => $purchaseOrder->createLink());
+
+        $to_name  = ucwords($user->firstname.' '.$user->lastname);
+        $to_email = $user->email;
+
+        Mail::send('email_template', $data, function($message) use($to_name, $to_email){
+            $message->to($to_email, $to_name)
+                    ->subject('Purchase Order Link');
+            $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
+        });
+
+        if(count(Mail::failures()) > 0) {
+            return response()->json([
+                'error'   => true,
+                'message' => 'Could not send the mail'
+            ]);
+        } else {
+            return response()->json([
+                'error'   => false,
+                'message' => 'Purchase Order Link sent successfully'
+            ]);
+        }
+    }
 }
+ 

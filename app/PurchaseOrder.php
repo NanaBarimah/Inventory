@@ -53,4 +53,18 @@ class PurchaseOrder extends Model
     {
         return $this->belongsTo('App\WorkOrder');
     }
+
+    public function createLink()
+    {
+        $str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $strcode = strlen($str)-1;
+        $id  = '';
+
+        for ($i = 0; $i < 84; $i++) {
+                $id .= $str[mt_rand(0, $strcode)]; 
+        }
+        
+        $this->hash_link = $id;
+    }
 }

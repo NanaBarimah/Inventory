@@ -89,7 +89,7 @@ class WorkOrder extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\User', 'teams', 'additional_workers', 'work_order_id')->withTimestamps();
+        return $this->belongsToMany('App\User', 'teams', 'work_order_id', 'additional_workers')->withTimestamps();
     }
 
     public function comments()
@@ -109,11 +109,11 @@ class WorkOrder extends Model
 
     public function parts()
     {
-        return $this->belongsToMany('App\Part', 'part_work_orders', 'part_id', 'work_order_id')->withTimestamps();
+        return $this->belongsToMany('App\Part', 'part_work_orders', 'work_order_id', 'part_id')->withPivot('quantity')->withTimestamps();
     }
 
     public function user_messages()
     {
-        return $this->belongsToMany('App\User', 'work_order_messages', 'user_id', 'work_order_id')->withPivot('action_taken')->withTimestamps();
+        return $this->belongsToMany('App\User', 'work_order_messages', 'work_order_id', 'user_id')->withPivot('action_taken')->withTimestamps();
     }
 }

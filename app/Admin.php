@@ -36,10 +36,6 @@ class Admin extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public $primaryKey = 'id';
-
-    public $incrementing  = false;
-
     public function setPasswordAttribute($password)
     {
         if ( !empty($password) ) {

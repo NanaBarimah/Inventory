@@ -90,7 +90,7 @@ class User extends Authenticatable
 
     public function work_order_teams()
     {
-        return $this->belongsToMany('App\WorkOrder', 'teams', 'work_order_id', 'additional_workers')->withTimestamps();
+        return $this->belongsToMany('App\WorkOrder', 'teams', 'additional_workers', 'work_order_id')->withTimestamps();
     }
 
     public function comments()
@@ -100,6 +100,6 @@ class User extends Authenticatable
 
     public function messages()
     {
-        return $this->belongsToMany('App\WorkOrder', 'work_order_messages', 'work_order_id', 'user_id')->withPivot('action_taken')->withTimestamps();
+        return $this->belongsToMany('App\WorkOrder', 'work_order_messages', 'user_id', 'work_order_id')->withPivot('action_taken')->withTimestamps();
     }
 }
