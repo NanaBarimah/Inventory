@@ -54,7 +54,7 @@ class PreventiveMaintenanceController extends Controller
             ]);
         }
 
-        return response($status = 200)->json([
+        return response()->json([
             'error'   => true,
             'message' => 'Could not create preventive maintenance. Try Again!'
         ]);
