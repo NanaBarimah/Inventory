@@ -100,9 +100,7 @@ class WorkOrderController extends Controller
             $workOrder->fileName = $name;
         }
 
-        $user = User::where("role", "Regular Technician")->orWhere("role", "Limited Technician")->get();
-
-        if($user) {
+        if($workOrder->assigned_to == null) {
             $work_order->pending();
         } else {
             $work_order->open();
@@ -232,6 +230,69 @@ class WorkOrderController extends Controller
         return response()->json([
             'error' => true,
             'message' => 'Error changing the status of work order. Try again!'
+        ]);
+    }
+
+    public function availableTechnicians($workOrder){
+        $engineers = User::whereDoesntHave('work_order_teams', function($query) use ($workOrder){
+            $query->where("work_order_id", $workOrder);
+        })->whereDoesntHave('work_orders', function($query) use ($workOrder){
+            $query->where("id", $workOrder);
+        })->get();
+
+        return response()->json([
+            "engineers" => $engineers
+        ]);
+    }
+
+    public function assignTeam(WorkOrder $workOrder, Request $request){
+        $request->validate([
+            "user_ids" => "required"
+        ]);
+
+        $workOrder->users()->attach($request->user_ids);
+        
+        return response()->json([
+            "error" => false,
+            "message" => "Technicians assigned to work order"
+        ]);
+    }
+
+    public function assignAsset(WorkOrder $workOrder, Request $request){
+        $request->validate([
+            "asset_id" => "required"
+        ]);
+
+        $workOrder->asset_id = $request->asset_id;
+        
+        if($workOrder->save()){
+            return response()->json([
+                "error" => false,
+                "message" => "Asset assigned to work order"
+            ]);
+        }
+        
+        return response()->json([
+            "error" => true,
+            "message" => "Could not assign asset to work order"
+        ]);
+    }
+
+    public function getActivities(WorkOrder $workOrder){
+        $activities = $workOrder->user_messages()->latest()->get();
+        return response()->json($activities);
+    }
+
+    public function recordActivity(WorkOrder $workOrder, Request $request){
+        $request->validate([
+            "user_id" => "required",
+            "activity" => "required"
+        ]);
+        $workOrder->user_messages()->attach($request->user_id, ["action_taken" => $request->activity]);
+
+        return response()->json([
+            "error" => false,
+            "message" => "Activity logged"
         ]);
     }
 }

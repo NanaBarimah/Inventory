@@ -26,9 +26,7 @@
 </head>
     <body>
         <div class="wrapper">
-            @include('layouts.sidebar')
             <div class="main-panel">
-                @include('layouts.navbar', ['page_title' => $page_title])
                 <div class="panel-header panel-header-sm">
                 </div>
                 @yield('content')

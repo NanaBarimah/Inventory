@@ -6,6 +6,8 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Hospital;
 use Auth;
+use Notification;
+use App\Notifications\UserFormUpdate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 
@@ -230,32 +232,4 @@ class UserController extends Controller
         ]);
 
     }
-      
-      /*public function userLogin(Request $request)
-      {
-          //validate the form
-          $request->validate([
-              'email' => 'required|string',
-              'password' => 'required|min:6'
-          ]);
-
-          $email = $request->email;
-          $password = $request->password;
-          $active = 1;
-
-          $user = User::where([['email', '=', $request->email], ['password', '=', $request->password], ['active', '=', 1]])->first();
-
-          if($user != null){
-              $user->api_token = bin2hex(openssl_random_pseudo_bytes(30));
-              return response()->json([
-                  "error" => false,
-                  "user" => $user
-              ]);
-          }else{
-              return response()->json([
-                  "error" => true,
-                  "user" => "No user with specified email and password"
-              ]);
-          }
-      }*/
 }

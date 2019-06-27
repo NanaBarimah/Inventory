@@ -85,12 +85,12 @@ class User extends Authenticatable
 
     public function work_orders()
     {
-        return $this->hasMany('App\WorkOrder');
+        return $this->hasMany('App\WorkOrder', 'assigned_to');
     }
 
     public function work_order_teams()
     {
-        return $this->belongsToMany('App\WorkOrder', 'teams', 'work_order_id', 'additional_workers')->withTimestamps();
+        return $this->belongsToMany('App\WorkOrder', 'teams', 'additional_workers', 'work_order_id')->withTimestamps();
     }
 
     public function comments()

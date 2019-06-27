@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('user/complete-profile', 'UserController@complete');
+
 Route::middleware('auth:api')->group(function(){
     Route::get('users/', 'UserController@index');
     Route::post('users/add_user', 'UserController@store');
@@ -20,7 +22,6 @@ Route::middleware('auth:api')->group(function(){
     Route::put('users/update/{user}', 'UserController@update');
     Route::put('users/activate', 'UserController@is_active');
     Route::post('users/user-login', 'UserController@userLogin');
-    Route::post('user/complete-profile', 'UserController@complete');
 
     Route::post('asset-category/add', 'AssetCategoryController@store');
     Route::post('fault-category/add', 'FaultCategoryController@store');
@@ -35,7 +36,7 @@ Route::middleware('auth:api')->group(function(){
     Route::post('spare-part/add', 'PartController@store');
     Route::put('spare-part/update/{part}', 'PartController@update');
     
-    Route::get('assets', 'AssetController@index');
+    Route::get('assets/{hospital}', 'AssetController@get');
     Route::post('asset/add', 'AssetController@store');
     Route::put('asset/{asset}/update', 'AssetController@update');
     Route::delete('asset/{asset}/delete', 'AssetController@delete');
@@ -53,12 +54,6 @@ Route::middleware('auth:api')->group(function(){
     Route::get('equipment/{equipment}', 'EquipmentController@show');
     Route::put('equipment/update/{equipment}', 'EquipmentController@update');
 
-    Route::get('maintenances/', 'MaintenanceController@index');
-    Route::post('maintenances/add', 'MaintenanceController@store');
-    Route::get('maintenances/{maintenance}', 'MaintenanceController@show');
-    Route::put('maintenances/update/{maintenance}', 'MaintenanceController@update');
-    Route::put('maintenances/approve', 'MaintenanceController@hospitalApprove');
-
     Route::post('departments/add', 'DepartmentController@store');
     Route::put('departments/update/{department}', 'DepartmentController@update');
 
@@ -70,6 +65,11 @@ Route::middleware('auth:api')->group(function(){
     Route::put('request/{work_request}/approve', 'RequestsController@approve');
 
     Route::post("work-order/add", "WorkOrderController@store");
+    Route::get("work-order/available-technicians/{workOrder}", "WorkOrderController@availableTechnicians");
+    Route::post("work-order/{workOrder}/assign-team", "WorkOrderController@assignTeam");
+    Route::post("work-order/{workOrder}/record-activity", "WorkOrderController@recordActivity");
+    Route::put("work-order/{workOrder}/assign-asset", "WorkOrderController@assignAsset");
+    Route::get("work-order/{workOrder}/activities", "WorkOrderController@getActivities");
 
     Route::post('schedule/add', 'ScheduleController@store');
 

@@ -1,4 +1,4 @@
-@extends('layouts.user-dashboard', ['page_title' => 'Complete Profile'])
+@extends('layouts.empty-dashboard', ['page_title' => 'Complete Profile'])
 @section('content')
 <div class="content">
                 <div class="row">
@@ -83,7 +83,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="author">
-                                <img class="round" width="96" height="96" avatar="{{Auth::user()->firstname}} {{Auth::user()->lastname}}" />
+                                <img class="round" width="96" height="96" avatar="{{$user->firstname}} {{$user->lastname}}" />
                                     <h5 class="title" id="card-fullname">{{ucfirst($user->firstname)}} {{ucfirst($user->lastname)}}</h5>
                                     <p class="description" id="card-username">
                                         {{$user->email}}

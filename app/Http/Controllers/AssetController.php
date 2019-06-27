@@ -278,5 +278,10 @@ class AssetController extends Controller
     private function formatDate($date){
         return date("Y-m-d H:i:s", strtotime(stripslashes($date)));
     }
+
+    public function get($hospital){
+        $assets = Asset::where("hospital_id", $hospital)->get();
+        return response()->json($assets);
+    }
     
 }
