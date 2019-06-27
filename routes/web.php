@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/request/{request}', 'RequestsController@show')->name('request');
     Route::get('/work-orders', 'WorkOrderController@index')->name('work-orders');
     Route::get('/work-order/{workOrder}', 'WorkOrderController@show')->name('work-order.show');
+    Route::get('/work-orders/add', 'WorkOrderController@create')->name('work-order.add');
 });
 
 

@@ -86,6 +86,11 @@
             </div>
         </div>
     </div>
+    <a href="/work-orders/add">
+        <div class="fab">
+            <i class="fas fa-plus"></i>
+        </div>
+    </a>
 @endsection
 @section('scripts')
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>

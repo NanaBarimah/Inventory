@@ -30,6 +30,7 @@ class WorkOrderController extends Controller
     public function create()
     {
         //
+        return view('work-order-add');
     }
 
     /**
