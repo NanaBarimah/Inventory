@@ -48,6 +48,11 @@ class Hospital extends Model
         return $this->hasMany('App\AssetCategory');
     }
 
+    public function fault_categories()
+    {
+        return $this->hasMany('App\FaultCategory');
+    }
+
     /**
      * Get the settings for the hospital.
      */

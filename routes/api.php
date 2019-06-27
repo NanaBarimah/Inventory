@@ -69,6 +69,8 @@ Route::middleware('auth:api')->group(function(){
     Route::put('request/{work_request}/decline', 'RequestsController@decline');
     Route::put('request/{work_request}/approve', 'RequestsController@approve');
 
+    Route::post("work-order/add", "WorkOrderController@store");
+
     Route::post('schedule/add', 'ScheduleController@store');
 
     Route::post('settings/save', 'SettingController@saveReceivers');

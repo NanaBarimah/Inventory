@@ -1,11 +1,25 @@
 @php $user = Auth::user() @endphp
 @extends('layouts.user-dashboard', ['page_title' => 'Add Work Order'])
+@section('styles')
+<style>
+.refresh-picker{
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.refresh-picker: hover{
+    text-decoration: underline;
+}
+</style>
+@endsection
 @section('content')
     <div class="content">
         <div class="col-md-12 mr-auto ml-auto">
             <div>
                 <div class="card" data-color="primary">
-                    <form method="post" action="#" id="add_user_form" class="p=4">
+                    <form method="post" action="#" id="add_wo_form" class="p=4">
                         <div class="card-header">
                             <h4 class="inline-block">
                                 New Work Order
@@ -24,77 +38,110 @@
                                 <div class="col-md-3 pl-1">
                                     <div class="form-group">
                                         <label class="pl-3"><b>Priority</b>  <span class="text-danger">*</span></label>
-                                        <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="role" title="Priority" required>
-                                            <option>Admin</option>
-                                            <option>Regular Technician</option>
-                                            <option>Limited Technician</option>
-                                            <option>Hospital Head</option>
-                                            <option>View Only</option>
+                                        <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="priority_id" title="Priority" required>
+                                            @foreach($hospital->priorities as $priority)
+                                            <option value="{{$priority->id}}">{{$priority->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-3 pl-1">
                                     <div class="form-group">
-                                        <label class="pl-3"><b>Fault Category</b></label>
-                                        <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="role" title="Fault" required>
-                                            <option>Admin</option>
-                                            <option>Regular Technician</option>
-                                            <option>Limited Technician</option>
-                                            <option>Hospital Head</option>
-                                            <option>View Only</option>
+                                        <label class="pl-3"><b>Fault Category</b> <span class="text-danger">*</span></label>
+                                        <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="fault_category_id" title="Fault Type" required>
+                                            @foreach($hospital->fault_categories as $category)
+                                            <option value="{{$category->id}}">{{$category->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-4">
                                 <div class="col-md-4 pr-1">
                                     <div class="form-group">
                                         <label><b>Due Date</b></label>
-                                        <input type="text datepicker" class="form-control resetable" name="due_date">
+                                        <input type="text" class="form-control datepicker" name="due_date"/>
                                     </div>
                                 </div>
                                 <div class="col-md-4 pr-1">
                                     <div class="form-group">
                                         <label><b>Estimated Duration (in hours)</b></label>
-                                        <input type="text datepicker" class="form-control resetable" name="estimated_duration">
+                                        <input type="text" class="form-control resetable" name="estimated_duration">
                                     </div>
                                 </div>
+                                @if($user->role == "Admin")
                                 <div class="col-md-4 pr-1">
                                     <div class="form-group">
                                         <label><b>Lead Technician</b></label>
-                                        <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="role" title="Lead Technician" required>
-                                            <option>Admin</option>
-                                            <option>Regular Technician</option>
-                                            <option>Limited Technician</option>
-                                            <option>Hospital Head</option>
-                                            <option>View Only</option>
+                                        <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="assigned_to" title="Lead Technician" required>
+                                            @foreach($hospital->users as $user)
+                                            <option value="{{$user->id}}">{{$user->firstname.' '.$user->lastname}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-3 pr-1">
+                                    <div class="form-group">
+                                        <label><b>Asset</b> <span class="text-danger">*</span></label>
+                                        <select class="selectpicker col-md-12" data-style="btn form-control" name="asset_id" title="Equipment" 
+                                        data-show-tick="true" data-live-search="true">
+                                            @if($hospital->assets->count() > 0)
+                                                @foreach($hospital->assets as $asset)
+                                                <option value="{{$asset->id}}">{{$asset->name}}</option>
+                                                @endforeach
+                                            @else
+                                                <option disabled>No assets recorded</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pr-1">
+                                    <div class="form-group">
+                                        <label><b>Department</b></label>
+                                        <select class="selectpicker col-md-12" data-style="btn form-control" name="department_id" title="Department" id="department" data-show-tick="true">
+                                        @if($hospital->departments->count() > 0)
+                                            @foreach($hospital->departments as $department)
+                                            <option value="{{$department->id}}" data-units = "{{$department->units}}">{{$department->name}}</option>
+                                            @endforeach
+                                        @else
+                                            <option disabled>No known departments</option>
+                                        @endif
+                                        </select>
+                                        <p class="text-right pr-3 refresh-picker"><b>Reset</b></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pr-1">
+                                    <div class="form-group">
+                                        <label><b>Unit</b></label>
+                                        <select class="selectpicker col-md-12" data-style="btn form-control" name="unit_id" id="unit" title="Unit" data-show-tick="true">
+                                            <option disabled>Select a department</option>
+                                        </select>
+                                        <p class="text-right pr-3 refresh-picker"><b>Reset</b></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pr-1">
+                                    <div class="form-group">
+                                        <label><b>Service Vendor</b></label>
+                                        <select class="selectpicker col-md-12" data-style="btn btn-round btn-purple" name="service_vendor_id" title="Service Vendor">
+                                        @if($hospital->services->count() > 0)
+                                            @foreach($hospital->services as $vendor)
+                                            <option value="{{$vendor->id}}">{{$vendor->name}}</option>
+                                            @endforeach
+                                        @else
+                                            <option disabled>No known service vendor</option>
+                                        @endif
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6 pr-1">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><b>Asset</b></label>
-                                        <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="role" title="Lead Technician" required>
-                                            <option>Admin</option>
-                                            <option>Regular Technician</option>
-                                            <option>Limited Technician</option>
-                                            <option>Hospital Head</option>
-                                            <option>View Only</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 pr-1">
-                                    <div class="form-group">
-                                        <label><b>Job Title</b></label>
-                                        <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="role" title="Lead Technician" required>
-                                            <option>Admin</option>
-                                            <option>Regular Technician</option>
-                                            <option>Limited Technician</option>
-                                            <option>Hospital Head</option>
-                                            <option>View Only</option>
-                                        </select>
+                                        <label><b>Description</b></label>
+                                        <textarea class="form-control" name="description"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +157,6 @@
                             </div>
                             <div class="clearfix"></div>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -119,9 +165,55 @@
     </div>
 @endsection
 @section('scripts')
+    <script src="{{asset('js/moment.min.js')}}"></script>
+    <script src="{{asset('js/bootstrap-datetimepicker.js')}}"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script>
+        $("#department").on("change", function(){
+            $("#unit").val(null);
+            $("#unit").html(null);
 
+            let units = $(this).find(":selected").data("units");
+
+            if(units.length > 0){
+                $("#unit").selectpicker("refresh");
+
+                $.each(units, function(index, unit){
+                    $("#unit").append(`<option value="${unit.id}">${unit.name}</option>`);
+                });
+
+            }else{
+                $("#unit").append(`<option disabled>No units for this department</option>`);
+            }
+
+            $("#unit").selectpicker("refresh");
+        });
+
+        $("#add_wo_form").on("submit", function(e){
+            e.preventDefault();
+            let data = new FormData(this);
+            data.append("hospital_id", '{{$user->hospital_id}}');
+            
+            @if($user->role != "Admin")
+            data.append("assigned_to", '{{$user->id}}')
+            @endif
+
+            data.append("user_admin", '{{$user->id}}');
+            let btn = $(this).find('[type="submit"]');
+
+            const success = (data) => {
+                setTimeout(() => {
+                    location.replace(`/work-order/${data.work_order.id}`)
+                }, 500);
+            }
+            submit_file_form("/api/work-order/add", "post", data, success, btn, false);
+        });
+
+        $('.refresh-picker').on("click", function(){
+            let picker = $(this).closest("div").find(".selectpicker");
+            picker.val(null);
+            picker.selectpicker("refresh");
+        });
     </script>
 @endsection

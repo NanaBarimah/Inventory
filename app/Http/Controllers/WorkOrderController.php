@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\WorkOrder;
+use App\Hospital;
 use Illuminate\Http\Request;
 
 use Auth;
@@ -30,7 +31,11 @@ class WorkOrderController extends Controller
     public function create()
     {
         //
-        return view('work-order-add');
+        $hospital = Hospital::with("departments", "departments.units", "assets", 
+        "fault_categories", "priorities", "services")->with(["users" => function($q){
+            $q->where("role", "Admin")->orWhere("role", "Limited Technician")->orWhere("role", "Regular Technician");
+        }])->where("id", Auth::user()->hospital_id)->first();
+        return view('work-order-add', compact("hospital"));
     }
 
     /**
@@ -41,10 +46,8 @@ class WorkOrderController extends Controller
      */
     public function store(Request $request, WorkOrder $work_order)
     {
-        $request->vaildate([
-            'id'          => 'required',
+        $request->validate([
             'title'       => 'required',
-            'wo_number'   => 'required',
             'hospital_id' => 'required'
         ]);
 
@@ -54,7 +57,7 @@ class WorkOrderController extends Controller
         $workOrder->title               = $request->title;
         $workOrder->description         = $request->description;
         $workOrder->due_date            = date('Y-m-d', strtotime($request->due_date)); 
-        $workOrder->estimated_durartion = $request->estimated_duration; 
+        $workOrder->estimated_duration = $request->estimated_duration; 
         $workOrder->priority_id         = $request->priority_id;
         $workOrder->hospital_id         = $request->hospital_id;
         $workOrder->fault_category_id   = $request->fault_category_id;
@@ -65,16 +68,16 @@ class WorkOrderController extends Controller
         $workOrder->service_vendor_id   = $request->service_vendor_id;
         $workOrder->request_id          = $request->request_id;
 
-        $last_wo_number = WorkOrder::where('hospital_id', Auth::user()->hospital_id)->latest()->get();
+        $last_wo_number = WorkOrder::where('hospital_id', Auth::user()->hospital_id)->latest()->first();
         if($last_wo_number == null) {
             $workOrder->wo_number = 1;
         } else {
             $workOrder->wo_number = $last_wo_number->wo_number + 1;
         }
 
-        if($request->image != null) {
+        if($request->hasFile("image") != null) {
             $request->validate([
-                'image' => 'required|mime:png,jpg,jpeg'
+                'image' => 'mime:png,jpg,jpeg'
             ]);
 
             $file = $request->file('image');
@@ -86,7 +89,7 @@ class WorkOrderController extends Controller
 
         if($request->hasFile('fileName')) {
             $request->validate([
-                'fileName' => 'required|mime:doc,pdf,docx,zip'
+                'fileName' => 'mime:doc,pdf,docx,zip'
             ]);
 
             $file = $request->file('fileName');

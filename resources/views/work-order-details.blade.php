@@ -76,30 +76,40 @@
                                 </div>
                             </div>
                             <div class="row mb-4">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label><b>Date Created</b></label>
                                         <p>{{Carbon\Carbon::parse($work_order->created_at)->format('jS F, Y')}}</p>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label><b>Due Date</b></label>
                                         <p>{{$work_order->due_date != null ? Carbon\Carbon::parse($work_order->due_date)->format('jS F, Y') : 'N/A'}}</p>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <h6>Lead Technician</h6>
+                                        <p>{{$work_order->user == null ? 'None Assigned' : $work_order->user->firstname.' '.$work_order->user->lastname}}</p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row mb-4">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <h6>Assignees</h6>
-                                        @if($work_order->users->count() == 0 && $work_order->user == null)
-                                        <span class="text-muted">No techinicians assigned yet</span>&nbsp;
+                                        <h6>Additional Technicians</h6>
+                                        @if($work_order->users->count() == 0)
+                                        <span class="text-muted">None assigned</span>&nbsp;
+                                        @else
+                                        <!--User tag avatars come here-->
                                         @endif
                                         <button class="btn btn-round btn-light btn-icon"><i class="fas fa-plus"></i></button>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <h6><b>Asset</b></h6>
                                         <span>{{$work_order->asset != null ? $work_order->asset->name : 'N/A'}}</span>
