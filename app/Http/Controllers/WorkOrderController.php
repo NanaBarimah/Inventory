@@ -63,6 +63,7 @@ class WorkOrderController extends Controller
         $workOrder->unit_id             = $request->unit_id;
         $workOrder->service_vendor_id   = $request->service_vendor_id;
         $workOrder->request_id          = $request->request_id;
+        $work_order->cost               = $request->cost;
 
         $last_wo_number = WorkOrder::where('hospital_id', Auth::user()->hospital_id)->latest()->get();
         if($last_wo_number == null) {

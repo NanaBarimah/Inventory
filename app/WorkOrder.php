@@ -111,4 +111,9 @@ class WorkOrder extends Model
     {
         return $this->belongsToMany('App\Part', 'part_work_orders', 'part_id', 'work_order_id')->withTimestamps();
     }
+
+    public function user_messages()
+    {
+        return $this->belongsToMany('App\User', 'work_order_messages', 'user_id', 'work_order_id')->withPivot('action_taken')->withTimestamps();
+    }
 }

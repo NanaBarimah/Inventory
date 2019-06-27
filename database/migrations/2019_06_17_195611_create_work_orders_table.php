@@ -21,6 +21,7 @@ class CreateWorkOrdersTable extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->date('due_date')->nullable();
+            $table->decimal('cost', 10, 2)->default(0.00);
             $table->string('asset_id')->nullable();
             $table->integer('estimated_duration')->nullable();
             $table->string('priority_id')->nullable();
