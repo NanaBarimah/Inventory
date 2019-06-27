@@ -17,18 +17,8 @@
                         <div class="collapse" id="maintenanceList">
                             <ul class="nav">
                                 <li>
-                                    <a href="/maintenance">
-                                        <span class="sidebar-normal">New Maintenance Report</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/request-maintenance">
-                                        <span class="sidebar-normal">Request Maintenance</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/maintenance/history">
-                                        <span class="sidebar-normal">Maintenance History</span>
+                                    <a href="/work-orders">
+                                        <span class="sidebar-normal">Work Orders</span>
                                     </a>
                                 </li>
                                 <li>

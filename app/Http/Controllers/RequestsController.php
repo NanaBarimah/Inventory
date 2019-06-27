@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Requests;
 use App\WorkOrder;
+use App\User;
 use Auth;
 use App\Notifications\RequestReceived;
 use App\Notifications\RequestAssigned;
@@ -82,7 +83,7 @@ class RequestsController extends Controller
 
          if($request->hasFile('fileName')) {
              $request->validate([
-                'fileName'   => 'required|mime:doc,pdf,docx,zip'
+                'fileName'   => 'required|mimes:doc,pdf,docx,zip'
              ]);
             $file = $request->file('fileName');
             $name = $file->getClientOriginalName();

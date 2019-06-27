@@ -77,6 +77,6 @@ class Asset extends Model
     
     public function pm_schedules()
     {
-        return $this->belongsToMany('App\PmSchedule', 'asset_pm_schedules', 'pm_schedule_id', 'asset_id')->withTimestamps();
+        return $this->belongsToMany('App\PmSchedule', 'asset_pm_schedules', 'asset_id', 'pm_schedule_id')->withTimestamps();
     }
 }

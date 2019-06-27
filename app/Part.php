@@ -32,11 +32,11 @@ class Part extends Model
 
     public function purchase_orders()
     {
-        return $this->belongsToMany('App\PurchaseOrder', 'part_purchases')->withTimestamps();
+        return $this->belongsToMany('App\PurchaseOrder', 'part_purchases')->withPivot('part_name', 'quantity', 'unit_cost')->withTimestamps();
     }
 
     public function work_orders()
     {
-        return $this->belongsToMany('App\WorkOrder', 'part_work_orders', 'work_order_id', 'part_id')->withTimestamps();
+        return $this->belongsToMany('App\WorkOrder', 'part_work_orders', 'part_id', 'work_order_id')->withPivot('quantity')->withTimestamps();
     }
 }

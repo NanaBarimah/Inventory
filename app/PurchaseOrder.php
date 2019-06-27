@@ -31,7 +31,7 @@ class PurchaseOrder extends Model
 
     public function parts()
     {
-        return $this->belongsToMany('App\Part', 'part_purchases')->withTimestamps();
+        return $this->belongsToMany('App\Part', 'part_purchases')->withPivot('part_name', 'quantity', 'unit_cost')->withTimestamps();
     }
 
     public function approve()
@@ -52,5 +52,19 @@ class PurchaseOrder extends Model
     public function work_order()
     {
         return $this->belongsTo('App\WorkOrder');
+    }
+
+    public function createLink()
+    {
+        $str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $strcode = strlen($str)-1;
+        $id  = '';
+
+        for ($i = 0; $i < 84; $i++) {
+                $id .= $str[mt_rand(0, $strcode)]; 
+        }
+        
+        $this->hash_link = $id;
     }
 }

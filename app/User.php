@@ -100,6 +100,6 @@ class User extends Authenticatable
 
     public function messages()
     {
-        return $this->belongsToMany('App\WorkOrder', 'work_order_messages', 'work_order_id', 'user_id')->withPivot('action_taken')->withTimestamps();
+        return $this->belongsToMany('App\WorkOrder', 'work_order_messages', 'user_id', 'work_order_id')->withPivot('action_taken')->withTimestamps();
     }
 }
