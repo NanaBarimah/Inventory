@@ -31,7 +31,7 @@ class PurchaseOrder extends Model
 
     public function parts()
     {
-        return $this->belongsToMany('App\Part', 'part_purchases')->withTimestamps();
+        return $this->belongsToMany('App\Part', 'part_purchases')->withPivot('part_name', 'quantity', 'unit_cost')->withTimestamps();
     }
 
     public function approve()
