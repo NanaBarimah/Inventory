@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\WorkOrder;
 use App\Hospital;
+use App\Comment;
+
 use Illuminate\Http\Request;
 
 use Auth;
@@ -290,6 +292,46 @@ class WorkOrderController extends Controller
             "activity" => "required"
         ]);
         $workOrder->user_messages()->attach($request->user_id, ["action_taken" => $request->activity]);
+
+        return response()->json([
+            "error" => false,
+            "message" => "Activity logged"
+        ]);
+    }
+
+    public function comment(WorkOrder $workOrder, Request $request){
+        $request->validate([
+            "user_id" => "required",
+            "comment" => "required"
+        ]);
+        $comment = new Comment();
+        $comment->user_id = $request->user_id;
+        $comment->comment = $request->comment;
+        $comment->work_order_id = $workOrder->id;
+        $comment->save();
+
+        return response()->json([
+            "error" => false,
+            "comment" => $comment,
+            "message" => "Comment added"
+        ]);
+    }
+
+    public function getComments(WorkOrder $workOrder){
+        return response()->json($workOrder->comments()->with("user")->latest()->get());
+    }
+
+    public function getSpareParts(WorkOrder $workOrder){
+        return response()->json($workOrder->parts()->latest()->get());
+    }
+
+    public function attachSpareParts(WorkOrder $workOrder, Request $request){
+        $request->validate([
+            "part_id" => "required",
+            "quantity" => "required",
+            "activity" => "required"
+        ]);
+        $workOrder->user_messages()->attach($request->user_id, ["quantity" => $request->quantity]);
 
         return response()->json([
             "error" => false,

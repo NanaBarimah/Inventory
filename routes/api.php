@@ -68,8 +68,11 @@ Route::middleware('auth:api')->group(function(){
     Route::get("work-order/available-technicians/{workOrder}", "WorkOrderController@availableTechnicians");
     Route::post("work-order/{workOrder}/assign-team", "WorkOrderController@assignTeam");
     Route::post("work-order/{workOrder}/record-activity", "WorkOrderController@recordActivity");
+    Route::post("work-order/{workOrder}/comment", "WorkOrderController@comment");
+    Route::get("work-order/{workOrder}/comments", "WorkOrderController@getComments");
     Route::put("work-order/{workOrder}/assign-asset", "WorkOrderController@assignAsset");
     Route::get("work-order/{workOrder}/activities", "WorkOrderController@getActivities");
+    Route::get("work-order/{workOrder}/spare-parts", "WorkOrderController@getSpareParts");
 
     Route::post('schedule/add', 'ScheduleController@store');
 

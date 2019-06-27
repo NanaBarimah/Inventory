@@ -143,6 +143,24 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="parts">
+                            <a href="javascript:void(0)" class="btn btn-round pull-right" 
+                            data-toggle="modal" data-target="#" style="margin-top: -50px">Add Spare Part</a>
+                            <table id="spare-parts" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Part Name</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Part Name</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                         <div class="tab-pane" id="pos">
                         </div>
@@ -156,11 +174,17 @@
                     <h6 class="title">Comments</h6>
                 </div>
                 <div class="card-body">
-                    <span class="text-muted">No comments made yet</span>
+                    <div class="row">
+                        <div id="comments" class="col-md-12">
+                            <p class="text-center"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></p>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
-                    <textarea class="form-control" placeholder="Write comment"></textarea>
-                    <button class="btn btn-round btn-purple mt-2 pull-right mb-3">Comment</button>
+                    <form id="add_comment">
+                        <textarea class="form-control" placeholder="Write comment" name="comment" id="comment"></textarea>
+                        <button type="submit" class="btn btn-round btn-purple mt-2 pull-right mb-3">Comment</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -252,6 +276,7 @@
         fetchTechnicians();
         fetchAssets();
         fetchActivities();
+        fetchComments();
     })
 
     const fetchTechnicians = () => {
@@ -348,6 +373,57 @@
             }
         });
     }
+
+    const fetchParts = () => {
+        $.ajax({
+            url : '/api/work-order/{{$work_order->id}}/spare-parts',
+            data : 'GET',
+            success : (data) => {
+                if(data.length == 0){
+                    $("#comments").html(`<p><i><b>No comments made</b></i></p>`)
+                }else{
+                    $('#comments').html(null);
+                    $.each(data, function(index, comment){
+                        $('#comments').append(`
+                        <div class="col-md-12">
+                            <p>${comment.comment}<br/>
+                            <span class="text-small"><a href="javascript:void(0)">${comment.user.firstname} ${comment.user.lastname}</a> <i>${comment.created_at}</i></span>
+                            </p>
+                        </div>
+                        `)
+                    });
+                }
+            },
+            error : (xhr) => {
+            }
+        });
+    }
+
+    const fetchComments = () => {
+        $.ajax({
+            url : '/api/work-order/{{$work_order->id}}/comments',
+            data : 'GET',
+            success : (data) => {
+                if(data.length == 0){
+                    $("#comments").html(`<p><i><b>No comments made</b></i></p>`)
+                }else{
+                    $('#comments').html(null);
+                    $.each(data, function(index, comment){
+                        $('#comments').append(`
+                        <div class="col-md-12">
+                            <p>${comment.comment}<br/>
+                            <span class="text-small"><a href="javascript:void(0)">${comment.user.firstname} ${comment.user.lastname}</a> <i>${comment.created_at}</i></span>
+                            </p>
+                        </div>
+                        `)
+                    });
+                }
+            },
+            error : (xhr) => {
+            }
+        });
+    }
+    
     $("#add_engineer").on("submit", function(e){
         e.preventDefault();
         let data = new FormData(this);
@@ -372,6 +448,28 @@
         let btn = $(this).find('[type="submit"]');
 
         submit_file_form("/api/work-order/{{$work_order->id}}/record-activity", "post", data, undefined, btn, true);
+    });
+
+    $("#add_comment").on("submit", function(e){
+        e.preventDefault();
+        let data = new FormData(this);
+        data.append("user_id", "{{Auth::user()->id}}")
+        let btn = $(this).find('[type="submit"]');
+        
+        const success = (data) => {
+            if($('#comments').html() == `<p><i><b>No comments made</b></i></p>`){
+                $('#comments').html(null);
+            }
+
+            $("#comments").append(`<div class="col-md-12">
+                <p>${data.comment.comment}<br/>
+                <span class="text-small">
+                <a href="javascript:void(0)">{{Auth::user()->firstname.' '.Auth::user()->lastname}}</a> <i>${data.comment.created_at}</i></span>
+                </p>
+            </div>`);
+            $("#comment").html(null);
+        }
+        submit_file_form("/api/work-order/{{$work_order->id}}/comment", "post", data, success, btn, false);
     });
     </script>
 @endsection
