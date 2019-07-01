@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Hospital;
 use Auth;
+use Mail;
 use Notification;
 use App\Notifications\UserFormUpdate;
 use Illuminate\Support\Facades\Hash;
@@ -58,12 +59,35 @@ class UserController extends Controller
 
         if($user->save()){
             $result = false;
+
+            $data = array('link' => '/user/profile-complete/'.$user->id);
+
+            $to_name = ucwords($request->firstname.' '. $request->lastname);
+            $to_email = $user->email;
+
+            Mail::send('email_templates.email_template', $data, function($message) use($to_name, $to_email) {
+                $message->to($to_email, $to_name)
+                        ->subject('Complete User Form');
+                $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
+            });
+
+            if(count(Mail::failures()) > 0) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Could not send the mail. Try again!'
+                ]);
+            } else {
+                return response()->json([
+                    'error' => false,
+                    'message' => 'User profile completion link sent successfully!'
+                ]);
+            }
         }
 
         return response()->json([
             'error'   => $result,
             'data'    => $user,
-            'message' => !$result ? 'Successfully created user' : 'Error creating user'
+            'message' => !$result ? 'User created successfully' : 'Error creating user'
             ],201);
     }
 
