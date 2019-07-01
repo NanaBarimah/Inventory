@@ -1,3 +1,7 @@
+@php
+$user = Auth::user();
+@endphp
+
 @extends('layouts.user-dashboard', ['page_title' => $work_order->title])
 @section('styles')
 <style>
@@ -34,10 +38,13 @@
                             Actions
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item">Mark as <b>open</b></button>
+                            @if($user->id == $work_order->assigned_to)
                             <button class="dropdown-item">Mark as <b>in progress</b></button>
                             <button class="dropdown-item">Mark as <b>on hold</b></button>
+                            @if(($work_order->status == 2 || $work_order->status == 3) && $work_order->status != 1)
                             <button class="dropdown-item">Mark as <b>closed</b></button>
+                            @endif
+                            @endif
                             <button class="dropdown-item"><b>Edit</b> work order</button>
                         </div>
                     </div>
@@ -54,6 +61,14 @@
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" role="tablist" href="#pos">Purchase Orders</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" role="tablist" href="#attachments">Attachments</a>
+                        </li>
+                        @if($work_order->is_complete == 1 && $work_order->user_id == $user->id)
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" role="tablist" href="#report">Report</a>
+                        </li>
+                        @endif
                     </ul>
                 </div>
                 <div class="card-body">
@@ -102,6 +117,12 @@
                                         <p>{{$work_order->user == null ? 'None Assigned' : $work_order->user->firstname.' '.$work_order->user->lastname}}</p>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label><b>Fault Category</b></label>
+                                        <p>{{$work_order->fault_category == null ? 'N/A' : $work_order->fault_category->name}}</p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row mb-4">
                                 <div class="col-md-12">
@@ -144,18 +165,20 @@
                         </div>
                         <div class="tab-pane" id="parts">
                             <a href="javascript:void(0)" class="btn btn-round pull-right" 
-                            data-toggle="modal" data-target="#" style="margin-top: -50px">Add Spare Part</a>
+                            data-toggle="modal" data-target="#add_part" style="margin-top: -50px">Add Spare Part</a>
                             <table id="spare-parts" class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Part Name</th>
                                         <th>Quantity</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th>Part Name</th>
                                         <th>Quantity</th>
+                                        <th>Action</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -163,6 +186,60 @@
                             </table>
                         </div>
                         <div class="tab-pane" id="pos">
+                            <div class="row">
+                                <div class="col-sm-12">    
+                                <a href="/purchase-orders/add?work_order={{$work_order->id}}" class="btn btn-round pull-right" 
+                                 style="margin-top: -50px">Create Purchase Order</a>
+                                    @if($work_order->purchase_orders->count() > 0)
+                                    <table id="purchase_orders" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Order #</th>
+                                                <th>Item Count</th>
+                                                <th>Total Cost</th>
+                                                <th>Requester</th>
+                                                <th>Vendor</th>
+                                                <th>Created At</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Order #</th>
+                                                <th>Item Count</th>
+                                                <th>Total Cost</th>
+                                                <th>Requester</th>
+                                                <th>Vendor</th>
+                                                <th>Created At</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            @foreach($work_order->purchase_orders as $order)
+                                            <tr>
+                                                <td><b><a href="/purchase-order/{{$order->id}}">{{$order->title}}</a></b></td>
+                                                <td>{{$order->po_number}}</td>
+                                                <td>{{$order->order_items->count()}}</td>
+                                                <td>GHS {{$order->item_cost + $order->sales_tax + $order->shipping_cost + $order->other_cost}}</td>
+                                                <td>{{$order->user->firstname.' '.$order->user->lastname}}</td>
+                                                <td>{{$order->service_vendor->name}}</td>
+                                                <td>{{date('jS F Y', strtotime($order->created_at))}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    @else
+                                    <p class="text-muted text-center">No purchase orders associated with this work order</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="attachments">
+                            <div class="row">
+                                <div class="col-sm-12">    
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -265,6 +342,47 @@
         </form>
     </div>
 </div>
+<div id="add_part" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method = "post" id="add_spare_part">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h6 class="header">Add Spare Part</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                <label><b>Select Part</b> <span class="text-danger">*</span></label>
+                                <select class="selectpicker col-md-12" data-style="form-control" 
+                                name="part_id" id="part_id" title="Select Part" data-live-search="true" required>
+                                    @foreach($hospital->parts as $part)
+                                    <option value="{{$part->id}}">{{$part->name}}</option>
+                                    @endforeach
+                                </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-2">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label><b>Quantity</b> <span class="text-danger">*</span></label>
+                                    <input type="number" step="1" class="form-control" id="quantity" name="quantity" required/>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="modal-footer mt-4">
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-purple text-right pull-right">Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('scripts')
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
@@ -272,11 +390,15 @@
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script>
     $("[data-toggle='tooltip']").tooltip();
+
+    let parts_table = generateDtbl("#spare-parts", "No parts associated with this work order", "Search parts");
+    let orders_table = generateDtbl("#purchase_orders", "No purchase orders created for this work order", "Search");
     $(document).ready(function(){
         fetchTechnicians();
         fetchAssets();
         fetchActivities();
         fetchComments();
+        fetchParts();
     })
 
     const fetchTechnicians = () => {
@@ -303,7 +425,7 @@
 
     const fetchAssets = () => {
         $.ajax({
-            url : '/api/assets/{{Auth::user()->hospital_id}}',
+            url : '/api/assets/{{$user->hospital_id}}',
             data : 'GET',
             success : (data) => {
                 if(data.length == 0){
@@ -379,19 +501,13 @@
             url : '/api/work-order/{{$work_order->id}}/spare-parts',
             data : 'GET',
             success : (data) => {
-                if(data.length == 0){
-                    $("#comments").html(`<p><i><b>No comments made</b></i></p>`)
-                }else{
-                    $('#comments').html(null);
-                    $.each(data, function(index, comment){
-                        $('#comments').append(`
-                        <div class="col-md-12">
-                            <p>${comment.comment}<br/>
-                            <span class="text-small"><a href="javascript:void(0)">${comment.user.firstname} ${comment.user.lastname}</a> <i>${comment.created_at}</i></span>
-                            </p>
-                        </div>
-                        `)
+                if(data.length > 0){
+                    let parts = [];
+                    $.each(data, function(index, part){
+                        let temp = [part.name, part.pivot.quantity, `<a href="javascript:void(0)" class="text-12 text-info">Edit</a>&nbsp;&nbsp;<a href="javascript:void(0)" class="text-12 text-danger">Remove</a>`];
+                        parts.push(temp);
                     });
+                    parts_table.rows.add(parts).draw();
                 }
             },
             error : (xhr) => {
@@ -444,7 +560,7 @@
     $("#add_activity_form").on("submit", function(e){
         e.preventDefault();
         let data = new FormData(this);
-        data.append("user_id", "{{Auth::user()->id}}")
+        data.append("user_id", "{{$user->id}}")
         let btn = $(this).find('[type="submit"]');
 
         submit_file_form("/api/work-order/{{$work_order->id}}/record-activity", "post", data, undefined, btn, true);
@@ -453,7 +569,7 @@
     $("#add_comment").on("submit", function(e){
         e.preventDefault();
         let data = new FormData(this);
-        data.append("user_id", "{{Auth::user()->id}}")
+        data.append("user_id", "{{$user->id}}")
         let btn = $(this).find('[type="submit"]');
         
         const success = (data) => {
@@ -464,12 +580,21 @@
             $("#comments").append(`<div class="col-md-12">
                 <p>${data.comment.comment}<br/>
                 <span class="text-small">
-                <a href="javascript:void(0)">{{Auth::user()->firstname.' '.Auth::user()->lastname}}</a> <i>${data.comment.created_at}</i></span>
+                <a href="javascript:void(0)">{{$user->firstname.' '.$user->lastname}}</a> <i>${data.comment.created_at}</i></span>
                 </p>
             </div>`);
             $("#comment").html(null);
         }
         submit_file_form("/api/work-order/{{$work_order->id}}/comment", "post", data, success, btn, false);
+    });
+
+    $("#add_spare_part").on("submit", function(e){
+        e.preventDefault();
+
+        let data = new FormData(this);
+        let btn = $(this).find('[type="submit"]');
+
+        submit_file_form("/api/work-order/{{$work_order->id}}/add-part", "post", data, undefined, btn, true);
     });
     </script>
 @endsection

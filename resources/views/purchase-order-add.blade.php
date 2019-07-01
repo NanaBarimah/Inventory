@@ -385,6 +385,7 @@
                 data.append("item_cost", item_cost);
                 data.append("orderItems", JSON.stringify(cart));
                 data.append("added_by", "{{Auth::user()->id}}");
+                data.append("work_order_id", "{{$work_order}}")
 
                 let btn = $(this).find('[type="submit"]');
                 

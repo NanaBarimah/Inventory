@@ -29,11 +29,16 @@ class PurchaseOrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
         $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("parts", "services")->first();
-        return view("purchase-order-add", compact("hospital"));
+        $work_order = null;
+
+        if($request->work_order != null){
+            $work_order = $request->work_order;
+        }
+        return view("purchase-order-add", compact("hospital", "work_order"));
     }
 
     /**
@@ -73,6 +78,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder->address           = $request->address;
         $purchaseOrder->contact_number    = $request->contact_number;
         $purchaseOrder->contact_name      = $request->contact_name;
+        $purchaseOrder->work_order_id     = $request->work_order_id;
  
         $last_po_number = PurchaseOrder::where('hospital_id', Auth::user()->hospital_id)->latest()->first();
 

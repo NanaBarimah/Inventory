@@ -137,8 +137,9 @@ class WorkOrderController extends Controller
     public function show($workOrder)
     {
         //
-        $work_order = WorkOrder::with("user", "users", "priority", "asset" )->where("id", $workOrder)->first();
-        return view("work-order-details", compact("work_order"));
+        $work_order = WorkOrder::with("user", "users", "priority", "asset", "purchase_orders", "fault_category")->where("id", $workOrder)->first();
+        $hospital = Hospital::with("parts")->where("id", Auth::user()->hospital_id)->first();
+        return view("work-order-details", compact("work_order", "hospital"));
     }
 
     /**
@@ -328,14 +329,15 @@ class WorkOrderController extends Controller
     public function attachSpareParts(WorkOrder $workOrder, Request $request){
         $request->validate([
             "part_id" => "required",
-            "quantity" => "required",
-            "activity" => "required"
+            "quantity" => "required"
         ]);
-        $workOrder->user_messages()->attach($request->user_id, ["quantity" => $request->quantity]);
+
+        $workOrder->parts()->attach($request->part_id, ["quantity" => $request->quantity]);
 
         return response()->json([
             "error" => false,
-            "message" => "Activity logged"
+            "message" => "Part added"
         ]);
     }
+    
 }

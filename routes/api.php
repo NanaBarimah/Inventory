@@ -73,6 +73,7 @@ Route::middleware('auth:api')->group(function(){
     Route::put("work-order/{workOrder}/assign-asset", "WorkOrderController@assignAsset");
     Route::get("work-order/{workOrder}/activities", "WorkOrderController@getActivities");
     Route::get("work-order/{workOrder}/spare-parts", "WorkOrderController@getSpareParts");
+    Route::post("work-order/{workOrder}/add-part", "WorkOrderController@attachSpareParts");
 
     Route::post('schedule/add', 'ScheduleController@store');
 
