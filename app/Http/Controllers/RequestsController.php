@@ -187,7 +187,7 @@ class RequestsController extends Controller
                 $to_email = $requester->email;
             }
 
-            Mail::send('email_templates.email_template', function($message) use($to_name, $to_email) {
+            /*Mail::send('email_templates.email_template', function($message) use($to_name, $to_email) {
                 $message->to($to_email, $to_name)
                         ->subject('Work order request accepted');
                 $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
@@ -203,7 +203,7 @@ class RequestsController extends Controller
                     'error' => false,
                     'message' => 'Work order request accepted successfully!'
                 ]);
-            }
+            }*/
 
             if($work_order->save()) {
                 return response()->json([
@@ -243,7 +243,7 @@ class RequestsController extends Controller
                 $to_email = $requester->email;
             }
             
-            Mail::send('email_templates.email_template', $data, function($message) use($to_name, $to_email){
+            /*Mail::send('email_templates.email_template', $data, function($message) use($to_name, $to_email){
                 $message->to($to_email, $to_name)
                         ->subject("Work order request declined");
                 $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
@@ -259,7 +259,7 @@ class RequestsController extends Controller
                     'error' => false,
                     'message' => 'Work order request declined successfully.'
                 ]);
-            }
+            }*/
 
             return response()->json([
                 'error'   => false,

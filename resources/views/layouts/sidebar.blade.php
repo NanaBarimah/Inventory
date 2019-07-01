@@ -16,10 +16,32 @@
                         </a>
                         <div class="collapse" id="maintenanceList">
                             <ul class="nav">
+                                
                                 <li>
                                     <a href="/work-orders">
                                         <span class="sidebar-normal">Work Orders</span>
                                     </a>
+                                </li>
+                                <li>
+                                    <a data-toggle="collapse" href="#pms">
+                                        <p>Preventive Maintenance (PM)
+                                            <b class="caret"></b>
+                                        </p>
+                                    </a>
+                                    <div class="collapse" id="pms">
+                                        <ul class="nav">
+                                            <li>
+                                                <a href="javascript:void(0)">
+                                                    <span class="sidebar-normal">PM Schedules</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="javascript:void(0)">
+                                                    <span class="sidebar-normal">PM Reports</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </li>
                                 <li>
                                     <a href="/schedule">
