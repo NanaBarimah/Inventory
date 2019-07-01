@@ -319,7 +319,7 @@ class WorkOrderController extends Controller
     }
 
     public function getComments(WorkOrder $workOrder){
-        return response()->json($workOrder->comments()->with("user")->latest()->get());
+        return response()->json($workOrder->comments()->with("user")->get());
     }
 
     public function getSpareParts(WorkOrder $workOrder){
