@@ -8,7 +8,8 @@ use App\Hospital;
 use App\Comment;
 
 use Illuminate\Http\Request;
-
+use Notification;
+use App\Notifications\WorkOrderStatus;
 use Auth;
 
 class WorkOrderController extends Controller
@@ -176,67 +177,6 @@ class WorkOrderController extends Controller
         //
     }
 
-    public function on_hold(WorkOrder $workOrder)
-    {
-        $workOrder->on_hold();
-
-        if($workOrder->save()){
-            $users = User::where([['role', 'Admin'], ['hospital_id', $workOrder->hospital_id]])->get();
-            Notification::send($users, new WorkOrderStatus($workOrder));
-
-            return response()->json([
-                'error' => false,
-                'message' => 'Work Order is on hold'
-            ]);
-        }
-
-        return response()->json([
-            'error' => true,
-            'message' => 'Error changing the status of work order. Try again!'
-        ]);
-    }
-
-    public function in_progress(WorkOrder $workOrder)
-    {
-        $workOrder->in_progress();
-
-        if($workOrder->save()){
-            $users = User::where([['role', 'Admin'], ['hospital_id', $workOrder->hospital_id]])->get();
-            Notification::send($users, new WorkOrderStatus($workOrder));
-
-            return response()->json([
-                'error' => false,
-                'message' => 'Work Order is in progress'
-            ]);
-        }
-
-        return response()->json([
-            'error' => true,
-            'message' => 'Error changing the status of work order. Try again!'
-        ]);
-    }
-
-    public function complete(WorkOrder $workOrder)
-    {
-        $workOrder->complete();
-
-        if($workOrder->save()){
-
-            $users = User::where([['role', 'Admin'], ['hospital_id', $workOrder->hospital_id]])->get();
-            Notification::send($users, new WorkOrderStatus($workOrder));
-
-            return response()->json([
-                'error' => false,
-                'message' => 'Work Order completed'
-            ]);
-        }
-
-        return response()->json([
-            'error' => true,
-            'message' => 'Error changing the status of work order. Try again!'
-        ]);
-    }
-
     public function availableTechnicians($workOrder){
         $engineers = User::whereDoesntHave('work_order_teams', function($query) use ($workOrder){
             $query->where("work_order_id", $workOrder);
@@ -339,5 +279,55 @@ class WorkOrderController extends Controller
             "message" => "Part added"
         ]);
     }
+
+    public function updateStatus(Workorder $workOrder, Request $request){
+        $workOrder->status = $request->status;
+        if($workOrder->update()){
+            $users = User::where([['role', 'Admin'], ['hospital_id', $workOrder->hospital_id]])->get();
+            switch($request->status){
+                case 1:
+                    Notification::send($users, new WorkOrderStatus($workOrder));
+                    break;
+                case 2: 
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been set to in progress'));
+                    break;
+                case 3: 
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been set on hold'));
+                    break;
+                case 4: 
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been opened'));
+                    break;
+                case 5: 
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been set to pending'));
+                    break;
+                default: 
+                    break;
+            }
+
+            return response()->json([
+                'error' => false,
+                'message' => "Work order status updated"
+            ]);
+        }
+        return response()->json([
+            'error' => true,
+            "message" => "Could not update work order"
+        ]);
+    }
     
+    public function complete(WorkOrder $workOrder){
+        $workOrder->finish();
+        
+        if($workOrder->save()){
+            return response()->json([
+                "error" => false,
+                "message" => "Work order has been marked as completed"
+            ]);
+        }
+
+        return response()->json([
+            "error" => true,
+            "message" => "Could not mark work order as completed"
+        ]);
+    }
 }

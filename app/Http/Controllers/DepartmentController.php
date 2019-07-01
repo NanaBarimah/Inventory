@@ -145,7 +145,7 @@ class DepartmentController extends Controller
     }
     
     public function view($department){
-        $department = Department::where([['id' , $department], ['hospital_id', Auth::user()->hospital_id]])->first();
+        $department = Department::where([['id' , $department], ['hospital_id', Auth::user()->hospital_id]])->with("units", "assets", "units.assets")->first();
 
         if($department == null){
             return abort(404);

@@ -79,4 +79,8 @@ class Asset extends Model
     {
         return $this->belongsToMany('App\PmSchedule', 'asset_pm_schedules', 'asset_id', 'pm_schedule_id')->withTimestamps();
     }
+
+    public function work_orders(){
+        return $this->hasMany('App\WorkOrder');
+    }
 }

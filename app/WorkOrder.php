@@ -41,6 +41,11 @@ class WorkOrder extends Model
     {
         $this->status = 1;
     }
+    
+    public function finish()
+    {
+        $this->is_complete = 1;
+    }
 
     public function priority()
     {

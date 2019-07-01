@@ -125,7 +125,7 @@ class AssetController extends Controller
     public function show($asset)
     {
         //
-        $asset = Asset::with("unit", "department", "asset_category", "service_vendor")->where("id", $asset)->first();
+        $asset = Asset::with("unit", "department", "asset_category", "service_vendor", "work_orders")->where("id", $asset)->first();
         
         $hospital = Hospital::where("id", Auth::user()->hospital_id)->with(["assets" => function($q) use ($asset){
             $q->where("id", "<>", $asset->id);

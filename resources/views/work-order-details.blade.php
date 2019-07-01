@@ -22,6 +22,10 @@ $user = Auth::user();
 .text-small{
     font-size:12px;
 }
+
+.image-preview{
+    cursor:pointer;
+}
 </style>
 @endsection
 @section('content')
@@ -38,14 +42,25 @@ $user = Auth::user();
                             Actions
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
+                        @if($work_order->is_complete == 0 || $work_order->is_complete == null)
                             @if($user->id == $work_order->assigned_to)
-                            <button class="dropdown-item">Mark as <b>in progress</b></button>
-                            <button class="dropdown-item">Mark as <b>on hold</b></button>
-                            @if(($work_order->status == 2 || $work_order->status == 3) && $work_order->status != 1)
-                            <button class="dropdown-item">Mark as <b>closed</b></button>
+                            @if($work_order->status !== 2)
+                            <button class="dropdown-item" onclick="change_status(2, this)">Mark as <b>in progress</b></button>
                             @endif
+                            @if($work_order->status !== 3)
+                            <button class="dropdown-item" onclick="change_status(3, this)">Mark as <b>on hold</b></button>
+                            @endif
+                            @if($work_order->status == 2 || $work_order->status == 3)
+                            <button class="dropdown-item"  onclick="change_status(1, this)">Mark as <b>closed</b></button>
+                            @endif
+                            @endif
+                            @if($user->role=="Admin" && $work_order->status == 1)
+                            <button class="dropdown-item" data-toggle="modal" data-target="#complete_modal">Mark as <b>completed</b></button>
                             @endif
                             <button class="dropdown-item"><b>Edit</b> work order</button>
+                        @else
+                            <button class="dropdown-item" disabled>No actions available</button>
+                        @endif
                         </div>
                     </div>
                     <ul class="nav nav-tabs nav-tabs-primary text-center">
@@ -64,7 +79,7 @@ $user = Auth::user();
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" role="tablist" href="#attachments">Attachments</a>
                         </li>
-                        @if($work_order->is_complete == 1 && $work_order->user_id == $user->id)
+                        @if($work_order->is_complete == 1 && $work_order->assigned_to == $user->id)
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" role="tablist" href="#report">Report</a>
                         </li>
@@ -78,7 +93,8 @@ $user = Auth::user();
                                 <div class="col-md-12 text-right">
                                     <label><b>Status</b></label>
                                     @if($work_order->status == 1)
-                                    <span class="badge badge-light">Closed</span>
+                                    <span class="badge badge-info">Closed</span>
+                                    
                                     @elseif($work_order->status == 2)
                                     <span class="badge badge-success">In Progress</span>
                                     @elseif($work_order->status == 3)
@@ -156,7 +172,7 @@ $user = Auth::user();
                         </div>
                         <div class="tab-pane" id="activity">
                             <a href="javascript:void(0)" class="btn btn-round pull-right" 
-                            data-toggle="modal" data-target="#add_activity" style="margin-top: -50px">Add Activity</a>
+                            data-toggle="modal" data-target="#add_activity" style="margin-top: -50px" @if($work_order->is_complete == 1) disabled @endif>Add Activity</a>
                             <div class="row">
                                 <div class="col-sm-12" id="activities">
                                     <p class="text-center"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></p>
@@ -165,7 +181,7 @@ $user = Auth::user();
                         </div>
                         <div class="tab-pane" id="parts">
                             <a href="javascript:void(0)" class="btn btn-round pull-right" 
-                            data-toggle="modal" data-target="#add_part" style="margin-top: -50px">Add Spare Part</a>
+                            data-toggle="modal" data-target="#add_part" style="margin-top: -50px"  @if($work_order->is_complete == 1) disabled @endif>Add Spare Part</a>
                             <table id="spare-parts" class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -189,7 +205,7 @@ $user = Auth::user();
                             <div class="row">
                                 <div class="col-sm-12">    
                                 <a href="/purchase-orders/add?work_order={{$work_order->id}}" class="btn btn-round pull-right" 
-                                 style="margin-top: -50px">Create Purchase Order</a>
+                                 style="margin-top: -50px"  @if($work_order->is_complete == 1) disabled @endif>Create Purchase Order</a>
                                     @if($work_order->purchase_orders->count() > 0)
                                     <table id="purchase_orders" class="table table-bordered table-hover">
                                         <thead>
@@ -236,11 +252,99 @@ $user = Auth::user();
                         </div>
                         <div class="tab-pane" id="attachments">
                             <div class="row">
-                                <div class="col-sm-12">    
-
+                                <div class="fileinput fileinput-new col-md-6 col-sm-12" data-provides="fileinput">
+                                    <div class="col-md-12 form-group">
+                                        <label style="display:block;"><b>Attached Image</b></label>
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                            <div class="fileinput-new thumbnail">
+                                            <div style="display: none; position: absolute; z-index: 110; left: 400; top: 100; width: 15; height: 15" id="preview_div"></div>
+                                                <img src="{{asset('img/assets/work_orders/'.$work_order->image)}}" class="image-preview" onerror = "this.src = '{{asset('img/image_placeholder.jpg')}}'"/>
+                                            </div>
+                                            <div class="fileinput-preview fileinput-exists thumbnail"></div>
+                                            <div>
+                                                <span class="btn btn-rose btn-round btn-file">
+                                                    <span class="fileinput-new">Select image</span>
+                                                    <span class="fileinput-exists">Change</span>
+                                                    <input type="file" name="image" />
+                                                </span>
+                                                <a href="#pablo" class="btn btn-danger btn-round fileinput-exists"
+                                                    data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label><b>Attached File</b></label>
+                                        @if($work_order->fileName == null)
+                                        <p>N/A</p>
+                                        <div class="form-group form-file-upload form-file-simple mb-2">
+                                            <label><b>Attach New File</b></label>
+                                            <input class="form-control inputFileVisible" placeholder="Select file...">
+                                            <input type="file" class="inputFileHidden" name="fileName">
+                                        </div>
+                                        @else
+                                        <a href="javascript:void(0)">{{$work_order->fileName}}</a>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        @if($work_order->is_complete == 1)
+                        <div class="tab-pane" id="report">
+                            <form id="report_form">
+                                <div class="row mb-4">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label><b>Total Cost of Maintenance</b></label>
+                                            <input type="number" step="0.01" name="total_cost" class="form-control"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label><b>Work Hours</b></label>
+                                            <input type="number" step="0.01" name="maintenance_duration" class="form-control"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label><b>Date completed</b></label>
+                                            <input type="text" name="date_completed" class="form-control datetimepicker"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label><b>Extra Notes</b></label>
+                                            <textarea class="form-control" name="extra_notes"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label><b>Equipment status</b></label>
+                                            <select class="selectpicker" data-style="form-control" title="Status" name="status">
+                                                <option>Good</option>
+                                                <option>Bad</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label><b>Availability</b></label>
+                                            <select class="selectpicker" data-style="form-control" title="Availability" name="availability">
+                                                <option>Operational</option>
+                                                <option>Non operational</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pull-right text-right pr-3">
+                                    <button class="btn btn-purple" type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -260,7 +364,7 @@ $user = Auth::user();
                 <div class="card-footer">
                     <form id="add_comment">
                         <textarea class="form-control" placeholder="Write comment" name="comment" id="comment"></textarea>
-                        <button type="submit" class="btn btn-round btn-purple mt-2 pull-right mb-3">Comment</button>
+                        <button type="submit" class="btn btn-round btn-purple mt-2 pull-right mb-3"  @if($work_order->is_complete == 1) disabled @endif>Comment</button>
                     </form>
                 </div>
             </div>
@@ -340,6 +444,23 @@ $user = Auth::user();
                 </div>
             </div>
         </form>
+    </div>
+</div>
+<div class="modal fade" id="complete_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h6 class="header">Complete Work Order</h6>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to mark this work order as completed? This process cannot be undone.</p>
+            </div>
+            <div class="modal-footer mt-4 right">
+                <button type="button" data-dismiss="modal" class="btn btn-light">Cancel</button>
+                <button type="button" class="btn btn-purple" onclick="complete(this)">Mark as complete</button>
+            </div>
+        </div>
     </div>
 </div>
 <div id="add_part" class="modal fade">
@@ -596,5 +717,22 @@ $user = Auth::user();
 
         submit_file_form("/api/work-order/{{$work_order->id}}/add-part", "post", data, undefined, btn, true);
     });
+
+    const change_status = (status, element) => {
+        let data = `status=${status}`;
+        $(element).prop("disabled", true);
+
+        success = (data) => {
+            $(element).prop("disabled", false);
+        }
+
+        submit_form("/api/work-order/{{$work_order->id}}/update-status", "post", data, undefined, null, true);
+    }
+
+    const complete = (element) => {
+        let btn = $(element);
+        submit_form("/api/work-order/{{$work_order->id}}/complete", "post", null, undefined, btn, true);
+    }
+    
     </script>
 @endsection

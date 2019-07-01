@@ -74,6 +74,8 @@ Route::middleware('auth:api')->group(function(){
     Route::get("work-order/{workOrder}/activities", "WorkOrderController@getActivities");
     Route::get("work-order/{workOrder}/spare-parts", "WorkOrderController@getSpareParts");
     Route::post("work-order/{workOrder}/add-part", "WorkOrderController@attachSpareParts");
+    Route::post("work-order/{workOrder}/update-status", "WorkOrderController@updateStatus");
+    Route::post("work-order/{workOrder}/complete", "WorkOrderController@complete");
 
     Route::post('schedule/add', 'ScheduleController@store');
 

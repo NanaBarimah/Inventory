@@ -46,13 +46,93 @@
                                 <div class="col-md-10">
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="work_orders">
-                                            
+                                            <table class="table table-bordered table-hover" id="work_orders">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Title</th>
+                                                        <th>#</th>
+                                                        <th>Due Date</th>
+                                                        <th>Status</th>
+                                                        <th>Priority</th>
+                                                        <th>Lead Tech</th>
+                                                        <th>Asset</th>
+                                                        <th>Last Updated</th>
+                                                        <th>Created</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Title</th>
+                                                        <th>#</th>
+                                                        <th>Due Date</th>
+                                                        <th>Status</th>
+                                                        <th>Priority</th>
+                                                        <th>Lead Tech.</th>
+                                                        <th>Asset</th>
+                                                        <th>Last Updated</th>
+                                                        <th>Created</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+                                                
+                                                </tbody>
+                                            </table>
                                         </div>
                                         <div class="tab-pane" id="reports">
                                             
                                         </div>
                                         <div class="tab-pane" id="assets">
-                                            
+                                        <h4 class="heading">Assets</h4>
+                                            <table id="assets_table" class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Asset Number</th>
+                                                        <th>Category</th>
+                                                        <th>Status</th>
+                                                        <th>Availability</th>
+                                                        <th>Date Created</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Asset Number</th>
+                                                        <th>Category</th>
+                                                        <th>Status</th>
+                                                        <th>Availability</th>
+                                                        <th>Date Created</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+                                                @foreach($department->assets as $item)
+                                                    <tr class="uppercase">
+                                                        <td>
+                                                            <a href="/inventory/{{$item->id}}"><b>{{$item->name}}</b></a>
+                                                        </td>
+                                                        <td>{{$item->asset_code}}</td>
+                                                        <td>{{$item->category != null ? $item->category->name : "N/A"}}</td>
+                                                        <td>{{$item->status}}</td>
+                                                        <td>{{$item->availability}}</td>
+                                                        <td>{{Carbon\Carbon::parse($item->created_at)->format('j F, Y')}}</td>
+                                                    </tr>
+                                                @endforeach
+                                                @foreach($department->units as $unit)
+                                                    @foreach($unit->assets as $item)
+                                                    <tr class="uppercase">
+                                                        <td>
+                                                            <a href="/inventory/{{$item->id}}"><b>{{$item->name}}</b></a>
+                                                        </td>
+                                                        <td>{{$item->asset_code}}</td>
+                                                        <td>{{$item->category != null ? $item->category->name : "N/A"}}</td>
+                                                        <td>{{$item->status}}</td>
+                                                        <td>{{$item->availability}}</td>
+                                                        <td>{{Carbon\Carbon::parse($item->created_at)->format('j F, Y')}}</td>
+                                                    </tr>
+                                                    @endforeach
+                                                @endforeach
+                                                </tbody>
+                                            </table>
                                         </div>
                                         <div class="tab-pane" id="units">
                                             <h4 class="heading">Units</h4>
@@ -106,6 +186,7 @@
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script>
         let units_table = generateDtbl('#units_table', 'No units for this department', 'Search for unit');
+        let assets_table = generateDtbl('#assets_table', 'No assets for this department', 'Search for asset');
     </script>
 
 @endsection
