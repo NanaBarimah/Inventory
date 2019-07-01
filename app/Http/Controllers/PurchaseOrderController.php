@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\PurchaseOrder;
 use App\Hospital;
 use App\User;
+use Mail;
+use Notification;
 use App\OrderItem;
 use Illuminate\Http\Request;
 
@@ -281,7 +283,7 @@ class PurchaseOrderController extends Controller
         $to_name  = ucwords($user->firstname.' '.$user->lastname);
         $to_email = $user->email;
 
-        Mail::send('email_template', $data, function($message) use($to_name, $to_email){
+        Mail::send('email_templates.email_template', $data, function($message) use($to_name, $to_email){
             $message->to($to_email, $to_name)
                     ->subject('Purchase Order Link');
             $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');

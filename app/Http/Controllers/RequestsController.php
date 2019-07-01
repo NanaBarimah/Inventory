@@ -6,6 +6,7 @@ use App\Requests;
 use App\WorkOrder;
 use App\User;
 use Auth;
+use Mail;
 use App\Notifications\RequestReceived;
 use App\Notifications\RequestAssigned;
 use App\Notifications\AssignedToEngineer;
@@ -177,6 +178,33 @@ class RequestsController extends Controller
             }
             $work_order->user_admin = $request->user_id;
 
+            if($work_request->user_id == null) {
+                $to_name = ucwords($work_request->requester_name);
+                $to_email = $work_request->requester_email;
+            } else {
+                $requester = $work_request->user()->first();
+                $to_name = ucwords($requester->firstname.' '.$requester->lastname);
+                $to_email = $requester->email;
+            }
+
+            Mail::send('email_templates.email_template', function($message) use($to_name, $to_email) {
+                $message->to($to_email, $to_name)
+                        ->subject('Work order request accepted');
+                $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
+            });
+
+            if(count(Mail::failures()) > 0) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Could not send the mail. Try again!'
+                ]);
+            } else {
+                return response()->json([
+                    'error' => false,
+                    'message' => 'Work order request accepted successfully!'
+                ]);
+            }
+
             if($work_order->save()) {
                 return response()->json([
                     'error'   => false,
@@ -204,6 +232,35 @@ class RequestsController extends Controller
         $work_request->reason = $request->reason;
 
         if($work_request->save()) {
+            $data = array('link' => '/request/'.$work_request);
+
+            if($work_request->user_id == null){
+                $to_name = $work_request->requester_name;
+                $to_email = $work_request->requester_email;
+            }else{
+                $requester = $work_request->user()->first();
+                $to_name = $requester->firstname.' '.$requester->lastname;
+                $to_email = $requester->email;
+            }
+            
+            Mail::send('email_templates.email_template', $data, function($message) use($to_name, $to_email){
+                $message->to($to_email, $to_name)
+                        ->subject("Work order request declined");
+                $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
+            });
+
+            if(count(Mail::failures()) > 0) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Could not send the mail. Try again!'
+                ]);
+            } else {
+                return response()->json([
+                    'error' => false,
+                    'message' => 'Work order request declined successfully.'
+                ]);
+            }
+
             return response()->json([
                 'error'   => false,
                 'message' => 'Work order request declined'
