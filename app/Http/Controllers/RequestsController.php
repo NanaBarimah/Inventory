@@ -122,7 +122,8 @@ class RequestsController extends Controller
     {
         //
         $request = Requests::where('id', $request)->with("priority", "user", "asset", "unit", "department")->first();
-        return view("request-details", compact("request"));
+        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("priorities", "assets", "departments", "departments.units")->first();
+        return view("request-details", compact("request", "hospital"));
     }
 
     /**
@@ -143,9 +144,27 @@ class RequestsController extends Controller
      * @param  \App\Requests  $requests
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Requests $requests)
+    public function update(Request $request, Requests $work_request)
     {
         //
+        $work_request->title         = $request->title;
+        $work_request->description   = $request->description;
+        $work_request->priority_id   = $request->priority_id;
+        $work_request->department_id = $request->department_id;
+        $work_request->unit_id       = $request->unit_id;
+        $work_request->asset_id      = $request->asset_id;
+
+        if($work_request->update()){
+            return response()->json([
+                "error" => false,
+                "message" => "Request successfully updated"
+            ]);
+        }
+
+        return response()->json([
+            "error" => true,
+            "message" => "Could not update the request"
+        ]);
     }
 
     /**
