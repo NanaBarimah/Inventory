@@ -1,19 +1,5 @@
 @php $user = Auth::user() @endphp
 @extends('layouts.user-dashboard', ['page_title' => 'Add Work Order'])
-@section('styles')
-<style>
-.refresh-picker{
-    font-size: 12px;
-    font-weight: bold;
-    margin-top: 2px;
-    cursor: pointer;
-}
-
-.refresh-picker: hover{
-    text-decoration: underline;
-}
-</style>
-@endsection
 @section('content')
     <div class="content">
         <div class="col-md-12 mr-auto ml-auto">
@@ -208,12 +194,6 @@
                 }, 500);
             }
             submit_file_form("/api/work-order/add", "post", data, success, btn, false);
-        });
-
-        $('.refresh-picker').on("click", function(){
-            let picker = $(this).closest("div").find(".selectpicker");
-            picker.val(null);
-            picker.selectpicker("refresh");
         });
     </script>
 @endsection

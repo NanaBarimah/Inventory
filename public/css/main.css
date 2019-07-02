@@ -10,6 +10,16 @@
     background-color: #0c2646!important;
 }
 
+.refresh-picker{
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.refresh-picker:hover{
+  text-decoration: underline;
+}
 
 .sidebar[data-color="blue"]:after,
 .off-canvas-sidebar[data-color="blue"]:after {

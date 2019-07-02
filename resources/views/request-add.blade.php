@@ -22,12 +22,13 @@
                             </div>
                             <div class="col-md-4 pl-1">
                                 <div class="form-group">
-                                    <label class="pl-3"><b>Role</b>  <span class="text-danger">*</span></label>
+                                    <label class="pl-3"><b>Request Priority</b>  <span class="text-danger">*</span></label>
                                     <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="priority_id" title="Priority" required>
                                         @foreach($hospital->priorities as $priority)
                                         <option value="{{$priority->id}}">{{$priority->name}}</option>
                                         @endforeach
                                     </select>
+                                    <p class="refresh-picker pr-4 text-right">Reset</p>
                                 </div>
                             </div>
                         </div>
@@ -44,6 +45,7 @@
                                         <option disabled>No known departments</option>
                                     @endif
                                     </select>
+                                    <p class="refresh-picker pr-4 text-right">Reset</p>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-1">
@@ -52,6 +54,7 @@
                                     <select class="selectpicker col-md-12" data-style="btn form-control" name="unit_id" id="unit" title="Unit" data-show-tick="true">
                                         <option disabled>Select a department</option>
                                     </select>
+                                    <p class="refresh-picker pr-4 text-right">Reset</p>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-1">
@@ -67,6 +70,7 @@
                                             <option disabled>No assets recorded</option>
                                         @endif
                                     </select>
+                                    <p class="refresh-picker pr-4 text-right">Reset</p>
                                 </div>
                             </div>
                         </div>

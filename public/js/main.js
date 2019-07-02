@@ -517,3 +517,9 @@ appFunctions = {
             }
         })
     }
+
+    $('.refresh-picker').on("click", function(){
+        let picker = $(this).closest("div").find(".selectpicker");
+        picker.val(null);
+        picker.selectpicker("refresh");
+    });
