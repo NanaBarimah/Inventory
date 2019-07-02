@@ -63,6 +63,7 @@ Route::middleware('auth:api')->group(function(){
     Route::post('requests/add', 'RequestsController@store');
     Route::put('request/{work_request}/decline', 'RequestsController@decline');
     Route::put('request/{work_request}/approve', 'RequestsController@approve');
+    Route::put('request/{work_request}/update', 'RequestsController@update');
 
     Route::post("work-order/add", "WorkOrderController@store");
     Route::get("work-order/available-technicians/{workOrder}", "WorkOrderController@availableTechnicians");

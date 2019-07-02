@@ -520,7 +520,7 @@ $user = Auth::user();
         fetchActivities();
         fetchComments();
         fetchParts();
-    })
+    });
 
     const fetchTechnicians = () => {
         $.ajax({

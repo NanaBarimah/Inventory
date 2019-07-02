@@ -102,20 +102,27 @@
                                             <div class="row">
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b>Category</b></label>
+<<<<<<< HEAD
                                                     <div class="input-group">
                                                         <select class="col-md-12 selectpicker" data-style="btn btn-purple"
                                                             title="Equipment type" name="asset_category_id">
+=======
+                                                    <div class="form-group">
+                                                        <select class="col-md-12 selectpicker" data-style="form-control"
+                                                            title="Equipment type" name="category_id">
+>>>>>>> c622f8ce36dabbfd8059fa3c1a8e44e7fec7a6c1
                                                             @foreach($hospital->asset_categories as $category)
                                                             <option value="{{$category->id}}">{{$category->name}}</option>
                                                             @endforeach
                                                         </select>
+                                                        <p class="refresh-picker pr-4 text-right">Reset</p>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b id="ud_label">Unit</b></label>
-                                                    <div class="input-group">
+                                                    <div class="form-group">
                                                         <div id="unit_div" class="col-md-12">    
-                                                            <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                            <select class="col-md-12 selectpicker" data-style="form-control"
                                                                 title="Unit" name="unit_id">
                                                                 @foreach($hospital->departments as $department)
                                                                 <optgroup label="{{$department->name}}">
@@ -125,14 +132,16 @@
                                                                 </optgroup>
                                                                 @endforeach
                                                             </select>
+                                                            <p class="refresh-picker pr-4 text-right">Reset</p>
                                                         </div>
                                                         <div id="department_div" class="col-md-12" style="display:none">
-                                                            <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                            <select class="col-md-12 selectpicker" data-style="form-control"
                                                                 title="Department" name="department_id">
                                                                 @foreach($hospital->departments as $department)
                                                                     <option value="{{$department->id}}">{{$department->name}}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <p class="refresh-picker pr-4 text-right">Reset</p>
                                                         </div>
                                                         <div class="form-check mt-2">
                                                             <label class="form-check-label">
@@ -145,12 +154,13 @@
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b>Status</b> <span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                    <div class="form-group">
+                                                        <select class="col-md-12 selectpicker" data-style="form-control"
                                                             title="Status" name="status" required="true">
                                                             <option>Good</option>
                                                             <option>Bad</option>
                                                         </select>
+                                                        <p class="refresh-picker pr-4 text-right">Reset</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -181,29 +191,31 @@
                                             <div class="row">
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b>Parent Equipment</b></label>
-                                                    <div class="input-group">
-                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                    <div class="form-group">
+                                                        <select class="col-md-12 selectpicker" data-style="form-control"
                                                             title="Parent Equipment" name="parent_id" data-live-search="true">
                                                             @foreach($hospital->assets as $asset)
                                                             <option value="{{$asset->id}}" data-subtext="{{$asset->code}}">{{$asset->name}}</option>
                                                             @endforeach
                                                         </select>
+                                                        <p class="refresh-picker pr-4 text-right">Reset</p>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b>Availability</b> <span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                    <div class="form-group">
+                                                        <select class="col-md-12 selectpicker" data-style="form-control"
                                                             title="Availablity" name="availability" required="true">
                                                             <option>Operational</option>
                                                             <option>Not Operational</option>
                                                         </select>
                                                     </div>
+                                                    <p class="refresh-picker pr-4 text-right">Reset</p>
                                                 </div>
-                                                <div class="form-group col-md-4 col-sm-12">
-                                                    <label><b>Purchase Price (in GHS)</b></label>
+                                                <div class="form-group col-md-4">
+                                                    <label><b>Specific Location</b></label>
                                                     <div class="input-group">
-                                                        <input type="number" step="0.01" class="form-control" name="purchase_price"/>
+                                                        <input type="text" class="form-control" name="area"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -211,20 +223,21 @@
                                         <div class="col-lg-11 mb-3">
                                             <div class="row">
                                                 <div class="form-group col-md-4">
-                                                    <label><b>Specific Location</b></label>
-                                                    <div class="input-group">
-                                                        <input type="text" class="form-control" name="area"/>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-4">
                                                     <label><b>Procurement Type</b> <span class="text-danger">*</span></label>
-                                                    <div class="input-group">
-                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                    <div class="form-group">
+                                                        <select class="col-md-12 selectpicker" data-style="form-control"
                                                             title="Procurement Type" name="procurement_type" id="procurement_type" required="true">
                                                             <option>Self Purchase</option>
                                                             <option>Ghana Health Service</option>
                                                             <option>Donation</option>
                                                         </select>
+                                                        <p class="refresh-picker pr-4 text-right">Reset</p>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4 col-sm-12">
+                                                    <label><b>Purchase Price (in GHS)</b></label>
+                                                    <div class="input-group">
+                                                        <input type="number" step="0.01" class="form-control" name="purchase_price"/>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4" id="div_donor" style="display:none;">
@@ -247,37 +260,40 @@
                                             <div class="row">
                                                 <div class="form-group col-md-5">
                                                     <label><b>Associated Parts</b></label>
-                                                    <div class="input-group">
-                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                    <div class="form-group">
+                                                        <select class="col-md-12 selectpicker" data-style="form-control"
                                                             title="Associated Parts" name="parts[]" multiple data-live-search="true"> 
                                                             @foreach($hospital->parts as $part)
                                                             <option value="{{$part->id}}">{{$part->name}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
+                                                    <p class="refresh-picker pr-4 text-right">Reset</p>
                                                 </div>
                                                 <div class="form-group col-md-5">
                                                     <label><b>Primary Technician</b></label>
-                                                    <div class="input-group">
-                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                    <div class="form-group">
+                                                        <select class="col-md-12 selectpicker" data-style="form-control"
                                                             title="Primary Technician" name="user_id" multiple data-live-search="true"> 
                                                             @foreach($hospital->users as $user)
                                                             <option value="{{$user->id}}">{{$user->firstname.' '.$user->lastname}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
+                                                    <p class="refresh-picker pr-4 text-right">Reset</p>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label><b>Service Vendor</b></label>
-                                                    <div class="input-group">
-                                                        <select class="col-md-12 selectpicker" data-style="btn btn-purple"
+                                                    <div class="form-group">
+                                                        <select class="col-md-12 selectpicker" data-style="form-control"
                                                             title="Service Vendor" name="vendor_id" multiple data-live-search="true"> 
                                                             @foreach($hospital->services as $vendor)
                                                             <option value="{{$vendor->id}}">{{$vendor->name}}</option>
                                                             @endforeach
                                                         </select>
+                                                        <p class="refresh-picker pr-4 text-right">Reset</p>
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-5">
@@ -362,7 +378,7 @@
             }else{
                 $("#div_donor").css("display", "none");
                 $('[name="donation"]').val(null);
-            }   
+            } 
         })
     </script>
 @endsection
