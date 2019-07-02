@@ -104,7 +104,7 @@
                                                     <label><b>Category</b></label>
                                                     <div class="input-group">
                                                         <select class="col-md-12 selectpicker" data-style="btn btn-purple"
-                                                            title="Equipment type" name="category_id">
+                                                            title="Equipment type" name="asset_category_id">
                                                             @foreach($hospital->asset_categories as $category)
                                                             <option value="{{$category->id}}">{{$category->name}}</option>
                                                             @endforeach
@@ -222,6 +222,7 @@
                                                         <select class="col-md-12 selectpicker" data-style="btn btn-purple"
                                                             title="Procurement Type" name="procurement_type" id="procurement_type" required="true">
                                                             <option>Self Purchase</option>
+                                                            <option>Ghana Health Service</option>
                                                             <option>Donation</option>
                                                         </select>
                                                     </div>

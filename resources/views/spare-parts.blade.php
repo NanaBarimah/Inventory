@@ -23,7 +23,6 @@
                                 <th>Cost</th>
                                 <th>Area</th>
                                 <th>Category</th>
-                                <th class="disabled-sorting text-right">Action</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -33,7 +32,6 @@
                                 <th>Cost</th>
                                 <th>Area</th>
                                 <th>Category</th>
-                                <th class="disabled-sorting text-right">Action</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -48,19 +46,6 @@
                                 <td>{{$part->cost}}</td>
                                 <td>{{$part->area}}</td>
                                 <td>{{$part->part_category != null ? $part->part_category->name : 'N/A'}}</td>
-                                <td class="text-right">
-                                    <div class="dropdown">
-                                        <button type="button"
-                                            class="btn btn-round btn-default dropdown-toggle btn-simple btn-icon no-caret"
-                                            data-toggle="dropdown">
-                                            <i class="now-ui-icons loader_gear"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#">Edit Part</a>
-                                            <a class="dropdown-item text-danger" href="#">Delete Part</a>
-                                        </div>
-                                    </div>
-                                </td>
                             </tr>
                             @endforeach
                         </tbody>
