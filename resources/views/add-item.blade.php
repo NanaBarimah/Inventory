@@ -102,15 +102,9 @@
                                             <div class="row">
                                                 <div class="form-group col-md-4 col-sm-12">
                                                     <label><b>Category</b></label>
-<<<<<<< HEAD
                                                     <div class="input-group">
                                                         <select class="col-md-12 selectpicker" data-style="btn btn-purple"
                                                             title="Equipment type" name="asset_category_id">
-=======
-                                                    <div class="form-group">
-                                                        <select class="col-md-12 selectpicker" data-style="form-control"
-                                                            title="Equipment type" name="category_id">
->>>>>>> c622f8ce36dabbfd8059fa3c1a8e44e7fec7a6c1
                                                             @foreach($hospital->asset_categories as $category)
                                                             <option value="{{$category->id}}">{{$category->name}}</option>
                                                             @endforeach
