@@ -130,7 +130,7 @@ class AssetController extends Controller
         $hospital = Hospital::where("id", Auth::user()->hospital_id)->with(["assets" => function($q) use ($asset){
             $q->where("id", "<>", $asset->id);
         }])->with("asset_categories", 
-        "departments", "departments.units", "services", "users")->first();
+        "departments", "departments.units", "services", "users", "parts")->first();
 
         return view("asset-details", compact("asset", "hospital"));
     }
@@ -284,4 +284,11 @@ class AssetController extends Controller
         return response()->json($assets);
     }
     
+    public function removePart(Asset $asset, Request $request){
+        $asset->parts()->detach($request->part_id);
+        return response()->json([
+            "error" => false,
+            "message" => "Part unlinked successfully"
+        ]);
+    }
 }

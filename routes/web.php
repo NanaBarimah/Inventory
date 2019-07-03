@@ -19,7 +19,7 @@ Route::middleware('guest')->group(function(){
     Route::get('/', function(){
         return view('auth/login');
     });
-    Route::get('/user/profile-complete/{id}', 'UserController@completeProfile');
+    Route::get('/user/profile-complete/{id}', 'UserController@completeProfile')->name('profile.complete');
 });
 
 Auth::routes();
@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/purchase-orders', 'PurchaseOrderController@index')->name('purchase-orders');
     Route::get('/purchase-orders/add', 'PurchaseOrderController@create')->name('purchase-order.add');
     Route::get('/purchase-order/{purchaseOrder}', 'PurchaseOrderController@show')->name('purchase-order.show');
+    Route::get('/purchase-order/{hash_link}/approval', 'PurchaseOrderController@approval')->name('purchase-order.approval');
     Route::get('/request/{request}', 'RequestsController@show')->name('request');
     Route::get('/work-orders', 'WorkOrderController@index')->name('work-orders');
     Route::get('/work-order/{workOrder}', 'WorkOrderController@show')->name('work-order.show');

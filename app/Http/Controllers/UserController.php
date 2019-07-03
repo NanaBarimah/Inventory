@@ -58,17 +58,18 @@ class UserController extends Controller
         $user->hospital_id  = $request->hospital_id; 
 
         if($user->save()){
+            $hospital = $user->hospital()->first();
             $result = false;
 
-            $data = array('link' => '/user/profile-complete/'.$user->id);
+            $data = array("user" => $user, "hospital" => $hospital);
 
             $to_name = ucwords($request->firstname.' '. $request->lastname);
             $to_email = $user->email;
 
-            Mail::send('email_templates.email_template', $data, function($message) use($to_name, $to_email) {
+            Mail::send('email_templates.new_user', $data, function($message) use($to_name, $to_email) {
                 $message->to($to_email, $to_name)
-                        ->subject('Complete User Form');
-                $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
+                        ->subject('Welcome To The Team');
+                $message->from('noreply@maintainme.com', 'MaintainMe');
             });
 
             if(count(Mail::failures()) > 0) {
@@ -216,6 +217,10 @@ class UserController extends Controller
     public function completeProfile($id)
     {
         $user = User::with('hospital')->where('id', $id)->where('completed', 0)->first();
+
+        if($user == null){
+            return abort(404);
+        }
 
         return view('complete-profile')->with('user', $user);
     }

@@ -45,9 +45,17 @@ Route::middleware('auth:api')->group(function(){
     Route::get('asset/{asset}/get-children', 'AssetController@getChildren');
     Route::get('asset/{asset}/depreciation', 'AssetController@depreciation');
     Route::post('asset/{asset}/toggle', 'AssetController@toggle');
+    Route::post('asset/{asset}/remove-part', 'AssetController@removePart');
+    Route::post('asset/{asset}/assign-parts', 'AssetController@assignPart');
+    Route::post('asset/{asset}/remove-child', 'AssetController@removeChild');
+    Route::post('asset/{asset}/assign-children', 'AssetController@assignChild');
 
     Route::post("purchase-order/add", 'PurchaseOrderController@store');
     Route::post("purchase-order/{purchaseOrder}/update", 'PurchaseOrderController@update');
+    Route::post("purchase-order/{purchaseOrder}/send", 'PurchaseOrderController@sendLink');
+    Route::post("purchase-order/{purchaseOrder}/approve", 'PurchaseOrderController@approve');
+    Route::post("purchase-order/{purchaseOrder}/decline", 'PurchaseOrderController@decline');
+    Route::post("purchase-order/{purchaseOrder}/fulfill", 'PurchaseOrderController@fulfill');
     
     Route::post('file/add', 'FileController@store');
     

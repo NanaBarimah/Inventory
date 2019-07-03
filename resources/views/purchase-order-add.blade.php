@@ -231,6 +231,24 @@
             </div>
         </div>
     </div>
+    <div id="alert" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                    <h3>All Done!</h3>
+                </div>
+                <div class="modal-body">
+                    <p>A new purchase order has been created. You can now send the purchase order to a specific hospital administrator user of MaintainMe&trade;.</p>
+                </div>
+                <div class="modal-footer mt-4">
+                    <div class="pull-right">
+                        <a id="got_it" class="btn btn-purple text-right pull-right">Got it!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('scripts')
     <script src="{{asset('js/moment.min.js')}}"></script>
@@ -388,9 +406,14 @@
                 data.append("work_order_id", "{{$work_order}}")
 
                 let btn = $(this).find('[type="submit"]');
+
+                let success = (data) => {
+                    $("#got_it").attr("href", `/purchase-order/${data.data.id}`);
+                    $("#alert").modal("show");
+                }
                 
                 //console.log(data);
-                submit_file_form("/api/purchase-order/add", "post", data, undefined, btn, true);
+                submit_file_form("/api/purchase-order/add", "post", data, success, btn, false);
             }
         })
     </script>

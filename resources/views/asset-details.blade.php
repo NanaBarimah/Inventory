@@ -78,7 +78,7 @@
                                 <div class="row pl-4">
                                     <div class="col-md-3">
                                         <div id="qrcode"></div>
-                                        <button class="btn btn-purple btn-block">Print QR Code</button>
+                                        <button class="btn btn-purple btn-block" onclick="printContent('qrcode')">Print QR Code</button>
                                     </div>
                                     <div class="col-md-9">
                                         <div class="row">
@@ -175,7 +175,7 @@
                             <div class="tab-pane" id="parts">
                                 <div class="row" id="parts_div">
                                     <div class="col-md-12 text-right mb-2">
-                                        <a href="javascript:void(0)" style="text-decoration: underline"><b>Assign New Part</b></a>   
+                                        <a href="javascript:void(0)" data-toggle="modal" data-target="#new-part-modal" style="text-decoration: underline"><b>Assign New Part</b></a>   
                                     </div>
                                 </div>
                             </div>
@@ -382,11 +382,12 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-4">
                                             <label><b>Asset Category</b> <span class="text-danger">*</span></label>
-                                            <select class="selectpicker col-sm-12" title="Category" data-style="btn btn-purple" name="asset_category_id">
+                                            <select class="selectpicker col-sm-12" title="Category" data-style="form-control" name="asset_category_id">
                                                 @foreach($hospital->asset_categories as $category)
                                                     <option value="{{$category->id}}" <?php if($asset->asset_category_id == $category->id){echo 'selected';}?>>{{$category->name}}</option>
                                                 @endforeach
                                             </select>
+                                            <p class="refresh-picker pr-4 text-right">Reset</p>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label><b>Purchase Price</b></label>
@@ -418,19 +419,21 @@
                                         </div>
                                         <div class="form-group col-md-4 col-sm-12">
                                             <label><b>Primary User</b></label>
-                                            <select class="selectpicker col-sm-12" title="Primary User" data-style="btn btn-purple" name="user_id">
+                                            <select class="selectpicker col-sm-12" title="Primary User" data-style="form-control" name="user_id">
                                                 @foreach($hospital->users as $user)
                                                     <option value="{{$user->id}}" <?php if($asset->user_id == $user->id){echo 'selected';}?>>{{$user->firstname.' '.$user->lastname}}</option>
                                                 @endforeach
                                             </select>
+                                            <p class="refresh-picker pr-4 text-right">Reset</p>
                                         </div>
                                         <div class="form-group col-md-4 col-sm-12">
                                             <label><b>Service Vendor</b></label>
-                                            <select class="selectpicker col-sm-12" title="Service Vendor" data-style="btn btn-purple" name="user_id">
+                                            <select class="selectpicker col-sm-12" title="Service Vendor" data-style="form-control" name="user_id">
                                                 @foreach($hospital->services as $vendor)
                                                     <option value="{{$vendor->id}}" <?php if($asset->service_vendor_id == $vendor->id){echo 'selected';}?>>{{$vendor->name}}</option>
                                                 @endforeach
                                             </select>
+                                            <p class="refresh-picker pr-4 text-right">Reset</p>
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -500,7 +503,7 @@
     </div>
     <div id="new-asset-modal" class="modal fade right">
         <div class="modal-dialog">
-            <form method = "post" id="new_file">
+            <form method = "post" id="new_asset">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
@@ -514,6 +517,34 @@
                                 name="children[]" title="Select Children Assets" data-show-tick="true" data-live-search = "true" multiple>
                                     @foreach($hospital->assets as $single_asset)
                                         <option value="{{$single_asset->id}}">{{$single_asset->name}} ({{$single_asset->asset_code}})</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-4">
+                        <button type="submit" class="btn btn-purple text-right pull-right">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="new-part-modal" class="modal fade right">
+        <div class="modal-dialog">
+            <form method = "post" id="new_part">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h6 class="header">Assign Part</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label><b>Select Part</b></label>
+                                <select class="selectpicker col-md-12" id="assign_children" data-style="btn btn-purple"
+                                name="parts[]" title="Select Children Assets" data-show-tick="true" data-live-search = "true" multiple>
+                                    @foreach($hospital->parts as $part)
+                                        <option value="{{$part->id}}">{{$part->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -659,23 +690,29 @@
                 method : "get",
                 success : (data) => {
                     container.html(temp_body);
-                    $.each(data, function(index, item){
-                        let holder = `<div class="col-md-4 col-sm-12">
-                            <div class="col-lg-12">
-                                <div class="card card-pricing ">
-                                    <div class="card-body">
-                                    <a href="/spare-part/${item.id}"><h6>${item.name}</h6></a>
-                                    <div class="card-footer mt-3">
-                                        <a href="javascript:void(0)" class="btn btn-round btn-danger">Remove Part</a>
+                    if(data.length > 0){
+                        $.each(data, function(index, item){
+                            let holder = `<div class="col-md-4 col-sm-12">
+                                <div class="col-lg-12">
+                                    <div class="card card-pricing ">
+                                        <div class="card-body">
+                                        <a href="/spare-part/${item.id}"><h6>${item.name}</h6></a>
+                                        <div class="card-footer mt-3">
+                                            <a href="javascript:void(0)" onclick="removePart('${item.id}', this)" class="btn btn-round btn-danger">Remove Part</a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>`;
-                        container.append(holder);
-                    })
+                            </div>`;
+                            container.append(holder);
+                        });
+                    }else{
+                        container.append(`<div class="col-md-12">
+                        <p class="text-center text-muted">No parts associated with this equipment.
+                        </div>
+                        </p>`)
+                    }
                 },
                 error : (xhr, err) => {
-                    container.html(temp_body);
                     container.append(`<p class="text-danger text-center">There was a problem retrieving the associated parts of this equipment</p>`)
                 }
             })
@@ -973,7 +1010,21 @@
 
             let btn = $(this).find('[type="submit"]');
             submit_file_form("/api/asset/{{$asset->id}}/update", "post", data, undefined, btn, true);
-        })
+        });
 
+        const removePart = (id, element) => {
+            let data = new FormData();
+            data.append("part_id", id);
+            let btn = $(element);
+
+            submit_file_form("/api/asset/{{$asset->id}}/remove-part", "post", data, undefined, btn, true);
+        }
+
+        $("#new_part").on("submit", function(e){
+            e.preventDefault();
+            let data = new FormData(this);
+            let btn = $(this).find('[type="submit"]');
+            submit_file_form("/api/asset/{{$asset->id}}/assign-part", "post", data, undefined, btn, true);
+        })
     </script>
 @endsection

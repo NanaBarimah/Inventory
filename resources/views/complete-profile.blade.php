@@ -127,7 +127,9 @@
                     $('#profile_update_form').find('.resetable').val('');
                     $('#btn_reset').val('Reset');
                     presentNotification('User profile saved', 'info', 'top', 'right');
-                    console.log('done');
+                    setTimeout(()=>{
+                        location.replace("/")
+                    }, 500);
                 },
                 error: function(xhr, desc, err){
                     $('#btn_submit').html('Save');
