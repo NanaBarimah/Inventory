@@ -10,11 +10,7 @@ class Setting extends Model
     use SoftDeletes;
 
     protected $fillable = [
-<<<<<<< HEAD
-        'hospital_id', 'request_link',
-=======
         'hospital_id', 'request_link'
->>>>>>> aa661ade09f65a2f10b09a9d7ab6051be3079c8d
     ];
 
       /**
