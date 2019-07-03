@@ -74,6 +74,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <button class="dropdown-item" <?php if($order->status != 1){echo "disabled";} ?>>Fulfill</button>
+                                <button class="dropdown-item" data-toggle="modal" data-target="#send" <?php if($order->status == 1){echo "disabled";} ?>>Send</button>
                             </div>
                         </div>
                     </div>
@@ -258,6 +259,46 @@
             </div>
         </div>
     </div>
+    <div id="send" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                    <h3>Send To Administrator</h3>
+                </div>
+                <form id="send_recipient">
+                    <div class="modal-body">
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label><b>Select Recepient</b></label>
+                                    <select class="selectpicker col-md-12" data-style="form-control" 
+                                    name="user_id" id="user_id" title="Select User" data-live-search="true" required>
+                                        @foreach($hospital->users as $user)
+                                            <option value="{{$user->id}}">{{$user->firstname.' '.$user->lastname}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label><b>Extra Notes</b></label>
+                                    <textarea class="form-control" name="notes"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-4">
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-purple text-right pull-right">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('scripts')
     <script src="{{asset('js/moment.min.js')}}"></script>
@@ -430,6 +471,14 @@
                 let btn = $(this).find('[type="submit"]');
                 submit_file_form("/api/purchase-order/{{$order->id}}/update", "post", data, undefined, btn, false);
             }
+        });
+
+        $("#send_recipient").on("submit", function(e){
+            e.preventDefault();
+            let data = new FormData(this);
+
+            let btn = $(this).find('[type="submit"]');
+            submit_file_form("/api/purchase-order/{{$order->id}}/send", "post", data, undefined, btn, false);
         })
     </script>
 @endsection

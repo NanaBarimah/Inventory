@@ -7,6 +7,8 @@ use App\Hospital;
 use App\User;
 use Mail;
 use Notification;
+use App\Notifications\PurchaseOrderStatus;
+
 use App\OrderItem;
 use Illuminate\Http\Request;
 
@@ -81,6 +83,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder->contact_number    = $request->contact_number;
         $purchaseOrder->contact_name      = $request->contact_name;
         $purchaseOrder->work_order_id     = $request->work_order_id;
+        $purchaseOrder->createLink();
  
         $last_po_number = PurchaseOrder::where('hospital_id', Auth::user()->hospital_id)->latest()->first();
 
@@ -131,7 +134,9 @@ class PurchaseOrderController extends Controller
     {
         //
         $order = PurchaseOrder::with("service_vendor", "order_items")->where("id", $purchaseOrder)->first();
-        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("parts", "services")->first();
+        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("parts", "services")->with(["users" => function($q){
+            $q->where("role", "Hospital Head");
+        }])->first();
         return view("purchase-details", compact("order", "hospital"));
     }
 
@@ -215,7 +220,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrder->approve();
         
         if($purchaseOrder->save()){
-            $user = User::where('id', $request->added_by)->first();
+            $user = User::where('id', $purchaseOrder->added_by)->first();
             $user->notify(new PurchaseOrderStatus($purchaseOrder));
 
             return response()->json([
@@ -276,36 +281,51 @@ class PurchaseOrderController extends Controller
         ]);
     }
 
-    public function createLink(Request $request, PurchaseOrder $purchaseOrder)
+    public function sendLink(Request $request, PurchaseOrder $purchaseOrder)
     {
         $request->validate([
             'user_id' => 'required',
         ]);
 
-        $user = User::where('id', $request->user_id)->first();
+        $recipient = User::where('id', $request->user_id)->first();
+        $sender = $purchaseOrder->user()->first();
+        $count = $purchaseOrder->order_items()->count();
     
-        $data = array('link' => $purchaseOrder->createLink());
+        $data = array('recipient' => $recipient, "sender" => $sender, "purchase_order" => $purchaseOrder, "notes" => $request->notes, "count" => $count);
 
-        $to_name  = ucwords($user->firstname.' '.$user->lastname);
-        $to_email = $user->email;
+        $to_name  = ucwords($recipient->firstname.' '.$recipient->lastname);
+        $to_email = $recipient->email;
 
-        Mail::send('email_templates.email_template', $data, function($message) use($to_name, $to_email){
+        Mail::send('email_templates.new_order', $data, function($message) use($to_name, $to_email){
             $message->to($to_email, $to_name)
-                    ->subject('Purchase Order Link');
-            $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
+                    ->subject('New Purchase Order Request');
+            $message->from('noreply@maintainme.com', 'MaintainMe');
         });
 
         if(count(Mail::failures()) > 0) {
             return response()->json([
                 'error'   => true,
-                'message' => 'Could not send the mail'
+                'message' => 'Error sending email'
             ]);
         } else {
             return response()->json([
                 'error'   => false,
-                'message' => 'Purchase Order Link sent successfully'
+                'message' => 'Email successfully sent'
             ]);
         }
+    }
+
+    public function approval($hash_link){
+        if(Auth::user()->role != "Hospital Head"){
+            return abort(403);
+        }
+        $order = PurchaseOrder::with("service_vendor", "order_items", "hospital")->where("hash_link", $hash_link)->first();
+
+        if($order == null){
+            return abort(404);
+        }
+
+        return view('purchase-approval', compact("order"));
     }
 }
  
