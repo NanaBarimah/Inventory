@@ -15,16 +15,13 @@ class CreateSettingsTable extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('hospital_id')->unsigned();
-            $table->string('user_id');
+            $table->string('hospital_id');
+            $table->string('request_link');
             $table->timestamps();
             $table->softDeletes();
            
             $table->foreign('hospital_id')->references('id')->on('hospitals')
                 ->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')
-                ->onUpdate('cascade')->onDelete('cascade');
-
         });
     }
 

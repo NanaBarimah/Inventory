@@ -53,6 +53,8 @@ class CreateAssetsTable extends Migration
                   ->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('hospital_id')->references('id')->on('hospitals')
                   ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('asset_category_id')->references('id')->on('asset_categories')
+                  ->onUpdate('cascade')->onDelete('cascade');
         });
 
         Schema::table('assets', function($table) {
