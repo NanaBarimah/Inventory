@@ -132,7 +132,7 @@
                     <li>
                         <a href="/settings">
                             <i class="now-ui-icons ui-1_settings-gear-63"></i>
-                            <p>Reminder Settings</p></a>
+                            <p>Settings</p></a>
                     </li>
                 </ul>
             </div>

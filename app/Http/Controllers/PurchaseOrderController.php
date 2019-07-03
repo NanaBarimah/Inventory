@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\PurchaseOrder;
 use App\Hospital;
 use App\User;
+use App\Part;
+
 use Mail;
 use Notification;
 use App\Notifications\PurchaseOrderStatus;
@@ -235,14 +237,14 @@ class PurchaseOrderController extends Controller
         ]);
     }
 
-    public function fulfill(Request $request)
+    public function fulfill(Request $request, PurchaseOrder $purchaseOrder)
     {
-        $purchaseOrder = PurchaseOrder::with("order_items")->where('id', $request->id)->first();
+        $order_items = $purchaseOrder->order_items()->get();
 
         $purchaseOrder->is_fulfilled = 1;
 
         if($purchaseOrder->save()){
-            foreach($purchaseOrder->order_items as $item){
+            foreach($order_items as $item){
                 if($item->part_id == null){
                     $part = new Part();
                     $part->name = $item->name;
@@ -257,7 +259,17 @@ class PurchaseOrderController extends Controller
 
                 $part->save();
             }
+            
+            return response()->json([
+                'error'   => false,
+                'message' => 'Purchase order marked as fulfilled'
+            ]);
         }
+
+        return response()->json([
+            'error'   => true,
+            'message' => 'Could not mark purchase order as fulfilled'
+        ]);
 
     }
 
