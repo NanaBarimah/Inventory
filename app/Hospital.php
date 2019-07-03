@@ -56,9 +56,9 @@ class Hospital extends Model
     /**
      * Get the settings for the hospital.
      */
-    public function settings()
+    public function setting()
     {
-        return $this->hasMany('App\Setting');
+        return $this->hasOne('App\Setting');
     }
     
     public function services()

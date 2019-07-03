@@ -88,7 +88,8 @@ Route::middleware('auth:api')->group(function(){
 
     Route::post('schedule/add', 'ScheduleController@store');
 
-    Route::post('settings/save', 'SettingController@saveReceivers');
+    Route::post('settings/{hospital_id}/generate-link', 'SettingController@generateRequestLink');
+    Route::post('settings/{hospital_id}/send-link', 'SettingController@generateRequestLink');
 
     Route::post('vendors/add', 'ServiceVendorController@store');
     Route::put('vendors/update/{vendor}', 'ServiceVendorController@update');

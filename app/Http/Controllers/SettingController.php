@@ -19,8 +19,8 @@ class SettingController extends Controller
     public function index()
     {
         //
-        $admins = User::where('role', '=', 'Hospital Admin')->where('hospital_id', '=', Auth::user()->hospital_id)->get();
-        return view('setting')->with('admins', $admins);
+        $hospital = Hospital::with("setting")->where("id", Auth::user()->hospital_id)->first();
+        return view('setting')->with('hospital', $hospital);
     }
 
     /**
@@ -109,32 +109,41 @@ class SettingController extends Controller
         //
     }
 
-    public function saveReceivers(Request $request){
-        $request->validate([
-            'hospital_id' => 'required',
-            'user_ids' => 'required',
-            'duration' => 'required'
-        ]);
+    public function generateRequestLink($hospital_id){
+        $hospital = Hospital::where("id", $hospital_id)->first();
 
-        $del = DB::delete("DELETE from settings where hospital_id = '$request->hospital_id'");
-
-        $user_ids = explode(",",$request->user_ids);
-        
-        foreach($user_ids as $id){
-            $temp = new Setting();
-            $temp->hospital_id = $request->hospital_id;
-            $temp->user_id = $id;
-
-            $temp->save();
+        if($hospital == null){
+            return response()->json([
+                "error" => true,
+                "message" => "Invalid request"
+            ]);
         }
 
-        $hospital = Hospital::where('id', '=', $request->hospital_id)->first();
-        $hospital->sms_frequency = $request->duration;
-        $hospital->update();
+        $setting = $hospital->setting()->first();
+        
+        if($setting == null){
+            $setting = new Setting();
+            $setting->hospital_id = $hospital->id;
+            $setting->createLink();
+        }else{
+            $setting->createLink();
+        }
+
+        if($setting->save()){
+            return response()->json([
+                "error" => true,
+                "data" => $setting,
+                "message" => "Link generated"
+            ]);
+        }
 
         return response()->json([
-            'success' => true
+            "error" => true,
+            "message" => "Could not save setting"
         ]);
+    }
 
+    public function sendLink($hospital_id){
+        
     }
 }

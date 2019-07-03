@@ -10,7 +10,7 @@ class Setting extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'hospital_id', 'user_id',
+        'hospital_id', 'request_link'
     ];
 
       /**
@@ -19,5 +19,19 @@ class Setting extends Model
     public function hospital()
     {
         return $this->belongsTo('App\Hospital');
+    }
+
+    public function createLink()
+    {
+        $str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $strcode = strlen($str)-1;
+        $id  = '';
+
+        for ($i = 0; $i < 96; $i++) {
+                $id .= $str[mt_rand(0, $strcode)]; 
+        }
+        
+        $this->request_link = $id;
     }
 }
