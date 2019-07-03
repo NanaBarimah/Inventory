@@ -27,7 +27,7 @@ class CreateRequestsTable extends Migration
             $table->string('fileName')->nullable();
             $table->string('requester_name')->nullable();
             $table->string('requester_number')->nullable();
-            $table->string('requester_email')->unique()->nullable();
+            $table->string('requester_email')->nullable();
             $table->smallInteger('status')->default(2);
             $table->text('reason')->nullable();
             $table->text('response')->nullable();
