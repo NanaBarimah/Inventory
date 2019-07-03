@@ -20,7 +20,7 @@
                                         Items Cost
                                     </td>
                                     <td class="text-right">
-                                        GHS <span id="items_cost"> {{$order->item_cost != null ? $order->item_cost : 0}}</span>
+                                        $<span id="items_cost">{{$order->item_cost != null ? $order->item_cost : 0}}</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -28,7 +28,7 @@
                                         Taxes 
                                     </td>
                                     <td class="text-right">
-                                        GHS <span id="taxes_cost">{{$order->sales_tax != null ? $order->sales_tax : 0}}</span>
+                                        $<span id="taxes_cost">{{$order->sales_tax != null ? $order->sales_tax : 0}}</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -36,7 +36,7 @@
                                         Shipping Cost 
                                     </td>
                                     <td class="text-right">
-                                        GHS <span id="shipping_cost">{{$order->shipping_cost != null ? $order->shipping_cost : 0}}</span>
+                                        $<span id="shipping_cost">{{$order->shipping_cost != null ? $order->shipping_cost : 0}}</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -44,7 +44,7 @@
                                         Other Costs
                                     </td>
                                     <td class="text-right">
-                                        GHS <span id="other_cost">{{$order->other_cost != null ? $order->other_cost : 0}}</span>
+                                        $<span id="other_cost">{{$order->other_cost != null ? $order->other_cost : 0}}</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -52,7 +52,7 @@
                                         <b>Total</b>
                                     </td>
                                     <td class="text-right">
-                                        <b>GHS <span id="total_cost">{{$order->item_cost + $order->shipping_cost + $order->other_cost + $order->sales_tax != null ? $order->item_cost + $order->shipping_cost + $order->other_cost + $order->sales_tax : 0}}</span></b>
+                                        <b>$<span id="total_cost">{{$order->item_cost + $order->shipping_cost + $order->other_cost + $order->sales_tax != null ? $order->item_cost + $order->shipping_cost + $order->other_cost + $order->sales_tax : 0}}</span></b>
                                     </td>
                                 </tr>
                             </tbody>
@@ -65,7 +65,17 @@
                     <div class="card-header">
                         <h5 class="title pb-2">{{$order->title}}</h5>
                         <strong>{{date('jS F Y', strtotime($order->created_at))}}</strong> 
-                        <span class="float-right">@if($order->status == 2) <i class="fas fa-circle text-warning"></i> Pending @elseif($order->status == 1) <i class="fas fa-circle text-success"></i> Accepted @elseif($order->status == 0) <i class="fas fa-circle text-danger"></i> Denied @endif</span>
+                        <span class="float-right">
+                        @if($order->status == 2) 
+                            <i class="fas fa-circle text-warning"></i> Pending 
+                        @elseif($order->status == 1) 
+                            <i class="fas fa-circle text-success"></i> Accepted 
+                            @if($order->is_fulfilled == 1)
+                                &nbsp;&nbsp;<i data-toggle="tooltip" title="Order fulfilled" class="fas fa-check-circle text-info"></i>
+                            @endif 
+                        @elseif($order->status == 0) <i class="fas fa-circle text-danger"></i> Denied 
+                        @endif
+                        </span>
                         <div class="dropdown" style="position:absolute; top: 0; right: 0;">
                             <button type="button"
                                 class="btn btn-round btn-default dropdown-toggle btn-simple"
@@ -73,7 +83,7 @@
                                 Actions
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <button class="dropdown-item" <?php if($order->status != 1){echo "disabled";} ?>>Fulfill</button>
+                                <button class="dropdown-item" data-toggle="modal" data-target="#fulfill" <?php if($order->status != 1 || $order->is_fulfilled == 1){echo "disabled";} ?>>Fulfill</button>
                                 <button class="dropdown-item" data-toggle="modal" data-target="#send" <?php if($order->status == 1){echo "disabled";} ?>>Send</button>
                             </div>
                         </div>
@@ -115,8 +125,8 @@
                                 </div>
                             </div>
                             
-                            <p class="text-right"><a href="javascript:void(0)" data-toggle="modal" data-target="#add-item">
-                            @if($order->status != 1)<i class="fa fa-plus"></i> <b>Add order items</b></a></p>@endif
+                            @if($order->status != 1)<p class="text-right"><a href="javascript:void(0)" data-toggle="modal" data-target="#add-item">
+                            <i class="fa fa-plus"></i> <b>Add order items</b></a></p>@endif
                             <table class="table table-bordered table-hover table-striped mt-4">
                                 <thead>
                                     <tr>
@@ -124,7 +134,7 @@
                                         <th>Unit cost</th>
                                         <th>Quantity</th>
                                         <th>Total</th>
-                                        <th>Action</th>
+                                        @if($order->status != 1)<th>Action</th>@endif
                                     </tr>
                                 </thead>
                                 <tbody id="table_body">
@@ -134,7 +144,9 @@
                                         <td>{{$item->unit_cost}}</td>
                                         <td>{{$item->quantity}}</td>
                                         <td>{{$item->quantity * $item->unit_cost}}</td>
+                                        @if($order->status != 1)
                                         <td><a href="javascript:void(0)" class="text-danger" onclick = "removeItem(this)">Remove Item</a></td>
+                                        @endif
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -299,6 +311,26 @@
             </div>
         </div>
     </div>
+    <div id="fulfill" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="fulfill_order">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h4>Fulfill Purchase Order</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure this order has been fulfilled? This process cannot be undone. Be very sure you want to mark this purchase order as fulfilled before you proceed.</p>
+                    </div>
+                    <div class="modal-footer mt-4">
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-purple text-right pull-right">Fulfill</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('scripts')
     <script src="{{asset('js/moment.min.js')}}"></script>
@@ -321,6 +353,7 @@
         }
         
         demo.initDateTimePicker();
+        $("[data-toggle='tooltip']").tooltip();
 
         $("#add_to_cart").on("submit", function(e){
             e.preventDefault();
@@ -479,6 +512,14 @@
 
             let btn = $(this).find('[type="submit"]');
             submit_file_form("/api/purchase-order/{{$order->id}}/send", "post", data, undefined, btn, false);
-        })
+        });
+
+        $("#fulfill_order").on("submit", function(e){
+            e.preventDefault();
+            let data = new FormData(this);
+
+            let btn = $(this).find('[type="submit"]');
+            submit_file_form("/api/purchase-order/{{$order->id}}/fulfill", "post", data, undefined, btn, false);
+        });
     </script>
 @endsection

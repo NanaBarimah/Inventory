@@ -20,6 +20,7 @@ Route::middleware('guest')->group(function(){
         return view('auth/login');
     });
     Route::get('/user/profile-complete/{id}', 'UserController@completeProfile')->name('profile.complete');
+    Route::get('/request/guest/{request_link}', 'RequestController@guestRequest')->name('request.guest');
 });
 
 Auth::routes();
