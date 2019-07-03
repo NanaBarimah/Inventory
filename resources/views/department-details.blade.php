@@ -177,7 +177,12 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
+        <a href="javascript:void(0)" data-target="#addDepartmentModal" data-toggle="modal">
+            <div class="fab">
+                <i class="fas fa-plus"></i>
+            </div>
+        </a>
     </div>
 @endsection
 @section('scripts')
