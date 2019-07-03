@@ -227,8 +227,6 @@ class UserController extends Controller
 
     public function complete(Request $request)
     {
-        $user = User::where('id', $request->id)->first();
-
         $request->validate([
             'firstname'    => 'required|string',
             'lastname'     => 'required|string',
@@ -236,7 +234,13 @@ class UserController extends Controller
             'phone_number' => 'required|string',
             'job_title'    => 'required|string'
         ]);
+
+        $user = User::where('id', $request->id)->first();
         
+        if($user == null){
+            return response("Forbidden request", 503);
+        }
+
         $user->firstname    = $request->firstname;
         $user->lastname     = $request->lastname;
         $user->password     = $request->password;

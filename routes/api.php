@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::post('user/complete-profile', 'UserController@complete');
+Route::post('request/guest/add', 'RequestsController@guestAdd');
 
 Route::middleware('auth:api')->group(function(){
     Route::get('users/', 'UserController@index');

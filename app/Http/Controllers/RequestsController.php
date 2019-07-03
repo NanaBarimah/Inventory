@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Requests;
 use App\WorkOrder;
 use App\User;
+use App\Setting;
 use Auth;
 use Mail;
 use App\Notifications\RequestReceived;
@@ -292,9 +293,36 @@ class RequestsController extends Controller
         ]);
     }
 
+    public function guestRequest($request_link){
+        $hospital = Hospital::whereHas("setting", function($q) use ($request_link){
+            $q->where("request_link", $request_link);
+        })->with("priorities", "setting")->first();
+
+        if($hospital == null){
+            return abort(404);
+        }
+
+        return view("request-guest", compact("hospital"));
+    }
+
     private function formatDate($date){
         $date = str_replace(',', '', $date);
         $date = str_replace('-', '/', $date);
         return date("Y-m-d H:i:s", strtotime(stripslashes($date)));
+    }
+
+    public function guestAdd(Request $request){
+        $request->validate([
+            "request_link" => "required",
+            "hospital_id" => "required"
+        ]);
+        
+        $setting = Setting::where("hospital_id", $request->hospital_id)->first();
+        
+        if($setting->request_link == $request->request_link){
+            return $this->store($request);
+        }
+
+        return response('Unauthenticated',401);
     }
 }
