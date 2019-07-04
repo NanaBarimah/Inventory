@@ -203,31 +203,30 @@ class RequestsController extends Controller
                 if($work_request->requested_by == null) {
                     $to_name = ucwords($work_request->requester_name);
                     $to_email = $work_request->requester_email;
+
+                    Mail::send('email_templates.request_accepted', array("request" => $work_request), function($message) use($to_name, $to_email) {
+                        $message->to($to_email, $to_name)
+                                ->subject('Work order request accepted');
+                        $message->from('noreply@maintainme.com', 'MaintainMe');
+                    });
+        
+                    if(count(Mail::failures()) > 0) {
+                        return response()->json([
+                            'error' => false,
+                            "work_order" => $work_order,
+                            'message' => 'Request saved. Could not notify the requester.'
+                        ]);
+                    }
                 } else {
                     $requester = $work_request->user()->first();
-                    $to_name = ucwords($requester->firstname.' '.$requester->lastname);
-                    $to_email = $requester->email;
+                    //function to notify requester
                 }
     
-                Mail::send('email_templates.email_template', array(), function($message) use($to_name, $to_email) {
-                    $message->to($to_email, $to_name)
-                            ->subject('Work order request accepted');
-                    $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
-                });
-    
-                if(count(Mail::failures()) > 0) {
-                    return response()->json([
-                        'error' => false,
-                        "work_order" => $work_order,
-                        'message' => 'Request saved. Could not notify the requester.'
-                    ]);
-                } else {
-                    return response()->json([
-                        'error' => false,
-                        "work_order" => $work_order,
-                        'message' => 'Request accepted. A new work order has been generated.'
-                    ]);
-                } 
+                return response()->json([
+                    'error' => false,
+                    "work_order" => $work_order,
+                    'message' => 'Request accepted. A new work order has been generated.'
+                ]);
             }
             
             return response()->json([
@@ -249,33 +248,26 @@ class RequestsController extends Controller
         $work_request->reason = $request->reason;
 
         if($work_request->save()) {
-            $data = array('link' => '/request/'.$work_request);
 
             if($work_request->requested_by == null){
                 $to_name = $work_request->requester_name;
                 $to_email = $work_request->requester_email;
+            
+                Mail::send('email_templates.request_declined', array("request" => $work_request), function($message) use($to_name, $to_email){
+                    $message->to($to_email, $to_name)
+                            ->subject("Work order request declined");
+                    $message->from('noreply@maintainme.com', 'MaintainMe');
+                });
+    
+                if(count(Mail::failures()) > 0) {
+                    return response()->json([
+                        'error' => true,
+                        'message' => 'Could not send the mail. Try again!'
+                    ]);
+                }
             }else{
                 $requester = $work_request->user()->first();
-                $to_name = $requester->firstname.' '.$requester->lastname;
-                $to_email = $requester->email;
-            }
-            
-            Mail::send('email_templates.email_template', $data, function($message) use($to_name, $to_email){
-                $message->to($to_email, $to_name)
-                        ->subject("Work order request declined");
-                $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
-            });
-
-            if(count(Mail::failures()) > 0) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'Could not send the mail. Try again!'
-                ]);
-            } else {
-                return response()->json([
-                    'error' => false,
-                    'message' => 'Work order request declined successfully.'
-                ]);
+                //notify the user;
             }
 
             return response()->json([

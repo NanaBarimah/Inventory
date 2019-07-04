@@ -53,7 +53,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/purchase-orders/add', 'PurchaseOrderController@create')->name('purchase-order.add');
     Route::get('/purchase-order/{purchaseOrder}', 'PurchaseOrderController@show')->name('purchase-order.show');
     Route::get('/purchase-order/{hash_link}/approval', 'PurchaseOrderController@approval')->name('purchase-order.approval');
-    Route::get('/request/{request}', 'RequestsController@show')->name('request');
+    Route::get('/request/{request}', 'RequestsController@show')->name('request.show');
     Route::get('/work-orders', 'WorkOrderController@index')->name('work-orders');
     Route::get('/work-order/{workOrder}', 'WorkOrderController@show')->name('work-order.show');
     Route::get('/work-orders/add', 'WorkOrderController@create')->name('work-order.add');
