@@ -156,6 +156,7 @@
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script>
+        demo.initDateTimePicker();
         $("#department").on("change", function(){
             $("#unit").val(null);
             $("#unit").html(null);

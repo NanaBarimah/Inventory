@@ -143,7 +143,7 @@ class WorkOrderController extends Controller
     {
         //
         $work_order = WorkOrder::with("user", "users", "priority", "asset", "purchase_orders", "fault_category")->where("id", $workOrder)->first();
-        $hospital = Hospital::with("parts")->where("id", Auth::user()->hospital_id)->first();
+        $hospital = Hospital::with("parts", "priorities", "fault_categories")->where("id", Auth::user()->hospital_id)->first();
         return view("work-order-details", compact("work_order", "hospital"));
     }
 
@@ -168,6 +168,24 @@ class WorkOrderController extends Controller
     public function update(Request $request, WorkOrder $workOrder)
     {
         //
+        $workOrder->title = $request->title;
+        $workOrder->due_date = date('Y-m-d', strtotime($request->due_date));
+        $workOrder->priority_id = $request->priority_id;
+        $workOrder->fault_category_id = $request->fault_category_id;
+        $workOrder->description = $request->description;
+        $workOrder->assigned_to = $request->assigned_to;
+        
+        if($workOrder->update()){
+            return response()->json([
+                "error" => false,
+                "message" => "Work order updated"
+            ]);
+        }
+
+        return response()->json([
+            "error" => true,
+            "message" => "Could not update work order"
+        ]);
     }
 
     /**
@@ -186,6 +204,8 @@ class WorkOrderController extends Controller
             $query->where("work_order_id", $workOrder);
         })->whereDoesntHave('work_orders', function($query) use ($workOrder){
             $query->where("id", $workOrder);
+        })->where(function($q){
+            $q->where("role", 'LIKE', "%Technician%")->orWhere("role", "=", "Admin");
         })->get();
 
         return response()->json([

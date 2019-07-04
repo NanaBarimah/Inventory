@@ -54,10 +54,9 @@ $user = Auth::user();
                             <button class="dropdown-item"  onclick="change_status(1, this)">Mark as <b>closed</b></button>
                             @endif
                             @endif
-                            @if($user->role=="Admin" && $work_order->status == 1)
+                            @if($user->id == $work_order->user_admin && $work_order->status == 1)
                             <button class="dropdown-item" data-toggle="modal" data-target="#complete_modal">Mark as <b>completed</b></button>
                             @endif
-                            <button class="dropdown-item"><b>Edit</b> work order</button>
                         @else
                             <button class="dropdown-item" disabled>No actions available</button>
                         @endif
@@ -82,6 +81,11 @@ $user = Auth::user();
                         @if($work_order->is_complete == 1 && $work_order->assigned_to == $user->id)
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" role="tablist" href="#report">Report</a>
+                        </li>
+                        @endif
+                        @if($work_order->is_complete != 1 && $user->id == $work_order->user_admin)
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" role="tablist" href="#edit">Edit</a>
                         </li>
                         @endif
                     </ul>
@@ -345,6 +349,72 @@ $user = Auth::user();
                             </form>
                         </div>
                         @endif
+                        @if($work_order->is_complete != 1 && $user->id == $work_order->user_admin)
+                        <div class="tab-pane" id="edit">
+                            <form id="edit_form">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label><b>Title</b></label>
+                                            <input type="text"  name="title" class="form-control" value="{{$work_order->title}}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label><b>Work order priority</b></label>
+                                            <select class="selectpicker" data-style="form-control" title="Priority" name="priority_id" data-show-tick="true">
+                                                @foreach($hospital->priorities as $priority)
+                                                <option value="{{$priority->id}}" 
+                                                    <?php if($work_order->priority_id == $priority->id){echo 'selected';} ?>
+                                                    >{{$priority->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label><b>Lead Technician</b></label>
+                                            <select class="selectpicker" data-style="form-control" title="Lead Technician" 
+                                            name="assigned_to" id="lead_tech" data-show-tick="true" data-live-search="true">
+                                                <option disabled><i>Fetching technicians...</i></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label><b>Details</b></label>
+                                            <textarea class="form-control" name="extra_notes">{{$work_order->details}}</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label><b>Fault Type</b></label>
+                                            <select class="selectpicker" data-style="form-control" title="Fault Type" 
+                                            name="fault_category_id" data-show-tick="true">
+                                                @foreach($hospital->fault_categories as $category)
+                                                <option value="{{$category->id}}"
+                                                <?php if($work_order->fault_category_id == $category->id){echo 'selected';} ?>
+                                                >{{$category->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label><b>Due Date</b></label>
+                                            <input type="text" class="form-control datepicker" name="due_date" value="{{$work_order->due_date != null ? date('m/d/Y', strtotime($work_order->due_date)) : null}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pull-right text-right pr-3">
+                                    <button class="btn btn-purple" type="submit">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -506,6 +576,8 @@ $user = Auth::user();
     </div>
 @endsection
 @section('scripts')
+    <script src="{{asset('js/moment.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('js/bootstrap-datetimepicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
@@ -520,6 +592,7 @@ $user = Auth::user();
         fetchActivities();
         fetchComments();
         fetchParts();
+        demo.initDateTimePicker();
     });
 
     const fetchTechnicians = () => {
@@ -528,16 +601,20 @@ $user = Auth::user();
             data : 'GET',
             success : (data) => {
                 if(data.engineers.length == 0){
-                    $('#technicians').html(`<option disabled>No technicians available</option>`);
+                    $('#technicians, #lead_tech').html(`<option disabled>No technicians available</option>`);
                 }else{
-                    $('#technicians').html(null);
+                    $('#technicians, #lead_tech').html(null);
+
+                    @if($user->id == $work_order->assigned_to)
+                    $('#lead_tech').append(`<option value="{{$user->id}}" selected>{{$user->firstname.' '.$user->lastname}}</option>`)
+                    @endif
 
                     $.each(data.engineers, function(index, engineer){
-                        $('#technicians').append(`<option value="${engineer.id}">${engineer.firstname} ${engineer.lastname}</option>`)
+                        $('#technicians, #lead_tech').append(`<option value="${engineer.id}">${engineer.firstname} ${engineer.lastname}</option>`);
                     });
                 }
 
-                $('#technicians').selectpicker("refresh");
+                $('#technicians, #lead_tech').selectpicker("refresh");
             },
             error : (xhr) => {
             }
@@ -685,6 +762,15 @@ $user = Auth::user();
         let btn = $(this).find('[type="submit"]');
 
         submit_file_form("/api/work-order/{{$work_order->id}}/record-activity", "post", data, undefined, btn, true);
+    });
+
+    $("#edit_form").on("submit", function(e){
+        e.preventDefault();
+        let data = new FormData(this);
+        data.append("_method", "put")
+        let btn = $(this).find('[type="submit"]');
+
+        submit_file_form("/api/work-order/{{$work_order->id}}/update", "post", data, undefined, btn, true);
     });
 
     $("#add_comment").on("submit", function(e){
