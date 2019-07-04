@@ -67,7 +67,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label><b>Email address</b></label>
-                                <input class="form-control" id="email" type="email" required/>
+                                <input class="form-control" id="email" type="email" name="email" required/>
                             </div>
                         </div>
                         <div class="modal-footer mt-4 pull-right float-right">

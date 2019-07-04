@@ -8,6 +8,7 @@ use App\User;
 use App\Hospital;
 use Auth;
 use DB;
+use Mail;
 
 class SettingController extends Controller
 {
@@ -131,7 +132,7 @@ class SettingController extends Controller
 
         if($setting->save()){
             return response()->json([
-                "error" => true,
+                "error" => false,
                 "data" => $setting,
                 "message" => "Link generated"
             ]);
@@ -143,7 +144,42 @@ class SettingController extends Controller
         ]);
     }
 
-    public function sendLink($hospital_id){
-        
+    public function sendLink($hospital_id, Request $request)
+    {
+        $setting = Setting::with('hospital')->where('hospital_id', $hospital_id)->first();
+
+        if($setting != null) {
+            if($setting->request_link != null){
+                $data = array('request_link' => $setting->request_link, 'hospital' => $setting->hospital);
+
+                $to_name = '';
+                $to_email = $request->email;
+
+                Mail::send('email_templates.send_link', $data, function($message) use($to_name, $to_email) {
+                    $message->to($to_email, $to_name)
+                            ->subject('Request Generation');
+                    $message->from('noreply@maintainme.com', 'MaintainMe');
+                });
+
+                if(count(Mail::failures()) > 0) {
+                    return response()->json([
+                        'error'   => true,
+                        'message' => 'Error sending email'
+                    ]);
+                } else {
+                    return response()->json([
+                        'error'   => false,
+                        'message' => 'Email sent successfully'
+                    ]);
+                }
+            }
+        } 
+
+        return response()->json([
+            'error' => true,
+            'message' => 'Invalid request'
+        ]);
+
+
     }
 }
