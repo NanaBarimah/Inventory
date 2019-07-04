@@ -291,7 +291,13 @@ $user = Auth::user();
         data.append("_method", "put");
         let btn = $(this).find('[type="submit"]');
 
-        submit_file_form("/api/request/{{$request->id}}/approve", "post", data, undefined, btn, false);
+        let success = (data) => {
+            setTimeout(() => {
+                window.location.replace(`/work-order/${data.work_order.id}`);
+            }, 500);
+        }
+
+        submit_file_form("/api/request/{{$request->id}}/approve", "post", data, success, btn, false);
     });
 
     $("#update_form").on("submit", function(e){

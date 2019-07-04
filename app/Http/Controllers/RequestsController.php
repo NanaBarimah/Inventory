@@ -187,50 +187,47 @@ class RequestsController extends Controller
         $work_request->reason = null;
 
         if($work_request->save()) {
-            $last_order = WorkOrder::where("hospital_id", $request->hospital_id)->latest()->first();
+            $last_order = WorkOrder::where("hospital_id", $work_request->hospital_id)->latest()->first();
             $work_order = $work_request->toWorkOrder();
 
             
             if($last_order == null){
              $work_order->wo_number = 1;   
             }else{
-                $work_order->wo_number = $last_order->wo_number ++;
+                $work_order->wo_number = $last_order->wo_number + 1;
             }
             $work_order->user_admin = $request->user_id;
 
-            if($work_request->requested_by == null) {
-                $to_name = ucwords($work_request->requester_name);
-                $to_email = $work_request->requester_email;
-            } else {
-                $requester = $work_request->user()->first();
-                $to_name = ucwords($requester->firstname.' '.$requester->lastname);
-                $to_email = $requester->email;
-            }
-
-            Mail::send('email_templates.email_template', array(), function($message) use($to_name, $to_email) {
-                $message->to($to_email, $to_name)
-                        ->subject('Work order request accepted');
-                $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
-            });
-
-            if(count(Mail::failures()) > 0) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'Could not send the mail. Try again!'
-                ]);
-            } else {
-                return response()->json([
-                    'error' => false,
-                    'message' => 'Work order request accepted successfully!'
-                ]);
-            }
-
+            
             if($work_order->save()) {
-                return response()->json([
-                    'error'   => false,
-                    'work_order' => $work_order,
-                    'message' => 'Request approved. A work order has been generated'
-                ]);   
+                if($work_request->requested_by == null) {
+                    $to_name = ucwords($work_request->requester_name);
+                    $to_email = $work_request->requester_email;
+                } else {
+                    $requester = $work_request->user()->first();
+                    $to_name = ucwords($requester->firstname.' '.$requester->lastname);
+                    $to_email = $requester->email;
+                }
+    
+                Mail::send('email_templates.email_template', array(), function($message) use($to_name, $to_email) {
+                    $message->to($to_email, $to_name)
+                            ->subject('Work order request accepted');
+                    $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
+                });
+    
+                if(count(Mail::failures()) > 0) {
+                    return response()->json([
+                        'error' => false,
+                        "work_order" => $work_order,
+                        'message' => 'Request saved. Could not notify the requester.'
+                    ]);
+                } else {
+                    return response()->json([
+                        'error' => false,
+                        "work_order" => $work_order,
+                        'message' => 'Request accepted. A new work order has been generated.'
+                    ]);
+                } 
             }
             
             return response()->json([

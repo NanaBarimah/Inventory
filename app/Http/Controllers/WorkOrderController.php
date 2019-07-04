@@ -73,6 +73,10 @@ class WorkOrderController extends Controller
         $work_order->cost               = $request->cost;
         $workOrder->asset_id            = $request->asset_id;
 
+        if($workOrder->assigned_to != null){
+            $workOrder->status = 4;
+        }
+
         $last_wo_number = WorkOrder::where('hospital_id', Auth::user()->hospital_id)->latest()->first();
         if($last_wo_number == null) {
             $workOrder->wo_number = 1;

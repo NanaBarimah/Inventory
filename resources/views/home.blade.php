@@ -66,7 +66,6 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
                                     <a class="dropdown-item" href="/profile">My Profile</a>
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#hospitalDetailsModal">My Hospital</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}" 
                                         onclick="
                                                     event.preventDefault();
@@ -96,7 +95,7 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <h5 class="title">
-                                            Inventory
+                                            Equipment
                                         </h5>
                                     </div>
                                     <div class="card-body">
@@ -105,33 +104,33 @@
                                 </div>
                             </a>
                         </div>
-                        @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'storekeeper')
+                        @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head')
                         <div class="col-md-4 col-sm-6">
-                            <a href="/departments" class="menu-item text-center">
+                            <a href="/work-orders" class="menu-item text-center">
                                 <div class="card">
                                     <div class="card-header">
                                         <h5 class="title">
-                                            Departments
+                                            Work Orders
                                         </h5>
                                     </div>
                                     <div class="card-body">
-                                        <img src="{{asset('img/list.svg')}}" class="menu-img" />
+                                        <img src="{{asset('img/construction.svg')}}" class="menu-img" />
                                     </div>
                                 </div>
                             </a>
                         </div>
                         @endif
-                        @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head')
+                        @if(strtolower(Auth::user()->role) == 'admin')
                         <div class="col-md-4 col-sm-6">
-                            <a href="/maintenance/history" class="menu-item text-center">
+                            <a href="/requests" class="menu-item text-center">
                                 <div class="card">
                                     <div class="card-header">
                                         <h5 class="title">
-                                            Maintenance
+                                            Requests
                                         </h5>
                                     </div>
                                     <div class="card-body">
-                                        <img src="{{asset('img/construction.svg')}}" class="menu-img" />
+                                        <img src="{{asset('img/list.svg')}}" class="menu-img" />
                                     </div>
                                 </div>
                             </a>
@@ -143,7 +142,7 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <h5 class="title">
-                                            Records
+                                            Reports
                                         </h5>
                                     </div>
                                     <div class="card-body text-center">
@@ -187,7 +186,7 @@
                         @endif
                     </div>
                 </div>
-                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer' || strtolower(Auth::user()->role) == 'hospital admin' || strtolower(Auth::user()->role) == 'department head' || strtolower(Auth::user()->role) == 'unit head')
+                @if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'regular engineer' || strtolower(Auth::user()->role) == 'limited engineer')
                 <div class="col-md-3 col-sm-12">
                     <div class="card gradient-background">
                         <div class="card-header">
@@ -199,30 +198,11 @@
                             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                                 <ol class="carousel-indicators">
                                     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                    @for($i = 1; $i < count($schedules); $i++)
-                                    <li data-target="#carouselExampleIndicators" data-slide-to="{{$i}}"></li>
-                                    @endfor
                                 </ol>
                                 <div class="carousel-inner">
-                                    @if(!empty($schedules))
-                                    <div class="carousel-item active">
-                                        <h5>{{$schedules[0]->equipment_code}}</h5>
-                                        <p>{{$schedules[0]->maintenance_type}} </p>
-                                        <p>{{$schedules[0]->maintenance_date}}</p>
-                                    </div>
-                                    @endif
-                                    @for($i = 1; $i < count($schedules); $i++)
-                                    <div class="carousel-item">
-                                        <h5>{{$schedules[$i]->equipment_code}}</h5>
-                                        <p>{{$schedules[$i]->maintenance_type}} </p>
-                                        <p>{{$schedules[$i]->maintenance_date}}</p>
-                                    </div>
-                                    @endfor
-                                    @if(empty($schedules))
                                     <div class="carousel-item active">
                                         <h6 class="text-muted">No scheduled maintenaces available</h6>
                                     </div>
-                                    @endif
                                 </div>
                                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -241,7 +221,6 @@
         </div>
         </div>
     </div>
-    @include('hospital-modal')
     </div>
 </body>
 

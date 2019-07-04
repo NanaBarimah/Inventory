@@ -410,6 +410,7 @@ appFunctions = {
                     }
                     
                 }else{
+                    presentNotification(data.message, 'info', 'top', 'right');
                     success(data);
                     if(should_reload){
                         setTimeout(() => {
@@ -487,6 +488,7 @@ appFunctions = {
                     }
                     
                 }else{
+                    presentNotification(data.message, 'info', 'top', 'right');
                     success(data);
                     if(should_reload){
                         setTimeout(() => {

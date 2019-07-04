@@ -1,7 +1,7 @@
 
         <div class="sidebar" data-color="blue">
             <div class="logo">
-                <a href="#" class="simple-text logo-normal">
+                <a href="/" class="simple-text logo-normal">
                     {{session('hospital')->name}}
                 </a>
             </div>

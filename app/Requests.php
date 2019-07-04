@@ -68,6 +68,7 @@ class Requests extends Model
         $work_order->id = md5($work_order->title.time());
         $work_order->hospital_id = $this->hospital_id;
         $work_order->asset_id = $this->asset_id;
+        $work_order->priority_id = $this->priority_id;
 
         return $work_order;
     }
