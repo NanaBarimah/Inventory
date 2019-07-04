@@ -21,7 +21,7 @@ class RequestStatus extends Notification
     public function __construct()
     {
         $this->request = $request;
-        $this->message = $message == null ? 'Work Order Request has been approved' : $message;
+        $this->message = $message == null ? 'Work order request has been approved' : $message;
     }
 
     /**
