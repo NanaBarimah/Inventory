@@ -207,7 +207,7 @@ class RequestsController extends Controller
                     Mail::send('email_templates.request_accepted', array("request" => $work_request), function($message) use($to_name, $to_email) {
                         $message->to($to_email, $to_name)
                                 ->subject('Work order request accepted');
-                        $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
+                        $message->from('noreply@maintainme.com', 'MaintainMe');
                     });
         
                     if(count(Mail::failures()) > 0) {
@@ -256,7 +256,7 @@ class RequestsController extends Controller
                 Mail::send('email_templates.request_declined', array("request" => $work_request), function($message) use($to_name, $to_email){
                     $message->to($to_email, $to_name)
                             ->subject("Work order request declined");
-                    $message->from('noreply@codbitgh.com', 'Codbit Ghana Limited');
+                    $message->from('noreply@maintainme.com', 'MaintainMe');
                 });
     
                 if(count(Mail::failures()) > 0) {
