@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddNextPmToPmSchedules extends Migration
+class AddAssetCategoryIdToPmSchedules extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,10 @@ class AddNextPmToPmSchedules extends Migration
     public function up()
     {
         Schema::table('pm_schedules', function (Blueprint $table) {
-            $table->dateTime('next_pm')->nullable();
+            $table->string('asset_category_id')->nullable();
+
+            $table->foreign('asset_category_id')->references('id')->on('asset_categories')
+                  ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
@@ -26,7 +29,7 @@ class AddNextPmToPmSchedules extends Migration
     public function down()
     {
         Schema::table('pm_schedules', function (Blueprint $table) {
-            $table->dropColumn('next_pm');
+            $table->dropColumn('asset_category_id');
         });
     }
 }
