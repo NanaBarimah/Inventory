@@ -8,6 +8,7 @@ use App\User;
 use App\Setting;
 use Auth;
 use Mail;
+use Notification;
 use App\Notifications\RequestReceived;
 use App\Notifications\RequestAssigned;
 use App\Notifications\AssignedToEngineer;
@@ -220,6 +221,7 @@ class RequestsController extends Controller
                 } else {
                     $requester = $work_request->user()->first();
                     //function to notify requester
+                    $requester->notify(new RequestStatus($work_request));
                 }
     
                 return response()->json([
@@ -268,6 +270,7 @@ class RequestsController extends Controller
             }else{
                 $requester = $work_request->user()->first();
                 //notify the user;
+                $requester->notify(new RequestStatus($work_request, 'Work order request had been declined'));
             }
 
             return response()->json([
