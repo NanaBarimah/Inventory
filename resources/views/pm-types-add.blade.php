@@ -296,6 +296,9 @@
                 if(data.get("assets[]") == null && data.get("asset_category_id") == ""){
                     presentNotification("Select at least one equipment or category associated with this preventive maintenance", "danger", "top", "right");
                 }else{
+                    const success = (data) => {
+                        window.location.replace("/pm-schedules")
+                    }
                     submit_file_form("/api/pm-schedule/add", "post", data, undefined, btn, false);
                 }
             }

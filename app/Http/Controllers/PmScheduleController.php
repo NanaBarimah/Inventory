@@ -49,7 +49,8 @@ class PmScheduleController extends Controller
         ]);
 
         $pmSchedule = new PmSchedule();
-
+        
+        $pmSchedule->id                = md5($request->title.microtime());
         $pmSchedule->title             = $request->title;
         $pmSchedule->recurringSchedule = $request->recurringSchedule;
         $pmSchedule->due_date          = date('Y-m-d H:i:s', strtotime($request->due_date));
@@ -60,6 +61,12 @@ class PmScheduleController extends Controller
         $pmSchedule->hospital_id       = $request->hospital_id;
         $pmSchedule->description       = $request->description;
         $pmSchedule->asset_category_id = $request->asset_category_id;
+        
+        if($request->rescheduledBasedOnCompletion == "on"){
+            $pmSchedule->rescheduledBasedOnCompletion = 1;
+        }else if($request->rescheduledBasedOnCompletion == "off"){
+            $pmSchedule->rescheduledBasedOnCompletion = 0;
+        }
 
         if($pmSchedule->save()){
             if($request->assets != null){

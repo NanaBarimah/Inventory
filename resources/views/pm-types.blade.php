@@ -43,10 +43,10 @@
                                        @foreach($pmSchedules as $pmSchedule)
                                         <tr>
                                             <td>{{$pmSchedule->title}}</td>
-                                            <td>{{$pmSchedule->description}}</td>
-                                            <td>{{date('jS F, Y', $pmSchedule->title)}}</td>
+                                            <td>{{$pmSchedule->description != null ? $pmSchedule->description : 'N/A'}}</td>
+                                            <td>{{$pmSchedule->due_date != null ? Carbon\Carbon::parse($pmSchedule->due_date)->format('jS F, Y') : 'N/A'}}</td>
                                             <td>{{$pmSchedule->priority->name}}</td>
-                                            <td>{{date('jS F, Y', $pmSchedule->endDueDate)}}</td>
+                                            <td>{{$pmSchedule->endDueDate != null ? Carbon\Carbon::parse($pmSchedule->endDueDate)->format('jS F, Y') : 'N/A'}}</td>
                                             <td>{{ucwords($pmSchedule->recurringSchedule)}}</td>
                                         </tr>
                                        @endforeach
