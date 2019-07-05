@@ -31,7 +31,7 @@
                                     <div class="collapse" id="pms">
                                         <ul class="nav">
                                             <li>
-                                                <a href="javascript:void(0)">
+                                                <a href="/pm-schedules">
                                                     <span class="sidebar-normal">PM Schedules</span>
                                                 </a>
                                             </li>

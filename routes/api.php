@@ -88,6 +88,9 @@ Route::middleware('auth:api')->group(function(){
     Route::post("work-order/{workOrder}/update-status", "WorkOrderController@updateStatus");
     Route::post("work-order/{workOrder}/complete", "WorkOrderController@complete");
 
+    Route::post("pm-schedule/add", 'PmScheduleController@store');
+    
+    
     Route::post('schedule/add', 'ScheduleController@store');
 
     Route::post('settings/{hospital_id}/generate-link', 'SettingController@generateRequestLink');

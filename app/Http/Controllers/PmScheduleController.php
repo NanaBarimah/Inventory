@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\PmSchedule;
+use App\Hospital;
+
+use Auth;
 use Illuminate\Http\Request;
 
 class PmScheduleController extends Controller
@@ -14,9 +17,9 @@ class PmScheduleController extends Controller
      */
     public function index()
     {
-        $pmSchedules = PmSchedule::with('assets')->where('hospital_id', Auth::user()->hospital_id)->get();
+        $pmSchedules = PmSchedule::with("priority")->where('hospital_id', Auth::user()->hospital_id)->get();
 
-        return view();
+        return view("pm-types", compact("pmSchedules"));
     }
 
     /**
@@ -27,6 +30,8 @@ class PmScheduleController extends Controller
     public function create()
     {
         //
+        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
+        return view('pm-types-add', \compact("hospital"));
     }
 
     /**
@@ -40,26 +45,25 @@ class PmScheduleController extends Controller
         $request->validate([
             'title'             => 'required',
             'recurringSchedule' => 'required',
-            'due_date'          => 'required',
-            'endDueDate'        => 'required'
+            'due_date'          => 'required'
         ]);
 
         $pmSchedule = new PmSchedule();
 
         $pmSchedule->title             = $request->title;
         $pmSchedule->recurringSchedule = $request->recurringSchedule;
-        $pmSchedule->due_date          = date('Y-m-d', strtotime($request->due_date));
+        $pmSchedule->due_date          = date('Y-m-d H:i:s', strtotime($request->due_date));
         $pmSchedule->endDueDate        = date('Y-m-d', strtotime($request->endDueDate));
-        $pmSchedule->cost              = $request->cost;
         $pmSchedule->department_id     = $request->department_id;
         $pmSchedule->unit_id           = $request->unit_id;
         $pmSchedule->priority_id       = $request->priority_id;
         $pmSchedule->hospital_id       = $request->hospital_id;
         $pmSchedule->description       = $request->description;
+        $pmSchedule->asset_category_id = $request->asset_category_id;
 
         if($pmSchedule->save()){
-            if($request->asset_id != null){
-                $pmSchedule->assets()->attach($request->asset_id);
+            if($request->assets != null){
+                $pmSchedule->assets()->attach($request->assets);
             }
             
             return response()->json([
