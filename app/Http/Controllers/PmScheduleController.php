@@ -54,7 +54,7 @@ class PmScheduleController extends Controller
         $pmSchedule->title             = $request->title;
         $pmSchedule->recurringSchedule = $request->recurringSchedule;
         $pmSchedule->due_date          = date('Y-m-d H:i:s', strtotime($request->due_date));
-        $pmSchedule->endDueDate        = date('Y-m-d', strtotime($request->endDueDate));
+        $pmSchedule->endDueDate        = $request->endDueDate != null ? date('Y-m-d', strtotime($request->endDueDate)) : null;
         $pmSchedule->department_id     = $request->department_id;
         $pmSchedule->unit_id           = $request->unit_id;
         $pmSchedule->priority_id       = $request->priority_id;
@@ -72,6 +72,13 @@ class PmScheduleController extends Controller
             if($request->assets != null){
                 $pmSchedule->assets()->attach($request->assets);
             }
+
+            if($request->actions != null){
+                $actions = explode("," , $request->actions);
+                $pmActions = array();
+                $pmSchedule->actions()->attach($actions);
+            }
+
             
             return response()->json([
                 'error'       => false,

@@ -4,6 +4,7 @@
 <style>
 #card-tasks{
     min-height: 250px;
+    max-height: 250px;
     overflow-y: auto;
 }
 
@@ -292,14 +293,15 @@
                 presentNotification("Add at least one task to this pm schedule", "danger", "top", "right");
             }else{
                 data.append("hospital_id", "{{$user->hospital_id}}");
-
+                data.append("actions", tasks);
+                
                 if(data.get("assets[]") == null && data.get("asset_category_id") == ""){
                     presentNotification("Select at least one equipment or category associated with this preventive maintenance", "danger", "top", "right");
                 }else{
                     const success = (data) => {
                         window.location.replace("/pm-schedules")
                     }
-                    submit_file_form("/api/pm-schedule/add", "post", data, undefined, btn, false);
+                    submit_file_form("/api/pm-schedule/add", "post", data, success, btn, false);
                 }
             }
         })

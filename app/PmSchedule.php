@@ -2,6 +2,8 @@
 
 namespace App;
 
+use DB;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -46,4 +48,10 @@ class PmSchedule extends Model
     {
         return $this->belongsToMany('App\Asset', 'asset_pm_schedules', 'pm_schedule_id', 'asset_id')->withTimestamps();
     }
+
+    public function actions()
+    {
+        return $this->hasMany('App\PmAction');
+    }
+    
 }

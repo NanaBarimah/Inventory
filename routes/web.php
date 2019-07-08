@@ -59,6 +59,8 @@ Route::middleware('auth')->group(function(){
     Route::get('/work-orders/add', 'WorkOrderController@create')->name('work-order.add');
     Route::get('/pm-schedules', 'PmScheduleController@index')->name('pm-schedules.show');
     Route::get('/pm-schedules/add', 'PmScheduleController@create')->name('pm-schedules.create');
+    Route::get('/pm-schedule/record', 'PreventiveMaintenanceController@create')->name('pm.create');
+    Route::get('/pm-schedule/{pmSchedule}/record', 'PreventiveMaintenanceController@make')->name('pm.make');
 });
 
 

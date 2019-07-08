@@ -36,7 +36,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="javascript:void(0)">
+                                                <a href="/pm-schedule/record">
                                                     <span class="sidebar-normal">PM Reports</span>
                                                 </a>
                                             </li>

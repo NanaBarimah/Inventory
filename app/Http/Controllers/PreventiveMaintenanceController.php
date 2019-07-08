@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\PreventiveMaintenance;
+use App\PmSchedule;
+
+use Auth;
 use Illuminate\Http\Request;
 
 class PreventiveMaintenanceController extends Controller
@@ -18,13 +21,29 @@ class PreventiveMaintenanceController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for listing resource types.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
         //
+        $pmSchedules = PmSchedule::where("hospital_id", Auth::user()->hospital_id)->with("priority")->get();
+        return view("pm-add-step1", \compact("pmSchedules"));
+    }
+
+    /**
+     * Show the form for creating a new resource
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function make(PmSchedule $pmSchedule)
+    {
+        if($pmSchedule == null){
+            return abort(403);
+        }
+        
+        return view("pm-add", compact("pmSchedule"));
     }
 
     /**
