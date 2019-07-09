@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\PmSchedule;
 use App\Hospital;
+use App\PmAction;
 
 use Auth;
 use Illuminate\Http\Request;
@@ -76,7 +77,12 @@ class PmScheduleController extends Controller
             if($request->actions != null){
                 $actions = explode("," , $request->actions);
                 $pmActions = array();
-                $pmSchedule->actions()->attach($actions);
+                
+                foreach($actions as $action){
+                    array_push($pmActions, array("pm_schedule_id" => $pmSchedule->id, "name" => $action, "created_at" => date('Y-m-d H:i:s')));
+                }
+
+                PmAction::insert($pmActions);
             }
 
             

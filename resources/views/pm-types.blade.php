@@ -42,7 +42,7 @@
                                     <tbody>
                                        @foreach($pmSchedules as $pmSchedule)
                                         <tr>
-                                            <td>{{$pmSchedule->title}}</td>
+                                            <td><a href="javascript:void(0)">{{$pmSchedule->title}}</a></td>
                                             <td>{{$pmSchedule->description != null ? $pmSchedule->description : 'N/A'}}</td>
                                             <td>{{$pmSchedule->due_date != null ? Carbon\Carbon::parse($pmSchedule->due_date)->format('jS F, Y') : 'N/A'}}</td>
                                             <td>{{$pmSchedule->priority->name}}</td>

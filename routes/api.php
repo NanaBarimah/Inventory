@@ -90,6 +90,7 @@ Route::middleware('auth:api')->group(function(){
 
     Route::post("pm-schedule/add", 'PmScheduleController@store');
     
+    Route::post("pm/add", "PreventiveMaintenanceController@store");
     
     Route::post('schedule/add', 'ScheduleController@store');
 

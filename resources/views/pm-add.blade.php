@@ -104,13 +104,12 @@
                                             <td>
                                                 <div class="form-check">
                                                     <label class="form-check-label">
-                                                        <input class="form-check-input" type="checkbox" checked>
+                                                        <input class="form-check-input" type="checkbox">
                                                         <span class="form-check-sign"></span>
                                                     </label>
                                                 </div>
                                             </td>
-                                            <td class="text-left">Sign contract for "What are conference organizers
-                                                afraid of?"</td>
+                                            <td class="text-left">{{$action->name}}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -131,6 +130,26 @@
     <script>
         $("[data-toggle='tooltip']").tooltip();
         demo.initDateTimePicker();
-        let tasks = [];
+        
+        $("#add_pm_form").on("submit", function(e){
+            e.preventDefault();
+            let data = new FormData(this);
+            let btn = $(this).find("[type='submit']");
+            
+            if($('.form-check-input:checked').length != $('.form-check-input').length){
+                presentNotification("Make sure all tasks are checked out before you continue", "danger", "top", "right");
+            }else{
+                data.append("pm_schedule_id", "{{$pmSchedule->id}}");
+
+                const success = (data) => {
+                    setTimeout(() => {
+                        location.replace("/pm-schedule/record");
+                    }, 500);
+                }
+                
+                submit_file_form("/api/pm/add", "post", data, success, btn, false);
+            }
+            
+        })
     </script>
 @endsection

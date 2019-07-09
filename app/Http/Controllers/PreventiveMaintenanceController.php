@@ -64,6 +64,7 @@ class PreventiveMaintenanceController extends Controller
         $preventiveMaintenance->observation    = $request->observation;
         $preventiveMaintenance->recommendation = $request->recommendation;
         $preventiveMaintenance->action_taken   = $request->action_taken;
+        $preventiveMaintenance->date_completed     = date('Y-m-d', $request->date_completed);
 
         if($preventiveMaintenance->save()) {
             return response()->json([
@@ -122,5 +123,15 @@ class PreventiveMaintenanceController extends Controller
     public function destroy(PreventiveMaintenance $preventiveMaintenance)
     {
         //
+    }
+
+    public function approve(PreventiveMaintenance $preventiveMaintenance){
+        $preventiveMaintenance->is_completed = 1;
+
+        if($preventiveMaintenance->update()){
+            $pm_schedule = $preventiveMaintenance->pm_schedule();
+
+            //come and update the next due date here
+        }
     }
 }
