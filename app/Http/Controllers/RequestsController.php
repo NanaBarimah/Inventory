@@ -10,7 +10,7 @@ use Auth;
 use Mail;
 use Notification;
 use App\Notifications\RequestReceived;
-use App\Notifications\RequestAssigned;
+use App\Notifications\RequestStatus;
 use App\Notifications\AssignedToEngineer;
 use Illuminate\Http\Request;
 use App\Hospital;
@@ -197,7 +197,7 @@ class RequestsController extends Controller
             }else{
                 $work_order->wo_number = $last_order->wo_number + 1;
             }
-            $work_order->user_admin = $request->user_id;
+            $work_order->user_admin = $request->user_admin;
 
             
             if($work_order->save()) {

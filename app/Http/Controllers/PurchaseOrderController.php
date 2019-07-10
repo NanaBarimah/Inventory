@@ -247,11 +247,12 @@ class PurchaseOrderController extends Controller
             foreach($order_items as $item){
                 if($item->part_id == null){
                     $part = new Part();
-                    $part->name = $item->name;
-                    $part->id = md5($part->name.microtime());
+                    $part->name = $item->part_name;
+                    $part->id = md5($part->part_name.microtime());
                     $part->quantity = $item->quantity;
                     $part->min_quantity = 0;
                     $part->hospital_id = $purchaseOrder->hospital_id;
+                    $part->cost = $item->unit_cost;
                 }else{
                     $part = Part::where('id', $item->part_id)->first();
                     $part->quantity += $item->quantity;
