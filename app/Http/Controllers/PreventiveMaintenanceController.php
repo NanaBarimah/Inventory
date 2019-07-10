@@ -6,6 +6,8 @@ use App\PreventiveMaintenance;
 use App\PmSchedule;
 
 use Auth;
+use Carbon;
+
 use Illuminate\Http\Request;
 
 class PreventiveMaintenanceController extends Controller
@@ -65,6 +67,7 @@ class PreventiveMaintenanceController extends Controller
         $preventiveMaintenance->recommendation = $request->recommendation;
         $preventiveMaintenance->action_taken   = $request->action_taken;
         $preventiveMaintenance->date_completed     = date('Y-m-d', $request->date_completed);
+        $preventiveMaintenance->is_complete = 2;
 
         if($preventiveMaintenance->save()) {
             return response()->json([
@@ -125,13 +128,209 @@ class PreventiveMaintenanceController extends Controller
         //
     }
 
-    public function approve(PreventiveMaintenance $preventiveMaintenance){
+    public function approve(PreventiveMaintenance $preventiveMaintenance, Request $request){
+
         $preventiveMaintenance->is_completed = 1;
 
         if($preventiveMaintenance->update()){
-            $pm_schedule = $preventiveMaintenance->pm_schedule();
-
+            $pm_schedule = $preventiveMaintenance->pm_schedule()->first();
+            $last_pm = PreventiveMaintenance::where("pm_schedule_id", $pm_schedule->id)->where("is_completed", 1)->orderBy("date_completed")->first();
+            
             //come and update the next due date here
+            if($last_pm->id == $preventiveMaintenance->id){
+                if($pm_schedule->rescheduleBasedOnCompletion == 1){
+                    
+                    if($preventiveMaintenance->date_completed != null){
+                        $date = Carbon\Carbon::parse($preventiveMaintenance->date_completed);
+                        
+                        switch($pm_schedule->recurringSchedule){
+                            case "daily":
+                                $date->addDay();
+                                break;
+                            case "weekly":
+                                $date->addWeek();
+                                break;
+                            case "bi-weekly":
+                                $date->addWeeks(2);
+                                break;
+                            case "monthly":
+                                $date->addMonth();
+                                break;
+                            case "bi-monthly":
+                                $date->addMonths(2);
+                                break;
+                            case "quarterly":
+                                $date->addMonths(3);
+                                break;
+                            case "triannually":
+                                $date->addMonths(4);
+                                break;
+                            case "biannually":
+                                $date->addMonths(6);
+                                break;
+                            case "yearly":
+                                $date->addYear();
+                                break;
+                            case "biennially":
+                                $date->addYears(2);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    $pm_schedule->due_date = $date;
+                    $pm_schedule->save();
+                }else{
+                    $date = Carbon\Carbon::parse($pm_schedule->due_date);
+                    
+                    switch($pm_schedule->recurringSchedule){
+                        case "daily":
+                            $date->addDay();
+                            break;
+                        case "weekly":
+                            $date->addWeek();
+                            break;
+                        case "bi-weekly":
+                            $date->addWeeks(2);
+                            break;
+                        case "monthly":
+                            $date->addMonth();
+                            break;
+                        case "bi-monthly":
+                            $date->addMonths(2);
+                            break;
+                        case "quarterly":
+                            $date->addMonths(3);
+                            break;
+                        case "triannually":
+                            $date->addMonths(4);
+                            break;
+                        case "biannually":
+                            $date->addMonths(6);
+                            break;
+                        case "yearly":
+                            $date->addYear();
+                            break;
+                        case "biennially":
+                            $date->addYears(2);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    $pm_schedule->due_date = $date;
+                    $pm_schedule->save();
+                }
+            }
+
+            return response()->json([
+                "error" => false,
+                "message" => "Preventive maintenance approved."
+            ]);
+        }
+    }
+
+    public function decline(PreventiveMaintenance $preventiveMaintenance, Request $request){
+
+        $preventiveMaintenance->is_completed = 0;
+
+        if($preventiveMaintenance->update()){
+            $pm_schedule = $preventiveMaintenance->pm_schedule()->first();
+            $last_pm = PreventiveMaintenance::where("pm_schedule_id", $pm_schedule->id)->where("is_completed", 1)->orderBy("date_completed")->first();
+            
+            //come and update the next due date here
+            if($last_pm->id == $preventiveMaintenance->id){
+                if($pm_schedule->rescheduleBasedOnCompletion == 1){
+                    
+                    if($preventiveMaintenance->date_completed != null){
+                        $date = Carbon\Carbon::parse($preventiveMaintenance->date_completed);
+                        
+                        switch($pm_schedule->recurringSchedule){
+                            case "daily":
+                                $date->subDay();
+                                break;
+                            case "weekly":
+                                $date->subWeek();
+                                break;
+                            case "bi-weekly":
+                                $date->subWeeks(2);
+                                break;
+                            case "monthly":
+                                $date->subMonth();
+                                break;
+                            case "bi-monthly":
+                                $date->subMonths(2);
+                                break;
+                            case "quarterly":
+                                $date->subMonths(3);
+                                break;
+                            case "triannually":
+                                $date->subMonths(4);
+                                break;
+                            case "biannually":
+                                $date->subMonths(6);
+                                break;
+                            case "yearly":
+                                $date->subYear();
+                                break;
+                            case "biennially":
+                                $date->subYears(2);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    $pm_schedule->due_date = $date;
+                    $pm_schedule->save();
+                }else{
+                    $date = Carbon\Carbon::parse($pm_schedule->due_date);
+                    
+                    switch($pm_schedule->recurringSchedule){
+                        case "daily":
+                            $date->subDay();
+                            break;
+                        case "weekly":
+                            $date->subWeek();
+                            break;
+                        case "bi-weekly":
+                            $date->subWeeks(2);
+                            break;
+                        case "monthly":
+                            $date->subMonth();
+                            break;
+                        case "bi-monthly":
+                            $date->subMonths(2);
+                            break;
+                        case "quarterly":
+                            $date->subMonths(3);
+                            break;
+                        case "triannually":
+                            $date->subMonths(4);
+                            break;
+                        case "biannually":
+                            $date->subMonths(6);
+                            break;
+                        case "yearly":
+                            $date->subYear();
+                            break;
+                        case "biennially":
+                            $date->subYears(2);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    $pm_schedule->due_date = $date;
+                    $pm_schedule->save();
+                }
+            }
+
+            return response()->json([
+                "error" => false,
+                "message" => "Preventive maintenance approved."
+            ]);
         }
     }
 }
