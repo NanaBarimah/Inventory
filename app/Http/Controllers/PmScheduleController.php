@@ -105,9 +105,12 @@ class PmScheduleController extends Controller
      * @param  \App\PmSchedule  $pmSchedule
      * @return \Illuminate\Http\Response
      */
-    public function show(PmSchedule $pmSchedule)
+    public function show($pmSchedule)
     {
         //
+        $pmSchedule = PmSchedule::with("preventive_maintenances", "priority", "department", "unit", "assets", "actions")->where("id", $pmSchedule)->first();
+        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
+        return view("pm-type-details", compact("pmSchedule", "hospital"));
     }
 
     /**

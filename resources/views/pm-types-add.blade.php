@@ -57,7 +57,7 @@
                                                 <option value="bi-monthly">Bi-monthly</option>
                                                 <option value="quarterly">Quarterly</option>
                                                 <option value="triannually">Triannually</option>
-                                                <option value="bianually">Biannually</option>
+                                                <option value="biannually">Biannually</option>
                                                 <option value="yearly">Yearly</option>
                                                 <option value="biennially">Biennially</option>
                                             </select>
