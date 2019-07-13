@@ -54,4 +54,8 @@ class PmSchedule extends Model
         return $this->hasMany('App\PmAction');
     }
     
+    public function asset_category()
+    {
+        return $this->belongsTo('App\AssetCategory');
+    }
 }
