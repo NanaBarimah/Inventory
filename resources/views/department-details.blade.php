@@ -1,4 +1,11 @@
 @extends('layouts.user-dashboard', ['page_title' => $department->name])
+@section('styles')
+<style>
+#work_order_canvas{
+    height: 1500px;
+}
+</style>
+@endsection
 @section('content')
     <div class="content">
         <div class="row">
@@ -164,6 +171,11 @@
                                                     @endforeach
                                                 </tbody>
                                             </table>
+                                            <a href="javascript:void(0)" data-target="#addDepartmentModal" data-toggle="modal">
+                                                <div class="fab">
+                                                    <i class="fas fa-plus"></i>
+                                                </div>
+                                            </a>
                                         </div>
                                         <div class="tab-pane" id="details">
                                             <div class="card-header text-center">
@@ -178,11 +190,6 @@
                 </div>
             </div>
         </div> 
-        <a href="javascript:void(0)" data-target="#addDepartmentModal" data-toggle="modal">
-            <div class="fab">
-                <i class="fas fa-plus"></i>
-            </div>
-        </a>
     </div>
 @endsection
 @section('scripts')

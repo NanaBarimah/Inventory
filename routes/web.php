@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/profile', 'UserController@index')->name('profile');
     Route::get('/users', 'UserController@listAll')->name('users');
     Route::get('/users/add', 'UserController@addNew')->name('users');
-    Route::get('/reports', 'RecordController@showReports')->name('reports');
+    Route::get('/reports', 'ReportController@index')->name('reports');
     Route::get('/schedule', 'ScheduleController@index')->name('schedule');
     Route::get('/schedule/fetch_all', 'ScheduleController@fetchAll')->name('schedule');
     Route::get('/departments', 'DepartmentController@viewALl')->name('departments');

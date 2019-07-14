@@ -465,3 +465,7 @@ input[type=number]::-webkit-outer-spin-button {
   height: 24px;
   background-color: green;
 }
+
+.nav-tabs > .nav-item > .nav-link.active{
+  border-radius: 0px;
+}
