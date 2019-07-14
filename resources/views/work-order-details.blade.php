@@ -151,8 +151,8 @@ $user = Auth::user();
                                         @if($work_order->users->count() == 0)
                                         <span class="text-muted">None assigned</span>&nbsp;
                                         @else
-                                        @foreach($work_order->users as $user)
-                                        <img class="round" width="30" height="30" avatar="{{$user->firstname.' '.$user->lastname}}" data-toggle="tooltip" title="{{$user->firstname.' '.$user->lastname}}"/>
+                                        @foreach($work_order->users as $team_user)
+                                        <img class="round" width="30" height="30" avatar="{{$team_user->firstname.' '.$team_user->lastname}}" data-toggle="tooltip" title="{{$team_user->firstname.' '.$team_user->lastname}}"/>
                                         @endforeach
                                         @endif
                                         <button class="btn btn-round btn-light btn-icon" data-toggle="modal" data-target="#assign_team"><i class="fas fa-plus"></i></button>
@@ -373,7 +373,7 @@ $user = Auth::user();
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label><b>Lead Technician</b></label>
+                                            <label><b>Change Technician</b></label>
                                             <select class="selectpicker" data-style="form-control" title="Lead Technician" 
                                             name="assigned_to" id="lead_tech" data-show-tick="true" data-live-search="true">
                                                 <option disabled><i>Fetching technicians...</i></option>
@@ -777,6 +777,7 @@ $user = Auth::user();
         e.preventDefault();
         let data = new FormData(this);
         data.append("user_id", "{{$user->id}}")
+        console.log(data.get('user_id'));
         let btn = $(this).find('[type="submit"]');
         
         const success = (data) => {

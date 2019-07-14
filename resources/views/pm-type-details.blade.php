@@ -77,7 +77,7 @@ $user = Auth::user();
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label><b>Associated Category</b></label>
-                                                <p>{{$pmSchedule->category != null ? $pmSchedule->category->name : 'N/A'}}</p>
+                                                <p>{{$pmSchedule->asset_category != null ? $pmSchedule->asset_category->name : 'N/A'}}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -111,7 +111,7 @@ $user = Auth::user();
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label><b>Ends on</b></label>
-                                                <p>{{$pmSchedule->endDate != null ? date('jS F, Y', strtotime($pmSchedule->endDate)) : 'N/A'}}</p>
+                                                <p>{{$pmSchedule->endDueDate != null ? date('jS F, Y', strtotime($pmSchedule->endDueDate)) : 'N/A'}}</p>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -225,13 +225,14 @@ $user = Auth::user();
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="edit">
+                                    <form id="edit-pm">
                                     <div class="row">
                                         <div class="col-md-9">
                                             <div class="row mb-2">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label><b>Title</b></label>
-                                                        <input value="{{$pmSchedule->title}}" class="form-control"/>
+                                                        <input name="title" value="{{$pmSchedule->title}}" class="form-control"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -241,28 +242,16 @@ $user = Auth::user();
                                                         <label><b>Recurrence</b></label>
                                                         <select class="selectpicker col-sm-12" data-style="form-control" title="Recurring frequency"
                                                         data-show-tick="true" name="recurringSchedule" required>
-                                                            <option value="daily">Daily</option>
-                                                            <option value="weekly">Weekly</option>
-                                                            <option value="bi-weekly">Bi-weekly</option>
-                                                            <option value="monthly">Monthly</option>
-                                                            <option value="bi-monthly">Bi-monthly</option>
-                                                            <option value="quarterly">Quarterly</option>
-                                                            <option value="triannually">Triannually</option>
-                                                            <option value="biannually">Biannually</option>
-                                                            <option value="yearly">Yearly</option>
-                                                            <option value="biennially">Biennially</option>
-                                                        </select>
-                                                        <p class="refresh-picker text-right pr-4">Reset</p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label><b>Associated Category</b></label>
-                                                        <select class="selectpicker col-sm-12" data-style="form-control" title="Priority"
-                                                        data-show-tick="true" name="priority_id">
-                                                            @foreach($hospital->priorities as $priority)
-                                                            <option value="{{$priority->id}}">{{$priority->name}}</option>
-                                                            @endforeach
+                                                            <option  <?php if($pmSchedule->recurringSchedule =='daily'){echo 'selected';}?> value="daily" >Daily</option>
+                                                            <option <?php if($pmSchedule->recurringSchedule =='weekly'){echo 'selected';}?> value="weekly">Weekly</option>
+                                                            <option <?php if($pmSchedule->recurringSchedule =='bi-weekly'){echo 'selected';}?> value="bi-weekly">Bi-weekly</option>
+                                                            <option <?php if($pmSchedule->recurringSchedule =='monthly'){echo 'selected';}?> value="monthly">Monthly</option>
+                                                            <option <?php if($pmSchedule->recurringSchedule =='bi-monthly'){echo 'selected';}?> value="bi-monthly">Bi-monthly</option>
+                                                            <option <?php if($pmSchedule->recurringSchedule =='quarterly'){echo 'selected';}?> value="quarterly">Quarterly</option>
+                                                            <option <?php if($pmSchedule->recurringSchedule =='triannually'){echo 'selected';}?> value="triannually">Triannually</option>
+                                                            <option <?php if($pmSchedule->recurringSchedule =='biannually'){echo 'selected';}?> value="biannually">Biannually</option>
+                                                            <option <?php if($pmSchedule->recurringSchedule =='yearly'){echo 'selected';}?> value="yearly">Yearly</option>
+                                                            <option <?php if($pmSchedule->recurringSchedule =='biennially'){echo 'selected';}?> value="biennially">Biennially</option>
                                                         </select>
                                                         <p class="refresh-picker text-right pr-4">Reset</p>
                                                     </div>
@@ -281,7 +270,7 @@ $user = Auth::user();
                                                         <select class="selectpicker col-sm-12" data-style="form-control" title="Priority"
                                                         data-show-tick="true" name="priority_id">
                                                             @foreach($hospital->priorities as $priority)
-                                                            <option value="{{$priority->id}}">{{$priority->name}}</option>
+                                                            <option  <?php if($priority->id == $pmSchedule->priority_id){echo 'selected';}?>  value="{{$priority->id}}">{{$priority->name}}</option>
                                                             @endforeach
                                                         </select>
                                                         <p class="refresh-picker text-right pr-4">Reset</p>
@@ -293,7 +282,7 @@ $user = Auth::user();
                                                         <select class="selectpicker col-md-12" data-style="btn form-control" name="department_id" title="Department" id="department" data-show-tick="true">
                                                         @if($hospital->departments->count() > 0)
                                                             @foreach($hospital->departments as $department)
-                                                            <option value="{{$department->id}}" data-units = "{{$department->units}}">{{$department->name}}</option>
+                                                            <option value="{{$department->id}}" data-units = "{{$department->units}}"  <?php if($department->id == $pmSchedule->department_id){echo 'selected';}?> >{{$department->name}}</option>
                                                             @endforeach
                                                         @else
                                                             <option disabled>No known departments</option>
@@ -316,7 +305,7 @@ $user = Auth::user();
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label><b>Ends on</b></label>
-                                                        <input class="form-control datepicker" name="endDueDate" value="{{$pmSchedule->endDate != null ? date('m/d/Y H:i:s', strtotime($pmSchedule->endDate)) : null}}"/>
+                                                        <input class="form-control datepicker" name="endDueDate" value="{{$pmSchedule->endDueDate != null ? date('m/d/Y H:i:s', strtotime($pmSchedule->endDueDate)) : null}}"/>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
@@ -324,7 +313,7 @@ $user = Auth::user();
                                                         <label><b>&nbsp;</b></label>
                                                         <div class="form-check mt-2">
                                                             <label class="form-check-label">
-                                                                <input class="form-check-input" name="rescheduledBasedOnCompletion" type="checkbox">
+                                                                <input class="form-check-input"  <?php if($pmSchedule->rescheduledBasedOnCompletion == 1){echo 'checked';}?>  name="rescheduledBasedOnCompletion" type="checkbox">
                                                                 <span class="form-check-sign"></span>
                                                                 Reschedule PM based on completion &nbsp;<i style="cursor:pointer" class="far fa-question-circle" title="Turning this setting on sets the next scheduled PM of this type with respect to the last completion date of this PM type" data-toggle="tooltip"></i>
                                                             </label>
@@ -341,7 +330,7 @@ $user = Auth::user();
                                                             data-show-tick="true" name="asset_category_id" id="category">
                                                             @if($hospital->asset_categories->count() > 0)
                                                                 @foreach($hospital->asset_categories as $category)
-                                                                <option value="{{$category->id}}">{{$category->name}}</option>
+                                                                <option  <?php if($category->id == $pmSchedule->asset_category_id){echo 'selected';}?>  value="{{$category->id}}">{{$category->name}}</option>
                                                                 @endforeach
                                                             @else 
                                                                 <option disabled>No equipment categories recorded</option>
@@ -391,6 +380,10 @@ $user = Auth::user();
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row mt-5 pull-right pr-4">
+                                        <button type="submit" class="btn btn-purple" id="btn_submit">Save</button> 
+                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -465,6 +458,16 @@ $user = Auth::user();
         $('#decline').modal("show");
     }
 
+    $("#edit-pm").on("submit", function(e) {
+        e.preventDefault();
+
+        let data = new FormData(this);
+        data.append("_method", "put");
+
+        let btn = $(this).find('[type="submit"]');
+        submit_file_form("/api/pm-schedule/update/{{$pmSchedule->id}}", "post", data, undefined, btn, true);
+    });
+
     $("#approve_pm").on("submit", function(e){
         e.preventDefault();
         let id = $("#pm_id").val();
@@ -473,6 +476,40 @@ $user = Auth::user();
 
         //console.log(data);
         submit_file_form(`/api/pm/${id}/approve`, "post", data, undefined, btn, false);
-    })
+    });
+
+    $('#toggle_category').on("change", function(){
+        if($(this).prop("checked") == false){
+            $("#asset_div").css("display", "none");
+            $("#category_div").css("display", "block");
+            $('[name="assets[]"]').val(null);
+            $('[name="assets[]"]').selectpicker("refresh");
+        }else{
+            $("#asset_div").css("display", "block");
+            $("#category_div").css("display", "none");
+            $('[name="asset_category_id"]').val(null);
+            $('[name="asset_category_id"]').selectpicker("refresh");
+        }
+    });
+
+    $("#department").on("change", function(){
+            $("#unit").val(null);
+            $("#unit").html(null);
+
+            let units = $(this).find(":selected").data("units");
+
+            if(units.length > 0){
+                $("#unit").selectpicker("refresh");
+
+                $.each(units, function(index, unit){
+                    $("#unit").append(`<option value="${unit.id}">${unit.name}</option>`);
+                });
+
+            }else{
+                $("#unit").append(`<option disabled>No units for this department</option>`);
+            }
+
+            $("#unit").selectpicker("refresh");
+        });
     </script>
 @endsection

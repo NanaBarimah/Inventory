@@ -146,11 +146,12 @@ class DepartmentController extends Controller
     
     public function view($department){
         $department = Department::where([['id' , $department], ['hospital_id', Auth::user()->hospital_id]])->with("units", "assets", "units.assets")->first();
+        $hospital = Hospital::with('users')->where('id', Auth::user()->hospital_id)->first(); 
 
         if($department == null){
             return abort(404);
         }
 
-        return view('department-details', compact('department'));
+        return view('department-details', compact('department', 'hospital'));
     }
 }

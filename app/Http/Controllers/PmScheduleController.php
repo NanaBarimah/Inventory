@@ -108,7 +108,7 @@ class PmScheduleController extends Controller
     public function show($pmSchedule)
     {
         //
-        $pmSchedule = PmSchedule::with("preventive_maintenances", "priority", "department", "unit", "assets", "actions")->where("id", $pmSchedule)->first();
+        $pmSchedule = PmSchedule::with("preventive_maintenances", "priority", "department", "unit", "asset_category", "assets", "actions")->where("id", $pmSchedule)->first();
         $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
         return view("pm-type-details", compact("pmSchedule", "hospital"));
     }
@@ -133,7 +133,34 @@ class PmScheduleController extends Controller
      */
     public function update(Request $request, PmSchedule $pmSchedule)
     {
-        //
+        $pmSchedule->title = $request->title;
+        $pmSchedule->recurringSchedule = $request->recurringSchedule;
+        $pmSchedule->due_date = date('Y-m-d H:i:s', strtotime($request->due_date));
+        $pmSchedule->endDueDate = $request->endDueDate != null ? date('Y-m-d', strtotime($request->endDueDate)) : null;
+        $pmSchedule->department_id = $request->department_id;
+        $pmSchedule->unit_id = $request->unit_id;
+        $pmSchedule->priority_id = $request->priority_id;
+        $pmSchedule->description = $request->description;
+        $pmSchedule->asset_category_id = $request->asset_category_id;
+
+        if($request->rescheduledBasedOnCompletion == 'on') {
+            $pmSchedule->rescheduledBasedOnCompletion = 1;
+        } else if ($request->rescheduledBasedOnCompletion = 'off') {
+            $pmSchedule->rescheduledBasedOnCompletion = 0;
+        }
+
+        if($pmSchedule->update()) {
+            return response()->json([
+                'error' => false,
+                'data' => $pmSchedule,
+                'message' => 'Preventive maintenance schedule updated'
+            ]);
+        }
+
+        return response()->json([
+            'error' => true,
+            'message' => 'Could not update preventive maintenance schedule. Try again!'
+        ]);
     }
 
     /**

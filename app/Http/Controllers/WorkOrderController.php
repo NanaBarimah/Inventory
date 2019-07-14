@@ -173,8 +173,15 @@ class WorkOrderController extends Controller
         $workOrder->priority_id = $request->priority_id;
         $workOrder->fault_category_id = $request->fault_category_id;
         $workOrder->description = $request->description;
-        $workOrder->assigned_to = $request->assigned_to;
         
+        if($request->assigned_to != null){
+            $workOrder->assigned_to = $request->assigned_to;
+        }
+
+        if($workOrder->assigned_to != null && $workOrder->status == 5) {
+            $workOrder->status = 4;
+        }
+
         if($workOrder->update()){
             return response()->json([
                 "error" => false,
@@ -310,7 +317,7 @@ class WorkOrderController extends Controller
             $users = User::where([['role', 'Admin'], ['hospital_id', $workOrder->hospital_id]])->get();
             switch($request->status){
                 case 1:
-                    Notification::send($users, new WorkOrderStatus($workOrder));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been closed'));
                     break;
                 case 2: 
                     Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been set to in progress'));
@@ -343,6 +350,14 @@ class WorkOrderController extends Controller
         $workOrder->finish();
         
         if($workOrder->save()){
+            $users = User::whereHas('work_order_teams', function($q) use($workOrder){
+                $q->where('work_order_id', $workOrder->id);
+            })->orWhereHas('work_orders', function($query) use($workOrder) {
+                $query->where('id', $workOrder->id);
+            })->get();
+            
+            Notification::send($users, new WorkOrderStatus($workOrder));
+
             return response()->json([
                 "error" => false,
                 "message" => "Work order has been marked as completed"

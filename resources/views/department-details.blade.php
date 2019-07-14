@@ -191,6 +191,48 @@
             </div>
         </div> 
     </div>
+    <div class="modal fade" id="addUnitModal" tabindex="-1" role="dialog" aria-labelledby="addUnitLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+        <form method = "post" id="add_unit_form">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h6 class="header">Add Unit</h6>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label><b>Unit Name</b> <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control resetable" name="name" required/>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label><b>Location</b></label>
+                        <input type="text" class="form-control resetable" name="location">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label><b>Contact Number</b></label>
+                        <input type="tel" class="form-control resetable" name="phone_number">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label><b>Unit Head</b></label>
+                        <select class="selectpicker col-md-12" title="user_id" data-style="btn btn-purple" name="user_id">
+                            @foreach($hospital->users as $user)
+                            <option value="{{$user->id}}">{{$user->firstname.' '.$user->lastname}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer mt-4">
+                <button type="submit" class="btn btn-purple float-right" id="btn_submit">Save</button>
+            </div>
+        </div>
+        </form>
+    </div>
 @endsection
 @section('scripts')
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
@@ -199,6 +241,15 @@
     <script>
         let units_table = generateDtbl('#units_table', 'No units for this department', 'Search for unit');
         let assets_table = generateDtbl('#assets_table', 'No assets for this department', 'Search for asset');
+
+        $('#add_unit_form').on('submit', function(e){
+            e.preventDefault();
+
+            let btn = $('#btn_submit');
+            let data = $(this).serialize() + '&department_id={{$department->id}}';
+
+            submit_form('/api/units/add', post, data, undefined, btn, true);
+        });
     </script>
 
 @endsection
