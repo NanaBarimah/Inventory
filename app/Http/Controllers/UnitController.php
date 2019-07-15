@@ -47,7 +47,6 @@ class UnitController extends Controller
      */
     public function store(Request $request)
     {
-        $result = true;
         $request->validate([
             'name'          => 'required|string',
             'department_id' => 'required'
@@ -68,11 +67,18 @@ class UnitController extends Controller
         $unit->user_id       = $request->user_id;
         $unit->location      = $request->location;
         $unit->phone_number  = $request->phone_number;   
-        
+     
+        if($unit->save()){
+            return response()->json([
+                'error'   => false,
+                'data'    => $unit,
+                'message' => 'Unit created successfully'
+            ]);
+        }
+
         return response()->json([
-            'error'   => $result,
-            'data'    => $unit,
-            'message' => !$result ? 'Unit created successfully' : 'Error creating unit'
+            'error'   => true,
+            'message' => 'Could not save unit'
         ]);
         
     }

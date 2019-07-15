@@ -1,4 +1,19 @@
 @extends('layouts.user-dashboard', ['page_title' => 'Reports'])
+@section('styles')
+<style>
+.heading-title{
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: capitalize;
+    color: #aaa;
+}
+
+#wo-chart{
+    width: 100%;
+    height: 500px;
+}
+</style>
+@endsection
 @section('content')
 <div class="content">
     <div class="row">
@@ -51,7 +66,7 @@
                                                         </div>
                                                         <div class="col-7 text-right">
                                                             <h3 class="info-title" id="downtime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
-                                                            <h6 class="stats-title">Pending</h6>
+                                                            <h6 class="heading-title">Pending</h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -72,7 +87,7 @@
                                                         </div>
                                                         <div class="col-7 text-right">
                                                             <h3 class="info-title" id="uptime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
-                                                            <h6 class="stats-title">Open</h6>
+                                                            <h6 class="heading-title">Open</h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -93,7 +108,7 @@
                                                         </div>
                                                         <div class="col-7 text-right">
                                                             <h3 class="info-title" id="uptime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
-                                                            <h6 class="stats-title">Progress</h6>
+                                                            <h6 class="heading-title">Progress</h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -114,7 +129,7 @@
                                                         </div>
                                                         <div class="col-7 text-right">
                                                             <h3 class="info-title" id="uptime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
-                                                            <h6 class="stats-title">On hold</h6>
+                                                            <h6 class="heading-title">On hold</h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -135,7 +150,7 @@
                                                         </div>
                                                         <div class="col-7 text-right">
                                                             <h3 class="info-title" id="uptime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
-                                                            <h6 class="stats-title">Closed</h6>
+                                                            <h6 class="heading-title">Closed</h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -156,7 +171,7 @@
                                                         </div>
                                                         <div class="col-7 text-right">
                                                             <h3 class="info-title" id="uptime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
-                                                            <h6 class="stats-title">Approved</h6>
+                                                            <h6 class="heading-title">Approved</h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -165,50 +180,77 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-3 col-sm-12">
-                                    <h6 class="title">Report Filter</h6>
+                            <div class="row mb-4">
+                                <div class="col-sm-12">
+                                    <h6>Filter</h6>
                                     <form id="work_order_report">
                                         <div class="row">
-                                            <div class="col-sm-12">
+                                            <div class="col-md-2 col-sm-12">
                                                 <div class="form-group">
                                                     <label>Type</label>
                                                     <select class="selectpicker col-md-12" data-style="form-control" title="Report type"
                                                     data-show-tick="true" name="type" required>
-                                                        <option value="status">Status</option>
                                                         <option value="cost">Cost</option>
-                                                        <option value="department">Departments</option>
-                                                        <option value="unit">Units</option>
-                                                        <option value="asset_category">Equipment Type</option>
-                                                        <option value="service_vendor">Service vendor</option>
+                                                        <option value="count">Count</option>
                                                     </select>
+                                                <p class="refresh-picker pr-4 text-right">Reset</p>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-12">
+                                            <div class="col-md-2 col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Group by</label>
+                                                    <select class="selectpicker col-md-12" data-style="form-control" title="Report type"
+                                                    data-show-tick="true" name="group" id="wo_report_group" required>
+                                                        <option value="status">Status</option>
+                                                        <option value="department_id">Department</option>
+                                                        <option value="unit_id">Unit</option>
+                                                    </select>
+                                                    <p class="refresh-picker pr-4 text-right">Reset</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Interval</label>
+                                                    <select class="selectpicker col-md-12" data-style="form-control" title="Report type"
+                                                    data-show-tick="true" name="interval" id="wo_report_group">
+                                                        <option value="month">Month</option>
+                                                        <option value="quarter">Quarter</option>
+                                                        <option value="year">Year</option>
+                                                    </select>
+                                                    <p class="refresh-picker pr-4 text-right">Reset</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-12">
                                                 <div class="form-group">
                                                     <label>Start Date</label>
-                                                    <input class="datepicker form-control" name="from"/>
+                                                    <input class="datepicker form-control" name="from" required/>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-12">
+                                            <div class="col-md-2 col-sm-12">
                                                 <div class="form-group">
                                                     <label>End Date</label>
-                                                    <input class="datepicker form-control" name="to"/>
+                                                    <input class="datepicker form-control" name="to" required/>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-12">
-                                                <div class="row pull-right pl-3">
-                                                    <button class="btn btn-purple">Generate Report</button>
-                                                </div>
+                                            <div class="col-sm-2 mt-2 pt-1">
+                                                <button type="submit" class="btn btn-round btn-purple"><b>Go</b></button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-9 col-sm-12">
                                     <h6 class="title">Report</h6>
                                     <div class="col-sm-12">
-                                        <div id="wo_container" style="width:100%; height:auto; margin: 0 auto;"></div>
+                                        <div id="wo-chart">
+                                        
+                                        </div>
                                     </div>
+                                </div>
+                                <div class="col-md-3 col-sm-12">
+                                    <h6 class="title">Report Notes</h6>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -238,15 +280,38 @@
 <script src="{{asset('js/highcharts-3d.js')}}"></script>
 <script src="{{asset('js/highcharts-export.js')}}"></script>
 <script src="{{asset('js/bootstrap-selectpicker.js')}}"></script>
+<script src="{{asset('js/chart-options.js')}}"></script>
 <script>
     demo.initDateTimePicker();
 
     $("#work_order_report").on("submit", function(e){
         e.preventDefault();
+        let data = $(this).serialize();
+        $.ajax({
+            'url' : "/api/reports/work-orders/status",
+            'method' : "get",
+            "data" : data,
+            success : (data) => {
+                loadColumnGraph('wo-chart', data.labels, data.datasets, "Work orders", "Work order reports");
+            },
+            error: (xhr) => {
+                       
+            }
+        })
+    });
+
+    $(document).ready(function(){
         
-        const success = (data) => {
-            
-        }
-    })
+        $.ajax({
+            'url' : "/api/reports/work-orders/index",
+            'method' : "get",
+            success : (data) => {
+                loadColumnGraph('wo-chart', data.labels, data.datasets, "Work orders", "Work order reports");
+            },
+            error: (xhr) => {
+                       
+            }
+        })
+    });
 </script>
 @endsection

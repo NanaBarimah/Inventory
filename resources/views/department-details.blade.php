@@ -166,12 +166,12 @@
                                                             <td><a href="javascript:void(0)">{{$unit->name}}</a></td>
                                                             <td>{{$unit->location != null ? $unit->location : 'N/A'}}</td>
                                                             <td>{{$unit->phone_number != null ? $unit->phone_number : 'N/A'}}</td>
-                                                            <td>{{$unit->user != null ? $unit->user->name : 'N/A'}}</td>
+                                                            <td class="text-right">{{$unit->user != null ? $unit->user->firstname.' '.$unit->user->lastname : 'N/A'}}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
-                                            <a href="javascript:void(0)" data-target="#addDepartmentModal" data-toggle="modal">
+                                            <a href="javascript:void(0)" data-target="#addUnitModal" data-toggle="modal">
                                                 <div class="fab">
                                                     <i class="fas fa-plus"></i>
                                                 </div>
@@ -201,9 +201,17 @@
             </div>
             <div class="modal-body">
                 <div class="form-row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-6">
                         <label><b>Unit Name</b> <span class="text-danger">*</span></label>
                         <input type="text" class="form-control resetable" name="name" required/>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label><b>Assigned User</b></label>
+                        <select class="selectpicker col-md-12" title="Select a user" data-style="form-control" name="user_id">
+                            @foreach($hospital->users as $user)
+                            <option value="{{$user->id}}">{{$user->firstname.' '.$user->lastname}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="form-row">
@@ -216,19 +224,11 @@
                         <input type="tel" class="form-control resetable" name="phone_number">
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label><b>Unit Head</b></label>
-                        <select class="selectpicker col-md-12" title="user_id" data-style="btn btn-purple" name="user_id">
-                            @foreach($hospital->users as $user)
-                            <option value="{{$user->id}}">{{$user->firstname.' '.$user->lastname}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
             </div>
             <div class="modal-footer mt-4">
-                <button type="submit" class="btn btn-purple float-right" id="btn_submit">Save</button>
+                <div class="row text-right">
+                    <button type="submit" class="btn btn-purple" id="btn_submit">Save</button>
+                </div>
             </div>
         </div>
         </form>
@@ -248,7 +248,7 @@
             let btn = $('#btn_submit');
             let data = $(this).serialize() + '&department_id={{$department->id}}';
 
-            submit_form('/api/units/add', post, data, undefined, btn, true);
+            submit_form('/api/units/add', "post", data, undefined, btn, true);
         });
     </script>
 

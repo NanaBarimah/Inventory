@@ -103,6 +103,8 @@ Route::middleware('auth:api')->group(function(){
     Route::post('vendors/add', 'ServiceVendorController@store');
     Route::put('vendors/update/{vendor}', 'ServiceVendorController@update');
 
+    Route::get("reports/work-orders/index", "ReportController@workOrderIndex");
+    Route::get("reports/work-orders/status", "ReportController@workOrderByStatus");
 });
 
 Route::middleware('passport:admin-api')->group(function(){
