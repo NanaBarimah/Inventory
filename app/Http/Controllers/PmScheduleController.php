@@ -18,9 +18,11 @@ class PmScheduleController extends Controller
      */
     public function index()
     {
-        $pmSchedules = PmSchedule::with("priority")->where('hospital_id', Auth::user()->hospital_id)->get();
+        $user = Auth::user();
 
-        return view("pm-types", compact("pmSchedules"));
+        $pmSchedules = PmSchedule::with("priority")->where('hospital_id', $user->hospital_id)->get();
+
+        return view("pm-types", compact("pmSchedules", "user"));
     }
 
     /**
@@ -30,9 +32,10 @@ class PmScheduleController extends Controller
      */
     public function create()
     {
-        //
-        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
-        return view('pm-types-add', \compact("hospital"));
+        $user = Auth::user();
+
+        $hospital = Hospital::where("id", $user->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
+        return view('pm-types-add', \compact("hospital", "user"));
     }
 
     /**
@@ -107,10 +110,11 @@ class PmScheduleController extends Controller
      */
     public function show($pmSchedule)
     {
-        //
+        $user = Auth::user();
+
         $pmSchedule = PmSchedule::with("preventive_maintenances", "priority", "department", "unit", "asset_category", "assets", "actions")->where("id", $pmSchedule)->first();
-        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
-        return view("pm-type-details", compact("pmSchedule", "hospital"));
+        $hospital = Hospital::where("id", $user->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
+        return view("pm-type-details", compact("pmSchedule", "hospital", "user"));
     }
 
     /**

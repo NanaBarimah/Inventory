@@ -1,6 +1,3 @@
-@php
-    $user = Auth::user();
-@endphp
 @extends('layouts.user-dashboard', ['page_title' => 'Service Vendors'])
 @section('content')
     <div class="content">
@@ -21,7 +18,9 @@
                                     <th>Vendor Type</th>
                                     <th>Address</th>
                                     <th>Website</th>
-                                    <th class="disabled-sorting">Actions</th>
+                                    @if($user->role == 'Admin')
+                                        <th class="disabled-sorting">Actions</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tfoot>
@@ -33,7 +32,9 @@
                                     <th>Vendor Type</th>
                                     <th>Address</th>
                                     <th>Website</th>
-                                    <th class="disabled-sorting text-right">Actions</th>
+                                    @if($user->role == 'Admin')
+                                        <th class="disabled-sorting text-right">Actions</th>
+                                    @endif
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -46,11 +47,13 @@
                                     <td>{{$vendor->vendor_type !== null ? $vendor->vendor_type : 'N/A'}}</td>
                                     <td>{{$vendor->address !== null ? $vendor->address : 'N/A'}}</td>
                                     <td>{{$vendor->website !== null ? $vendor->website : 'N/A'}}</td>
-                                    <td>
-                                        <a href="javascript:void(0)" class="edit" data-placement="left" title="Edit" data-toggle="tooltip" onclick = "edit({{$vendor}})">
-                                            <i class="fas fa-pen text-muted"></i>
-                                        </a>
-                                    </td>
+                                    @if($user->role == 'Admin')
+                                        <td>
+                                            <a href="javascript:void(0)" class="edit" data-placement="left" title="Edit" data-toggle="tooltip" onclick = "edit({{$vendor}})">
+                                                <i class="fas fa-pen text-muted"></i>
+                                            </a>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>
@@ -172,11 +175,13 @@
     </form>
         </div>
     </div>
-    <a href="javascript:void(0)" data-toggle="modal" data-target="#addVendorModal">
-        <div class="fab">
-            <i class="fas fa-plus"></i>
-        </div>
-    </a>
+    @if($user->role == 'Admin')
+        <a href="javascript:void(0)" data-toggle="modal" data-target="#addVendorModal">
+            <div class="fab">
+                <i class="fas fa-plus"></i>
+            </div>
+        </a>
+    @endif
 @endsection
 @section('scripts')
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>

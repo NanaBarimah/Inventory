@@ -23,8 +23,10 @@ class RequestsController extends Controller
      */
     public function index()
     {
-        $requests = Requests::where('hospital_id', Auth::user()->hospital_id)->with("priority", "user")->get();
-        return view('requests', compact("requests"));
+        $user = Auth::user();
+
+        $requests = Requests::where('hospital_id', $user->hospital_id)->with("priority", "user")->get();
+        return view('requests', compact("requests", "user"));
     }
 
     /**
@@ -34,9 +36,10 @@ class RequestsController extends Controller
      */
     public function create()
     {
-        //
-        $hospital = Hospital::where('id', Auth::user()->hospital_id)->with("priorities", "departments", "departments.units", "assets")->first();
-        return view('request-add', compact("hospital"));
+        $user = Auth::user();
+
+        $hospital = Hospital::where('id', $user->hospital_id)->with("priorities", "departments", "departments.units", "assets")->first();
+        return view('request-add', compact("hospital", "user"));
     }
 
     /**
@@ -122,10 +125,11 @@ class RequestsController extends Controller
      */
     public function show($request)
     {
-        //
+        $user = Auth::user();
+
         $request = Requests::where('id', $request)->with("priority", "user", "asset", "unit", "department")->first();
-        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("priorities", "assets", "departments", "departments.units")->first();
-        return view("request-details", compact("request", "hospital"));
+        $hospital = Hospital::where("id", $user->hospital_id)->with("priorities", "assets", "departments", "departments.units")->first();
+        return view("request-details", compact("request", "hospital", "user"));
     }
 
     /**

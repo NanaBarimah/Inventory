@@ -1,6 +1,3 @@
-@php
-$user = Auth::user();
-@endphp
 
 @extends('layouts.user-dashboard', ['page_title' => $pmSchedule->title])
 @section('styles')

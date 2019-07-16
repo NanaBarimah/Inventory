@@ -1,6 +1,4 @@
-@php 
-$user = Auth::user();
-@endphp
+
         <div class="sidebar" data-color="blue">
             <div class="logo">
                 <a href="/" class="simple-text logo-normal">
@@ -90,12 +88,14 @@ $user = Auth::user();
                         </a>
                     </li>
                     @endif
+                    @if($user->role == 'Admin' || $user->role == 'Regular Technician')
                     <li>
                         <a href="/vendors">
                             <i class="now-ui-icons shopping_delivery-fast"></i>
                             <p>Service Vendors</p>
                         </a>
                     </li>
+                    @endif
                     <li>
                         <a href="/purchase-orders">
                             <i class="now-ui-icons shopping_cart-simple"></i>

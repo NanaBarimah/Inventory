@@ -38,7 +38,7 @@ class CategoryController extends Controller
                 return $item->parent_id == null;
             })->values();
 
-            return view('categories', compact("asset_categories", "fault_categories", "priority_categories", "parent_categories", "part_categories"));
+            return view('categories', compact("asset_categories", "fault_categories", "priority_categories", "parent_categories", "part_categories", "user"));
         } else {
             abort(403);
         }

@@ -1,6 +1,4 @@
-@php
-$user = Auth::user();
-@endphp
+
 @extends('layouts.user-dashboard', ['page_title' => 'Departments'])
 @section('styles')
 <style>

@@ -15,9 +15,15 @@ class ServiceVendorController extends Controller
      */
     public function index()
     {
-        $vendors = Service_Vendor::where('hospital_id', '=', Auth::user()->hospital_id)->get();
+        $user = Auth::user();
+        if($user->role == 'Admin' || $user->role == 'Regular Technician'){
+            $vendors = Service_Vendor::where('hospital_id', '=', $user->hospital_id)->get();
 
-        return view('vendors')->with('vendors', $vendors);
+            return view('vendors')->with('vendors', $vendors)->with('user', $user);
+        } else {
+            abort(403);
+        }
+        
     }
 
     /**

@@ -115,7 +115,11 @@
                                                 @foreach($department->assets as $item)
                                                     <tr class="uppercase">
                                                         <td>
-                                                            <a href="/inventory/{{$item->id}}"><b>{{$item->name}}</b></a>
+                                                            @if($user->role == 'Admin' || $user->role == 'Regular Technician')
+                                                                <a href="/inventory/{{$item->id}}"><b>{{$item->name}}</b></a>
+                                                            @elseif($user->role == 'View Only')
+                                                                <b>{{$item->name}}</b>
+                                                            @endif
                                                         </td>
                                                         <td>{{$item->asset_code}}</td>
                                                         <td>{{$item->category != null ? $item->category->name : "N/A"}}</td>
@@ -128,7 +132,11 @@
                                                     @foreach($unit->assets as $item)
                                                     <tr class="uppercase">
                                                         <td>
-                                                            <a href="/inventory/{{$item->id}}"><b>{{$item->name}}</b></a>
+                                                            @if($user->role == 'Admin' || $user->role == 'Regular Technician')
+                                                                <a href="/inventory/{{$item->id}}"><b>{{$item->name}}</b></a>
+                                                            @elseif($user->role == 'View Only')
+                                                                <b>{{$item->name}}</>
+                                                            @endif
                                                         </td>
                                                         <td>{{$item->asset_code}}</td>
                                                         <td>{{$item->category != null ? $item->category->name : "N/A"}}</td>
@@ -163,7 +171,13 @@
                                                 <tbody>
                                                     @foreach($department->units as $unit)
                                                         <tr>
-                                                            <td><a href="javascript:void(0)">{{$unit->name}}</a></td>
+                                                            <td>
+                                                                @if($user->role == 'Admin' || $user->role == 'Regular Techician')
+                                                                    <a href="javascript:void(0)">{{$unit->name}}</a>
+                                                                @elseif($user->role == 'View Only')
+                                                                    {{$unit->name}}
+                                                                @endif
+                                                            </td>
                                                             <td>{{$unit->location != null ? $unit->location : 'N/A'}}</td>
                                                             <td>{{$unit->phone_number != null ? $unit->phone_number : 'N/A'}}</td>
                                                             <td class="text-right">{{$unit->user != null ? $unit->user->firstname.' '.$unit->user->lastname : 'N/A'}}</td>
@@ -171,11 +185,13 @@
                                                     @endforeach
                                                 </tbody>
                                             </table>
+                                            @if($user->role == 'Admin')
                                             <a href="javascript:void(0)" data-target="#addUnitModal" data-toggle="modal">
                                                 <div class="fab">
                                                     <i class="fas fa-plus"></i>
                                                 </div>
                                             </a>
+                                            @endif
                                         </div>
                                         <div class="tab-pane" id="details">
                                             <div class="card-header text-center">

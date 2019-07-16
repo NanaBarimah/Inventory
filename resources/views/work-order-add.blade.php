@@ -1,4 +1,3 @@
-@php $user = Auth::user() @endphp
 @extends('layouts.user-dashboard', ['page_title' => 'Add Work Order'])
 @section('content')
     <div class="content">

@@ -146,7 +146,7 @@ class DepartmentController extends Controller
             return view('departments')->with('departments', $departments)->with('user', $user);
         } else if($user->role == 'View Only'){
              $departments = Department::with('units')->where([['hospital_id', $user->hospital_id], ['user_id', $user->id]])->orderBy('name', 'ASC')->paginate(20);
-            return view('departments')->with('departments', $departments);
+            return view('departments')->with('departments', $departments)->with('user', $user);
         }else {
             abort(403);
         }
@@ -162,12 +162,12 @@ class DepartmentController extends Controller
                 return abort(404);
             }
     
-            return view('department-details', compact('department', 'hospital'));  
+            return view('department-details', compact('department', 'hospital', 'user'));  
         } else if($user->role == 'View Only') {
             $department = Department::where([['id', $department], ['user_id', $user->id]])->with("units", "assets", "units.assets", "units.user")->first();
             $hospital = Hospital::with('users')->where('id', $user->hospital_id)->first(); 
 
-            return view('department-details', compact('department', 'hospital'));
+            return view('department-details', compact('department', 'hospital', 'user'));
         } else {
             abort(403);
         }
