@@ -1,4 +1,6 @@
-
+@php 
+$user = Auth::user();
+@endphp
         <div class="sidebar" data-color="blue">
             <div class="logo">
                 <a href="/" class="simple-text logo-normal">
@@ -56,6 +58,7 @@
                             <p>Requests</p>
                         </a>
                     </li>
+                    @if($user->role == 'Admin' || $user->role == 'Regular Technician')
                     <li>
                         <a data-toggle="collapse" href="#inventoryList">
                             <i class="now-ui-icons design_bullet-list-67"></i>
@@ -78,12 +81,15 @@
                             </ul>
                         </div>
                     </li>
+                    @endif
+                    @if($user->role == 'Admin' || $user->role == 'Regular Technician' || $user->role == 'View Only')
                     <li>
                         <a href="/departments">
                             <i class="now-ui-icons health_ambulance"></i>
                             <p>Departments & Units</p>
                         </a>
                     </li>
+                    @endif
                     <li>
                         <a href="/vendors">
                             <i class="now-ui-icons shopping_delivery-fast"></i>
@@ -124,11 +130,13 @@
                             </ul>
                         </div>
                     </li>
+                    @if($user->role == 'Admin' || $user->role == 'Regular Technician')
                     <li>
                         <a href="/categories">
                             <i class="now-ui-icons files_single-copy-04 "></i>
                             <p>Categories</p></a>
-                        </li>
+                    </li>
+                    @endif
                     <li>
                         <a href="/settings">
                             <i class="now-ui-icons ui-1_settings-gear-63"></i>

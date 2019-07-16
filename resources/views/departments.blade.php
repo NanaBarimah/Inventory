@@ -1,4 +1,6 @@
-
+@php
+$user = Auth::user();
+@endphp
 @extends('layouts.user-dashboard', ['page_title' => 'Departments'])
 @section('styles')
 <style>
@@ -63,6 +65,7 @@
         <div class="row">
 
         </div>
+        @if($user->role == 'Admin')
         <a href="javascript:void(0)" data-target="#addDepartmentModal" data-toggle="modal">
             <div class="fab">
                 <i class="fas fa-plus"></i>
@@ -106,6 +109,7 @@
             </div>
         </div>
     </div>
+    @endif
 @endsection
 @section('scripts')
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>

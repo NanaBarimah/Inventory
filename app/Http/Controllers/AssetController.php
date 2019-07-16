@@ -21,9 +21,13 @@ class AssetController extends Controller
      */
     public function index()
     {
-        //
-        $assets = Asset::with('asset_category')->where('hospital_id', Auth::user()->hospital_id)->get();
-        return view("assets", compact("assets"));
+        $user = Auth::user();
+        if($user->role == 'Admin' || $user->role == 'Regular Technician'){
+            $assets = Asset::with('asset_category')->where('hospital_id', Auth::user()->hospital_id)->get();
+            return view("assets", compact("assets"));
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -35,11 +39,14 @@ class AssetController extends Controller
     {
         //
         $user = Auth::user();
-        
-        $hospital = Hospital::with("assets", "asset_categories", "departments",
-         "departments.units", "services", "parts", "users")->where("id", $user->hospital_id)->first();
-        
-        return view('add-item', compact("hospital"));
+        if($user->role == 'Admin' || $user->role == 'Regular Technician') {
+            $hospital = Hospital::with("assets", "asset_categories", "departments",
+            "departments.units", "services", "parts", "users")->where("id", $user->hospital_id)->first();
+
+            return view('add-item', compact("hospital"));
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -124,15 +131,20 @@ class AssetController extends Controller
      */
     public function show($asset)
     {
-        //
-        $asset = Asset::with("unit", "department", "asset_category", "service_vendor", "work_orders")->where("id", $asset)->first();
-        
-        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with(["assets" => function($q) use ($asset){
-            $q->where("id", "<>", $asset->id);
-        }])->with("asset_categories", 
-        "departments", "departments.units", "services", "users", "parts")->first();
+        $user = Auth::user();
 
-        return view("asset-details", compact("asset", "hospital"));
+        if($user->role == 'Admin' || $user->role == 'Regular Technician') {
+            $asset = Asset::with("unit", "department", "asset_category", "service_vendor", "work_orders")->where("id", $asset)->first();
+        
+            $hospital = Hospital::where("id", Auth::user()->hospital_id)->with(["assets" => function($q) use ($asset){
+                $q->where("id", "<>", $asset->id);
+            }])->with("asset_categories", 
+            "departments", "departments.units", "services", "users", "parts")->first();
+            
+            return view("asset-details", compact("asset", "hospital"));
+        } else {
+            abort(403);
+        }
     }
 
     /**
