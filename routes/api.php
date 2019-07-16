@@ -105,6 +105,8 @@ Route::middleware('auth:api')->group(function(){
 
     Route::get("reports/work-orders/index", "ReportController@workOrderIndex");
     Route::get("reports/work-orders/status", "ReportController@workOrderByStatus");
+    Route::get("reports/get-months", "ReportController@getMonths");
+    Route::get("reports/get-years", "ReportController@getYears");
 });
 
 Route::middleware('passport:admin-api')->group(function(){

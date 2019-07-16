@@ -53,8 +53,6 @@ class ReportController extends Controller
 
     public function workOrderByStatus(Request $request){
         $request->validate([
-            "from" => "required",
-            "to" => "required",
             "type" => "required"
         ]);
 
@@ -64,14 +62,10 @@ class ReportController extends Controller
             $quantifier = "COUNT(id) as kount";
         }
         
-        $from = date('Y-m-d', strtotime($request->from));
-        $to = date('Y-m-d', strtotime($request->to));
-        
-        
         
         if($request->interval == null){
            $statuses = ["Closed", "On hold", "In progress", "Open", "Pending"];
-           $results = WorkOrder::select("status", DB::raw($quantifier))->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->groupBy("status")->get();
+           $results = WorkOrder::select("status", DB::raw($quantifier))->groupBy("status")->get();
            $data = [0,0,0,0,0]; 
            
            foreach($results as $result){
@@ -98,45 +92,45 @@ class ReportController extends Controller
 
             return response()->json([
                 "labels" => $statuses,
-                "datasets" => array(array("name" => "Work orders", "data" => $data))
+                "datasets" => array(array("name" => "Work orders", "data" => $data)),
+                "timespan" => "all time",
+                "type" => ""
             ]);
 
         }else if($request->interval == "month"){
-            $results = WorkOrder::select("status", DB::raw($quantifier.', DATE_FORMAT(created_at, "%M %Y") as month'))
-            ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->groupBy("status", "month")->get();
+            $request->validate([
+                "date" => "required"
+            ]);
+
+            $results = WorkOrder::select("status", DB::raw($quantifier.', DATE_FORMAT(created_at, "%M") as month'))
+            ->whereYear("created_at", "=", $request->date)->groupBy("status", "month")->get();
             
-            $labels = $this->monthsBetween($from, $to);
+            $labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             $open = $pending = $in_progress = $on_hold = $closed = array();
 
-            foreach($labels as $label){
-                $found = false;
+            foreach($labels as $key => $label){
+                $open[$key] = $pending[$key] = $in_progress[$key] = $on_hold[$key] = $closed[$key] = 0;
                 foreach($results as $result){
                     if($result->month == $label){
                         switch($result->status){
                             case 5:
-                                $pending[] = $result->kount != null ? $result->kount : $result->cost;
+                                $pending[$key] = $result->kount != null ? $result->kount : $result->cost;
                                 break;
                             case 4:
-                                $open[] = $result->kount != null ? $result->kount : $result->cost;
+                                $open[$key] = $result->kount != null ? $result->kount : $result->cost;
                                 break;
                             case 3:
-                                $in_progress[] = $result->kount != null ? $result->kount : $result->cost;
+                                $in_progress[$key] = $result->kount != null ? $result->kount : $result->cost;
                                 break;
                             case 2:
-                                $on_hold[] = $result->kount != null ? $result->kount : $result->cost;
+                                $on_hold[$key] = $result->kount != null ? $result->kount : $result->cost;
                                 break;
                             case 1:
-                                $closed[] = $result->kount != null ? $result->kount : $result->cost;
-                                break;
+                                $closed[$key] = $result->kount != null ? $result->kount : $result->cost;
                             default: 
                                 break;
                         }
-                        $found = true;
                     }
-                }
-                
-                if(!$found){
-                    $open[] = $pending[] = $in_progress[] = $on_hold[] = $closed[] = 0;
                 }
             }
 
@@ -148,45 +142,47 @@ class ReportController extends Controller
                     array("name" => "In progress" , "data" => $in_progress),
                     array("name" => "Open" , "data" => $open),
                     array("name" => "Pending" , "data" => $pending)
-                )
+                ),
+                "timespan" => $request->date,
+                "type" => "Monthly"
             ]);
             
         }else if($request->interval == "year"){
+            
+            $from = date('Y-m-d', strtotime($request->from));
+            $to = date('Y-m-d', strtotime($request->to));
+            
+            
             $results = WorkOrder::select("status", DB::raw($quantifier.', DATE_FORMAT(created_at, "%Y") as year'))
             ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->groupBy("status", "year")->get();
             
             $labels = $this->yearsBetween($from, $to);
             $open = $pending = $in_progress = $on_hold = $closed = array();
 
-            foreach($labels as $label){
-                $found = false;
+            foreach($labels as $key => $label){
+                $open[$key] = $pending[$key] = $in_progress[$key] = $on_hold[$key] = $closed[$key] = 0;
                 foreach($results as $result){
                     if($result->year == $label){
                         switch($result->status){
                             case 5:
-                                $pending[] = $result->kount != null ? $result->kount : $result->cost;
+                                $pending[$key] = $result->kount != null ? $result->kount : $result->cost;
                                 break;
                             case 4:
-                                $open[] = $result->kount != null ? $result->kount : $result->cost;
+                                $open[$key] = $result->kount != null ? $result->kount : $result->cost;
                                 break;
                             case 3:
-                                $in_progress[] = $result->kount != null ? $result->kount : $result->cost;
+                                $in_progress[$key] = $result->kount != null ? $result->kount : $result->cost;
                                 break;
                             case 2:
-                                $on_hold[] = $result->kount != null ? $result->kount : $result->cost;
+                                $on_hold[$key] = $result->kount != null ? $result->kount : $result->cost;
                                 break;
                             case 1:
-                                $closed[] = $result->kount != null ? $result->kount : $result->cost;
+                                $closed[$key] = $result->kount != null ? $result->kount : $result->cost;
                                 break;
                             default: 
                                 break;
                         }
-                        $found = true;
                     }
-                }
-                
-                if(!$found){
-                    $open[] = $pending[] = $in_progress[] = $on_hold[] = $closed[] = 0;
                 }
             }
 
@@ -198,20 +194,68 @@ class ReportController extends Controller
                     array("name" => "In progress" , "data" => $in_progress),
                     array("name" => "Open" , "data" => $open),
                     array("name" => "Pending" , "data" => $pending)
-                )
+                ),
+                "timespan" => $from.' to '.$to,
+                "type" => "Yearly"
             ]);
         }else if($request->interval == "quarter"){
-            $results = WorkOrder::select("status", DB::raw($quantifier.', DATE_FORMAT(created_at, "%Y") as year, QUARTER(created_at) as quarter'))
-            ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->groupBy("status", "quarter", "year")->get();
+            $results = WorkOrder::select("status", DB::raw($quantifier.', QUARTER(created_at) as quarter'))
+            ->whereYear("created_at", "=", $request->date)->groupBy("status", "quarter")->get();
 
-            $labels = array();
+            $labels = ["January - March ".$request->date, "April - June ".$request->date, "July - September ".$request->date, "October - December ".$request->date];
+            $comparator = [1, 2, 3, 4];
 
-            foreach($results as $result){
-                $labels[] = $result->year.' Qrtr'.$result->quarter;
+            $open = $pending = $in_progress = $on_hold = $closed = [0,0,0,0];
+            
+            foreach($comparator as $key => $label){
+                foreach($results as $result){
+                    if($result->quarter == $label){
+                        switch($result->status){
+                            case 5:
+                                $pending[$key] = $result->kount != null ? $result->kount : $result->cost;
+                                break;
+                            case 4:
+                                $open[$key] = $result->kount != null ? $result->kount : $result->cost;
+                                break;
+                            case 3:
+                                $in_progress[$key] = $result->kount != null ? $result->kount : $result->cost;
+                                break;
+                            case 2:
+                                $on_hold[$key] = $result->kount != null ? $result->kount : $result->cost;
+                                break;
+                            case 1:
+                                $closed[$key] = $result->kount != null ? $result->kount : $result->cost;
+                            default: 
+                                break;
+                        }
+                    }
+                }
             }
 
             $labels = array_unique($labels);
-            return response()->json([$labels, $results]);
+            return response()->json([
+                "labels" => $labels,
+                "datasets" => array(
+                    array("name" => "Closed" , "data" => $closed),
+                    array("name" => "On hold" , "data" => $on_hold),
+                    array("name" => "In progress" , "data" => $in_progress),
+                    array("name" => "Open" , "data" => $open),
+                    array("name" => "Pending" , "data" => $pending)
+                ),
+                "timespan" => $request->date,
+                "type" => "Quarterly"
+            ]);
+        }else if($request->interval == "daily"){
+            $request->validate([
+                "date" => "required"
+            ]);
+            $date = $request->date;
+            $daysInMonth = Carbon::parse($date)->daysInMonth;
+
+            $results = WorkOrder::select("status", DB::raw($quantifier.', DAY(created_at) as day'))
+            ->whereRaw(DB::raw("DATE_FORMAT(created_at, '%M %Y') = '$date'"))->groupBy("status", "day")->get();
+
+            return response()->json($results);
         }
         
     }
@@ -299,6 +343,16 @@ class ReportController extends Controller
             $years[] = $year->format('Y');
         }
         return $years;
+    }
+
+    public function getMonths(){
+        $months = WorkOrder::select(DB::raw("DISTINCT(DATE_FORMAT(created_at, '%M %Y')) as month"))->get();
+        return response()->json($months);
+    }
+
+    public function getYears(){
+        $years = WorkOrder::select(DB::raw("DISTINCT(YEAR(created_at)) as year"))->get();
+        return response()->json($years);
     }
 }
 
