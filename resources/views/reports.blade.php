@@ -65,7 +65,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-7 text-right">
-                                                            <h3 class="info-title" id="downtime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
+                                                            <h3 class="info-title" id="lead_pending"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
                                                             <h6 class="heading-title">Pending</h6>
                                                         </div>
                                                     </div>
@@ -86,7 +86,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-7 text-right">
-                                                            <h3 class="info-title" id="uptime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
+                                                            <h3 class="info-title" id="lead_open"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
                                                             <h6 class="heading-title">Open</h6>
                                                         </div>
                                                     </div>
@@ -107,7 +107,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-7 text-right">
-                                                            <h3 class="info-title" id="uptime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
+                                                            <h3 class="info-title" id="lead_progress"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
                                                             <h6 class="heading-title">Progress</h6>
                                                         </div>
                                                     </div>
@@ -128,7 +128,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-7 text-right">
-                                                            <h3 class="info-title" id="uptime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
+                                                            <h3 class="info-title" id="lead_hold"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
                                                             <h6 class="heading-title">On hold</h6>
                                                         </div>
                                                     </div>
@@ -149,29 +149,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-7 text-right">
-                                                            <h3 class="info-title" id="uptime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
+                                                            <h3 class="info-title" id="lead_closed"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
                                                             <h6 class="heading-title">Closed</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="card card-stats">
-                                        <div class="card-body ">
-                                            <div class="statistics statistics-horizontal">
-                                                <div class="info info-horizontal">
-                                                    <div class="row">
-                                                        <div class="col-5">
-                                                            <div class="icon icon-success icon-circle">
-                                                                <i class="fas fa-arrow-up"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-7 text-right">
-                                                            <h3 class="info-title" id="uptime"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
-                                                            <h6 class="heading-title">Approved</h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -187,7 +166,7 @@
                                         <div class="row">
                                             <div class="col-md-2 col-sm-12">
                                                 <div class="form-group">
-                                                    <label>Type</label>
+                                                    <label>Type <span class="text-danger">*</span></label>
                                                     <select class="selectpicker col-md-12" data-style="form-control" title="Report type"
                                                     data-show-tick="true" name="type" required>
                                                         <option value="cost">Cost</option>
@@ -198,38 +177,58 @@
                                             </div>
                                             <div class="col-md-2 col-sm-12">
                                                 <div class="form-group">
-                                                    <label>Group by</label>
+                                                    <label>Group by <span class="text-danger">*</span></label>
                                                     <select class="selectpicker col-md-12" data-style="form-control" title="Report type"
                                                     data-show-tick="true" name="group" id="wo_report_group" required>
                                                         <option value="status">Status</option>
                                                         <option value="department_id">Department</option>
                                                         <option value="unit_id">Unit</option>
+                                                        <option value="is_complete">Approval</option>
                                                     </select>
                                                     <p class="refresh-picker pr-4 text-right">Reset</p>
                                                 </div>
                                             </div>
                                             <div class="col-md-2 col-sm-12">
                                                 <div class="form-group">
-                                                    <label>Interval</label>
+                                                    <label>Date Interval</label>
                                                     <select class="selectpicker col-md-12" data-style="form-control" title="Report type"
-                                                    data-show-tick="true" name="interval" id="wo_report_group">
-                                                        <option value="month">Month</option>
-                                                        <option value="quarter">Quarter</option>
-                                                        <option value="year">Year</option>
+                                                    data-show-tick="true" name="interval" id="wo_report_date">
+                                                        <option value="daily">Daily</option>
+                                                        <option value="month">Monthly</option>
+                                                        <option value="quarter">Quarterly</option>
+                                                        <option value="year">Yearly</option>
                                                     </select>
                                                     <p class="refresh-picker pr-4 text-right">Reset</p>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-12">
+                                            <div class="col-md-2 col-sm-12 custom" style="display:none;">
                                                 <div class="form-group">
                                                     <label>Start Date</label>
-                                                    <input class="datepicker form-control" name="from" required/>
+                                                    <input class="datepicker form-control" name="from" required disabled/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-12">
+                                            <div class="col-md-2 col-sm-12 custom" style="display:none;">
                                                 <div class="form-group">
                                                     <label>End Date</label>
-                                                    <input class="datepicker form-control" name="to" required/>
+                                                    <input class="datepicker form-control" name="to" required disabled/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-12" class="date-control" id="year-picker" style="display:none;">
+                                                <div class="form-group">
+                                                    <label>Select year</label>
+                                                    <select class="selectpicker col-sm-12 resetable-select" data-style="form-control" title="Select year"
+                                                    data-live-search="true" data-show-tick="true" name="date" required disabled>
+                                                        <option disabled><i>Please wait...</i></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-12" class="date-control" id="month-picker" style="display:none;">
+                                                <div class="form-group">
+                                                    <label>Select month</label>
+                                                    <select class="selectpicker col-sm-12 resetable-select" data-style="form-control" title="Select month"
+                                                    data-live-search="true" data-show-tick="true" name="date" required disabled>
+                                                        <option disabled><i>Please wait...</i></option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-sm-2 mt-2 pt-1">
@@ -250,7 +249,9 @@
                                 </div>
                                 <div class="col-md-3 col-sm-12">
                                     <h6 class="title">Report Notes</h6>
+                                    <div class="col-sm-12" id="wo_report_notes">
                                     
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -287,31 +288,121 @@
     $("#work_order_report").on("submit", function(e){
         e.preventDefault();
         let data = $(this).serialize();
+        let btn = $(this).find()
         $.ajax({
             'url' : "/api/reports/work-orders/status",
             'method' : "get",
             "data" : data,
             success : (data) => {
                 loadColumnGraph('wo-chart', data.labels, data.datasets, "Work orders", "Work order reports");
+                
+                let pending = data.datasets[4].data.reduce((a, b) => a + b, 0);
+                let open = data.datasets[3].data.reduce((a, b) => a + b, 0);
+                let progress = data.datasets[2].data.reduce((a, b) => a + b, 0);
+                let hold = data.datasets[1].data.reduce((a, b) => a + b, 0);
+                let closed = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                
+                let total = pending + open + progress + hold + closed;
+
+                $("#lead_pending").html(pending);
+                $("#lead_open").html(open);
+                $("#lead_progress").html(progress);
+                $("#lead_hold").html(hold);
+                $("#lead_closed").html(closed);
+
+                $("#wo_report_notes").html(`<p><b>${data.type} Work order report</b> for <b>${data.timespan}</b> grouped by <b>status</b>.</p>
+                <p>Total number of work orders during this time period is <b>${total}</b></p>
+                `);
             },
             error: (xhr) => {
                        
             }
-        })
+        });
     });
 
     $(document).ready(function(){
-        
+        loadMonths();
+        loadYears(); 
+
         $.ajax({
             'url' : "/api/reports/work-orders/index",
             'method' : "get",
             success : (data) => {
                 loadColumnGraph('wo-chart', data.labels, data.datasets, "Work orders", "Work order reports");
+                $("#lead_pending").html(data.datasets[0].data[0]);
+                $("#lead_open").html(data.datasets[0].data[1]);
+                $("#lead_progress").html(data.datasets[0].data[2]);
+                $("#lead_hold").html(data.datasets[0].data[3]);
+                $("#lead_closed").html(data.datasets[0].data[3]);
+
+                const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                $("#wo_report_notes").html(`<p><b>Work order report</b> for <b>all time</b> grouped by <b>status</b>.</p>
+                <p>Total number of work orders during this time period is <b>${total}</b></p>
+                `);
             },
             error: (xhr) => {
                        
             }
-        })
+        });
     });
+
+    $("#wo_report_date").on("change", function(){
+        $(".custom, #month-picker, #year-picker").css("display", "none");
+        $("#month-picker, #year-picker").find("select").prop("disabled", true);
+        $("#month-picker, #year-picker").find("select").val(null).selectpicker("refresh");
+        $(".custom").find(".datepicker").val(null).prop("disabled", true);
+
+        if($(this).val() == "daily"){
+            $("#month-picker").find("select").prop("disabled", false);
+            $("#month-picker").css("display", "block");
+            $("#month-picker").find("select").val(null).selectpicker("refresh");
+        }else if($(this).val() == "month" || $(this).val() == "quarter"){
+            $("#year-picker").find("select").prop("disabled", false);
+            $("#year-picker").find("select").val(null).selectpicker("refresh");
+            $("#year-picker").css("display", "block");
+        }else{
+            $(".custom").css("display", "block");
+            $(".custom").find(".datepicker").val(null).prop("disabled", false);
+        }
+    });
+
+    const loadMonths = () => {
+        const monthSelect = $("#month-picker").find("select");
+        monthSelect.html(null);
+        $.ajax({
+            'url' : "/api/reports/get-months",
+            'method' : "get",
+            success : (data) => {
+
+                data.forEach(function(element, index){
+                    monthSelect.append(`<option>${element.month}</option>`);
+                });
+
+                monthSelect.selectpicker("refresh");
+            },
+            error: (xhr) => {
+                       
+            }
+        });
+    }
+
+    const loadYears = () => {
+        const yearSelect = $("#year-picker").find("select");
+        yearSelect.html(null);
+        $.ajax({
+            'url' : "/api/reports/get-years",
+            'method' : "get",
+            success : (data) => {
+                data.forEach(function(element, index){
+                    yearSelect.append(`<option>${element.year}</option>`);
+                });
+
+                yearSelect.selectpicker("refresh");
+            },
+            error: (xhr) => {
+                       
+            }
+        });
+    }
 </script>
 @endsection

@@ -2,7 +2,7 @@ const loadGraph = (container, options) => {
     Highcharts.chart(container, options);
 }
 
-const loadColumnGraph = (container, labels, datasets, yLabel = "Result", title = "Report", subtitle = "", tickInterval = 1) => {
+const loadColumnGraph = (container, labels, datasets, yLabel = "Result", title = "Report", subtitle = "") => {
     Highcharts.chart(container, {
         chart: {
           type: 'column'
@@ -19,7 +19,6 @@ const loadColumnGraph = (container, labels, datasets, yLabel = "Result", title =
         },
         yAxis: {
           min: 0,
-          tickInterval: tickInterval,
           title: {
             text: yLabel
           }
@@ -32,6 +31,4 @@ const loadColumnGraph = (container, labels, datasets, yLabel = "Result", title =
         },
         series: datasets
       });
-
-      console.log(datasets);
 }
