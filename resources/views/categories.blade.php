@@ -482,6 +482,14 @@
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.bootstrap4.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
     <script>
         let temp_asset_id, temp_fault_id, temp_priority, temp_spare_part_id;
 
@@ -490,13 +498,13 @@
                 $('[data-toggle="tooltip"]').tooltip()
             });
 
-            let asset_table = generateDtbl('#asset_table');
+            let asset_table = generateExportDtbl('#asset_table');
         
-            let faults_table = generateDtbl('#faults_table');
+            let faults_table = generateExportDtbl('#faults_table');
 
-            let works_table = generateDtbl('#works_table');
+            let works_table = generateExportDtbl('#works_table');
             
-            let spare_parts_table = generateDtbl('#spare_parts_table');
+            let spare_parts_table = generateExportDtbl('#spare_parts_table');
         });
 
         $('#is_sub_category').on('change', function(){

@@ -453,7 +453,33 @@ appFunctions = {
                 search: "_INPUT_",
                 searchPlaceholder: search,
                 sEmptyTable: empty_table
-            }
+            },
+            "bLengthChange": false,
+        });
+    }
+
+    let generateExportDtbl = (table, empty_table = "No data to display", search = "Search table", paginator = false) => {
+        return $(table).DataTable({
+            "pagingType": "full_numbers",
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "searching" : !paginator,
+            "bLengthChange" : !paginator,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: search,
+                sEmptyTable: empty_table
+            },
+            "bLengthChange": false,
+            dom: 'Blfrtip',
+                buttons: [ 
+                    {
+                        extend: 'excelHtml5',
+                        title: "Export - " + Math.random()
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: "Export - " + Math.random()
+                    }]
         });
     }
 

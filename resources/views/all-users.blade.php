@@ -1,4 +1,7 @@
     @extends('layouts.user-dashboard', ['page_title' => 'Users'])
+    @section('styles')
+    <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css" rel="stylesheet" />
+    @endsection
     @section('content')
     <div class="content">
         <div class="row">
@@ -75,11 +78,20 @@
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.bootstrap4.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
     <script>
         $(document).ready(function () {
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip()
             });
+            
+            let name = "CMMS Users List " + new Date();
 
             $('#datatable').DataTable({
                 "pagingType": "full_numbers",
@@ -88,21 +100,22 @@
                 language: {
                     search: "_INPUT_",
                     searchPlaceholder: "Find an item",
-                }
+                },
+                "bLengthChange": false,
+                dom: 'Blfrtip',
+                buttons: [ 
+                    {
+                        extend: 'excelHtml5',
+                        title: name
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: name
+                    }]
             });
 
             var table = $('#datatable').DataTable();
         });
-
-        /*$('#active').on('switchChange.bootstrapSwitch', function(e, s){
-            var form_data = $('toggle_active').serialize();
-            alert(form_data);
-
-            request = $.ajax({
-                url : '/api/users/activate',
-
-            })
-        });*/
 
         function setActive(user, el){
             var active;
