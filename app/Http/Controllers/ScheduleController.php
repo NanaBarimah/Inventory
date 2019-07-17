@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Schedule;
+use App\WorkOrder;
+use App\PmSchedule;
+
 use Illuminate\Http\Request;
 use Auth;
-use DB;
-use App\Equipment;
+
+use App\Asset;
 
 class ScheduleController extends Controller
 {
@@ -17,9 +20,10 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        $equipment = Equipment::where('hospital_id', '=', Auth::user()->hospital_id)->get();
-        if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'engineer'){
-            return view('schedule')->with('equipment', $equipment);
+        $user = Auth::user();
+        if(strtolower(Auth::user()->role) == 'admin' || strtolower(Auth::user()->role) == 'regular technician'){
+            $equipment = Asset::where('hospital_id', '=', Auth::user()->hospital_id)->get();
+            return view('schedule', compact("equipment", "user"));
         }else{
             return abort(403);
         }
@@ -111,22 +115,54 @@ class ScheduleController extends Controller
         //
     }
 
-    public function fetchAll(){
+    public function fetchAll(Request $request){
+        $start = date("Y-m-d", \strtotime($request->start));
+        $end = date("Y-m-d", \strtotime($request->end));
+        
         $hospital_id = Auth::user()->hospital_id;
-        $events = DB::select("SELECT * from schedules, equipment where schedules.equipment_code = equipment.code and equipment.hospital_id = '$hospital_id'");
+        
+        $work_order_events = WorkOrder::where("hospital_id", $hospital_id)
+        ->with("priority", "fault_category")->whereDate("due_date", ">=" , $start)->
+        whereDate("due_date", "<=", $end)->get();
+
+        $pm_events = PmSchedule::where("hospital_id", $hospital_id)
+        ->whereDate("due_date", ">=" , $start)->
+        whereDate("due_date", "<=", $end)->get();
+        
         $response = array();
         
-        foreach($events as $event){
+        foreach($work_order_events as $event){
             $temp = array();
             $temp['id'] = $event->id;
-            $temp['title'] = $event->equipment_code.' - '.$event->maintenance_type;
-            $temp['start'] = $event->maintenance_date;
-            $temp['end'] = $event->maintenance_date;
+            $temp['title'] = $event->title;
+            $temp["description"] = "Work order to be worked on by ".date('jS F Y', strtotime($event->due_date));
+            
+            if($event->priority != null){
+                $temp["description"] .= " Priority: ".$event->priority->name;
+            }
+
+            if($event->fault_category != null){
+                $temp["description"] .= " Fault category: ".$event->fault_category->name;
+            }
+            
+            $temp['start'] = $event->due_date;
+            $temp['end'] = $event->due_date;
 
             array_push($response, $temp);
         }
 
-        return json_encode($response);
+        foreach($pm_events as $event){
+            $temp = array();
+            $temp['id'] = $event->id;
+            $temp['title'] = $event->title;
+            $temp["description"] = "Preventive maintenance to be worked on by ".date('jS F Y', strtotime($event->due_date));
+            $temp['start'] = $event->due_date;
+            $temp['end'] = $event->due_date;
+
+            array_push($response, $temp);
+        }
+
+        return response()->json($response);
     }
 
 }

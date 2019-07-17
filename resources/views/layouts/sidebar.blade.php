@@ -45,7 +45,7 @@
                                 </li>
                                 <li>
                                     <a href="/schedule">
-                                        <p>Scheduler</p></a>
+                                        <p>View schedule</p></a>
                                 </li>
                             </ul>
                         </div>
