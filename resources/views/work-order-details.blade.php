@@ -160,7 +160,7 @@
                             <div class="row mb-4">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <h6><b>Asset</b></h6>
+                                        <h6><b>Equipment</b></h6>
                                         <span>
                                         @if($work_order->asset != null)
                                             @if($user->role == 'Admin' || $user->role == 'Regular Technician')
@@ -475,15 +475,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                    <h6 class="header">Assign Asset To Work Order</h6>
+                    <h6 class="header">Assign Equip. To Work Order</h6>
                 </div>
                 <div class="modal-body">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label><b>Select asset</b></label>
-                            <select class="selectpicker col-md-12" data-style="form-control" title="Asset" name="asset_id"
+                            <select class="selectpicker col-md-12" data-style="form-control" title="Equipment" name="asset_id"
                             data-live-search="true" data-show-tick="true" id="assets" required>
-                            <option disabled><i>Fetching Assets...</i></option>
+                            <option disabled><i>Fetching equipment...</i></option>
                             </select>
                         </div>
                     </div>

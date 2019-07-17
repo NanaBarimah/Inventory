@@ -19,7 +19,7 @@
                     <ul class="nav nav-pills nav-pills-primary text-center" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#assets" role="tablist">
-                                Asset Categories
+                                Equipment Categories
                             </a>
                         </li>
                         <li class="nav-item">
@@ -42,7 +42,7 @@
                 <div class="card-body">
                     <div class="tab-content tab-space">
                         <div class="tab-pane active" id="assets">
-                            <h6 class="header">Asset Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#asset-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
+                            <h6 class="header">Equipment Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#asset-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "asset_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>
@@ -88,8 +88,8 @@
                                                             <i class="fas fa-cog"></i>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            <a class="dropdown-item" href="javascript:void(0)"  onclick="edit_asset_category('{{$child->name}}', '{{$child->id}}', '{{$category->id}}')">Edit Asset Category</a>
-                                                            <a class="dropdown-item text-danger" href="javascript:void(0)">Delete Asset Category</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"  onclick="edit_asset_category('{{$child->name}}', '{{$child->id}}', '{{$category->id}}')">Edit Equipment Category</a>
+                                                            <a class="dropdown-item text-danger" href="javascript:void(0)">Delete Equipment Category</a>
                                                         </div>
                                                     </span>
                                                 </div>
@@ -261,7 +261,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h6 class="header">New Asset Category</h6>
+                <h6 class="header">New Equipment Category</h6>
             </div>
             <div class="modal-body">
                 <div class="col-md-12">
@@ -482,6 +482,14 @@
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.bootstrap4.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
     <script>
         let temp_asset_id, temp_fault_id, temp_priority, temp_spare_part_id;
 
@@ -490,13 +498,13 @@
                 $('[data-toggle="tooltip"]').tooltip()
             });
 
-            let asset_table = generateDtbl('#asset_table');
+            let asset_table = generateExportDtbl('#asset_table');
         
-            let faults_table = generateDtbl('#faults_table');
+            let faults_table = generateExportDtbl('#faults_table');
 
-            let works_table = generateDtbl('#works_table');
+            let works_table = generateExportDtbl('#works_table');
             
-            let spare_parts_table = generateDtbl('#spare_parts_table');
+            let spare_parts_table = generateExportDtbl('#spare_parts_table');
         });
 
         $('#is_sub_category').on('change', function(){

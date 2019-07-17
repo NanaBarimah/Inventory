@@ -27,7 +27,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link" data-toggle="tab" href="#assets" role="tablist">
                                                 <i class="now-ui-icons users_single-02"></i>
-                                                Assets
+                                                Equipment
                                             </a>
                                         </li>
                                         <li class="nav-item">
@@ -56,7 +56,7 @@
                                                         <th>Status</th>
                                                         <th>Priority</th>
                                                         <th>Lead Tech</th>
-                                                        <th>Asset</th>
+                                                        <th>Equip.</th>
                                                         <th>Last Updated</th>
                                                         <th>Created</th>
                                                     </tr>
@@ -69,7 +69,7 @@
                                                         <th>Status</th>
                                                         <th>Priority</th>
                                                         <th>Lead Tech.</th>
-                                                        <th>Asset</th>
+                                                        <th>Equip.</th>
                                                         <th>Last Updated</th>
                                                         <th>Created</th>
                                                     </tr>
@@ -83,12 +83,12 @@
                                             
                                         </div>
                                         <div class="tab-pane" id="assets">
-                                        <h4 class="heading">Assets</h4>
+                                        <h4 class="heading">Equipment</h4>
                                             <table id="assets_table" class="table table-bordered table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th>Name</th>
-                                                        <th>Asset Number</th>
+                                                        <th>Equip. No.</th>
                                                         <th>Category</th>
                                                         <th>Status</th>
                                                         <th>Availability</th>
@@ -98,7 +98,7 @@
                                                 <tfoot>
                                                     <tr>
                                                         <th>Name</th>
-                                                        <th>Asset Number</th>
+                                                        <th>Equip. No.</th>
                                                         <th>Category</th>
                                                         <th>Status</th>
                                                         <th>Availability</th>
@@ -248,9 +248,19 @@
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.bootstrap4.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js"></script>
+    
     <script>
-        let units_table = generateDtbl('#units_table', 'No units for this department', 'Search for unit');
-        let assets_table = generateDtbl('#assets_table', 'No assets for this department', 'Search for asset');
+        let units_table = generateExportDtbl('#units_table', 'No units for this department', 'Search for unit');
+        let assets_table = generateExportDtbl('#assets_table', 'No equipment for this department', 'Search for equipment');
 
         $('#add_unit_form').on('submit', function(e){
             e.preventDefault();
