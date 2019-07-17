@@ -30,9 +30,12 @@ class PreventiveMaintenanceController extends Controller
     public function create()
     {
         $user = Auth::user();
-
-        $pmSchedules = PmSchedule::where("hospital_id", $user->hospital_id)->with("priority")->get();
-        return view("pm-add-step1", \compact("pmSchedules", "user"));
+        if($user->role == 'Admin' || $user->role == 'Regular Technician') {
+            $pmSchedules = PmSchedule::where("hospital_id", $user->hospital_id)->with("priority")->get();
+            return view("pm-add-step1", \compact("pmSchedules", "user"));
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -47,8 +50,11 @@ class PreventiveMaintenanceController extends Controller
         if($pmSchedule == null){
             return abort(403);
         }
-        
-        return view("pm-add", compact("pmSchedule", "user"));
+        if($user->role == 'Admin' || $user->role == 'Regular Technician'){
+            return view("pm-add", compact("pmSchedule", "user"));
+        } else {
+            abort(403);
+        }
     }
 
     /**

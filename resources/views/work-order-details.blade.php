@@ -140,6 +140,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @if($user->role == 'Admin')
                             <div class="row mb-4">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -155,13 +156,18 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                             <div class="row mb-4">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <h6><b>Equipment</b></h6>
                                         <span>
                                         @if($work_order->asset != null)
-                                        <a href="/inventory/{{$work_order->asset->id}}">{{$work_order->asset->name}}</a>
+                                            @if($user->role == 'Admin' || $user->role == 'Regular Technician')
+                                                <a href="/inventory/{{$work_order->asset->id}}">{{$work_order->asset->name}}</a>
+                                            @elseif($user->role == 'Limited Technician')
+                                                {{$work_order->asset->name}}
+                                            @endif
                                         @else
                                         N/A <span class="add-asset text-primary" data-toggle="modal" data-target="#assign_asset">Assign asset</span>
                                         </span>

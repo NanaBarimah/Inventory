@@ -38,7 +38,11 @@
                                     }else{
                                         echo 'N/A';
                                     } ?>" id="request_link" readonly/>
-                                    <p class="text-right"><span class="link-generate">Generate</span> &nbsp; <a href="javascript:void(0)" data-target="#send-link" data-toggle="modal"
+                                    <p class="text-right">
+                                        @if($user->role == 'Admin')
+                                            <span class="link-generate">Generate</span> &nbsp; 
+                                        @endif
+                                        <a href="javascript:void(0)" data-target="#send-link" data-toggle="modal"
                                         <?php if($hospital->setting != null){
                                             if($hospital->setting->request_link == null){
                                                 echo 'disabled';

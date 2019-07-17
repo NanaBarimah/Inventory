@@ -35,41 +35,45 @@
                                     Details
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#parts" role="tablist">
-                                    Associated Parts
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#work-orders" role="tablist">
-                                    Work Orders
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#files" role="tablist">
-                                    Files
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#child" role="tablist">
-                                    Child equipment
-                                </a>
-                            </li>
+                            @if($user->role == 'Admin' || $user->role == 'Regular Technician')
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#parts" role="tablist">
+                                        Associated Parts
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#work-orders" role="tablist">
+                                        Work Orders
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#files" role="tablist">
+                                        Files
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#child" role="tablist">
+                                        Child Equipment
+                                    </a>
+                                </li>
+                            @endif
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#down-time" role="tablist">
                                     Down Time & Depreciation
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#edit" role="tablist">
-                                    Edit
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#actions" role="tablist">
-                                    Actions
-                                </a>
-                            </li>
+                            @if($user->role == 'Admin' || $user->role == 'Regular Technician')
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#edit" role="tablist">
+                                        Edit
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#actions" role="tablist">
+                                        Actions
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                     <div class="card-body">
@@ -352,12 +356,14 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label class="text-danger"><b>Delete Equipment</b></label>
-                                            <button class="btn btn-round btn-danger btn-block" data-toggle="modal" data-target="#delete">Delete</button>
+                                    @if($user->role == 'Admin')
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="text-danger"><b>Delete Equipment</b></label>
+                                                <button class="btn btn-round btn-danger btn-block" data-toggle="modal" data-target="#delete">Delete</button>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 </div>
                             </div>
                             <div class="tab-pane" id="edit">

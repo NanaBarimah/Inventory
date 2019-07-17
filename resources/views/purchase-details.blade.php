@@ -83,7 +83,9 @@
                                 Actions
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <button class="dropdown-item" data-toggle="modal" data-target="#fulfill" <?php if($order->status != 1 || $order->is_fulfilled == 1){echo "disabled";} ?>>Fulfill</button>
+                                @if($user->role == 'Admin')
+                                    <button class="dropdown-item" data-toggle="modal" data-target="#fulfill" <?php if($order->status != 1 || $order->is_fulfilled == 1){echo "disabled";} ?>>Fulfill</button>
+                                @endif
                                 <button class="dropdown-item" data-toggle="modal" data-target="#send" <?php if($order->status == 1){echo "disabled";} ?>>Send</button>
                             </div>
                         </div>
@@ -286,8 +288,8 @@
                                     <label><b>Select Recepient</b></label>
                                     <select class="selectpicker col-md-12" data-style="form-control" 
                                     name="user_id" id="user_id" title="Select User" data-live-search="true" required>
-                                        @foreach($hospital->users as $user)
-                                            <option value="{{$user->id}}">{{$user->firstname.' '.$user->lastname}}</option>
+                                        @foreach($hospital->users as $hospital_user)
+                                            <option value="{{$hospital_user->id}}">{{$hospital_user->firstname.' '.$hospital_user->lastname}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -496,10 +498,10 @@
                     item_cost += (cart[i].unit_cost * cart[i].quantity);
                 }
 
-                data.append("hospital_id", "{{Auth::user()->hospital_id}}");
+                data.append("hospital_id", "{{$user->hospital_id}}");
                 data.append("item_cost", item_cost);
                 data.append("orderItems", JSON.stringify(cart));
-                data.append("added_by", "{{Auth::user()->id}}");
+                data.append("added_by", "{{$user->id}}");
 
                 let btn = $(this).find('[type="submit"]');
                 submit_file_form("/api/purchase-order/{{$order->id}}/update", "post", data, undefined, btn, false);

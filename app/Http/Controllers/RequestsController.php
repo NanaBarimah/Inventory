@@ -25,8 +25,15 @@ class RequestsController extends Controller
     {
         $user = Auth::user();
 
-        $requests = Requests::where('hospital_id', $user->hospital_id)->with("priority", "user")->get();
-        return view('requests', compact("requests", "user"));
+        if($user->role == 'Admin'){
+            $requests = Requests::where('hospital_id', $user->hospital_id)->with("priority", "user")->get();
+            return view('requests', compact("requests", "user"));
+        } elseif ($user->role == 'Regular Technician' || $user->role == 'Limited Technician' || $user->role == 'View Only' || $user->role == 'Hospital Head') {
+            $requests = Requests::where([['hospital_id', $user->hospital_id], ['requested_by', $user->id]])->with("priority", "user")->get();
+            return view('requests', compact("requests", "user"));
+        } else {
+            abort(403);
+        }
     }
 
     /**

@@ -23,8 +23,16 @@ class WorkOrderController extends Controller
     {
         $user = Auth::user();
 
-        $work_orders = WorkOrder::where("hospital_id", $user->hospital_id)->with("priority", "user", "asset")->get();
-        return view("work-orders", compact("work_orders", "user"));
+        if($user->role == 'Admin') {  
+            $work_orders = WorkOrder::where("hospital_id", $user->hospital_id)->with("priority", "user", "asset")->get();
+            return view("work-orders", compact("work_orders", "user"));
+        } elseif ($user->role == 'Regular Technician' || $user->role == 'Limited Technician') {
+           $work_orders = WorkOrder::whereHas('users', function($q) use($user) {
+               $q->where('additional_workers', $user->id);
+           })->orWhere('assigned_to', $user->id)->with('priority', 'user', 'asset')->get();
+
+           return view('work-orders', compact('work_orders', 'user'));
+        }
     }
 
     /**
@@ -36,11 +44,15 @@ class WorkOrderController extends Controller
     {
         $user = Auth::user();
 
-        $hospital = Hospital::with("departments", "departments.units", "assets", 
-        "fault_categories", "priorities", "services")->with(["users" => function($q){
-            $q->where("role", "Admin")->orWhere("role", "Limited Technician")->orWhere("role", "Regular Technician");
-        }])->where("id", $user->hospital_id)->first();
-        return view('work-order-add', compact("hospital", "user"));
+        if($user->role == 'Admin' || $user->role == 'Regular Technician') {
+            $hospital = Hospital::with("departments", "departments.units", "assets", 
+            "fault_categories", "priorities", "services")->with(["users" => function($q){
+                $q->where("role", "Admin")->orWhere("role", "Limited Technician")->orWhere("role", "Regular Technician");
+            }])->where("id", $user->hospital_id)->first();
+            return view('work-order-add', compact("hospital", "user"));
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -145,7 +157,22 @@ class WorkOrderController extends Controller
     {
         $user = Auth::user();
 
-        $work_order = WorkOrder::with("user", "users", "priority", "asset", "purchase_orders", "fault_category")->where("id", $workOrder)->first();
+        if($user->role == "Regular Technician" || $user->role == "Limited Technician"){
+            $work_order = WorkOrder::with("user", "users", "priority", "asset", "purchase_orders", "fault_category")
+            ->where("id", $workOrder)->where(function($query) use ($user){
+                $query->whereHas("users", function($q) use($user){
+                    $q->where('additional_workers', $user->id);
+                })->orWhere("assigned_to", $user->id);
+            })->first();
+        }else if($user->role == "Admin"){
+            $work_order = WorkOrder::with("user", "users", "priority", "asset", "purchase_orders", "fault_category")
+            ->where("id", $workOrder)->first();
+        }
+
+        if($work_order == null){
+            return abort(404);
+        }
+
         $hospital = Hospital::with("parts", "priorities", "fault_categories")->where("id", $user->hospital_id)->first();
         return view("work-order-details", compact("work_order", "hospital", "user"));
     }

@@ -111,11 +111,13 @@
             </div>
         </div>
     </div>
-    <a href="/inventory/add">
-        <div class="fab">
-            <i class="fas fa-plus"></i>
-        </div>
-    </a>
+    @if($user->role == 'Admin' || $user->role == 'Regular Technician')
+        <a href="/inventory/add">
+            <div class="fab">
+                <i class="fas fa-plus"></i>
+            </div>
+        </a>
+    @endif
 @endsection
 @section('scripts')
     <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>

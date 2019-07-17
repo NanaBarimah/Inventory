@@ -20,9 +20,12 @@ class PmScheduleController extends Controller
     {
         $user = Auth::user();
 
-        $pmSchedules = PmSchedule::with("priority")->where('hospital_id', $user->hospital_id)->get();
-
-        return view("pm-types", compact("pmSchedules", "user"));
+        if($user->role == 'Admin' || $user->role == 'Regular Technician'){
+            $pmSchedules = PmSchedule::with("priority")->where('hospital_id', $user->hospital_id)->get();
+            return view("pm-types", compact("pmSchedules", "user"));
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -34,8 +37,12 @@ class PmScheduleController extends Controller
     {
         $user = Auth::user();
 
-        $hospital = Hospital::where("id", $user->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
-        return view('pm-types-add', \compact("hospital", "user"));
+        if($user->role == 'Admin' || $user->role == 'Regular Technician'){
+            $hospital = Hospital::where("id", $user->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
+            return view('pm-types-add', \compact("hospital", "user"));
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -112,9 +119,13 @@ class PmScheduleController extends Controller
     {
         $user = Auth::user();
 
-        $pmSchedule = PmSchedule::with("preventive_maintenances", "priority", "department", "unit", "asset_category", "assets", "actions")->where("id", $pmSchedule)->first();
-        $hospital = Hospital::where("id", $user->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
-        return view("pm-type-details", compact("pmSchedule", "hospital", "user"));
+        if($user->role == 'Admin' || $user->role == 'Regular Technician') {
+            $pmSchedule = PmSchedule::with("preventive_maintenances", "priority", "department", "unit", "asset_category", "assets", "actions")->where("id", $pmSchedule)->first();
+            $hospital = Hospital::where("id", $user->hospital_id)->with("priorities", "asset_categories", "assets", "departments", "departments.units")->first();
+            return view("pm-type-details", compact("pmSchedule", "hospital", "user"));
+        } else {
+            abort(403);
+        }
     }
 
     /**

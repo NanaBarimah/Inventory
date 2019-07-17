@@ -20,7 +20,7 @@ class PartController extends Controller
     {
         $user = Auth::user();
 
-        if($user->role == 'Admin' || $user->role == 'Regular Tech') {
+        if($user->role == 'Admin' || $user->role == 'Regular Technician' || $user->role == 'Hospital Head') {
             $parts = Part::with("part_category")->where('hospital_id', $user->hospital_id)->get();
             $part_categories = PartCategory::where('hospital_id', $user->hospital_id)->get();
             return view('spare-parts', compact("parts", "part_categories", "user"));
@@ -100,7 +100,7 @@ class PartController extends Controller
         //
         $user = Auth::user();
         
-        if($user->role == 'Admin' || $user->role == 'Regular Technician') {
+        if($user->role == 'Admin' || $user->role == 'Regular Technician' || $user->role == 'Hospital Head') {
             $part = Part::with('part_category')->where('id', $part)->where('hospital_id', $user->hospital_id)->first();
             $part_categories = PartCategory::where('hospital_id', $user->hospital_id)->get();
             

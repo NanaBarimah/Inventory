@@ -35,21 +35,23 @@
                                 Part Details
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#assets" role="tablist">
-                                Associated Assets
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#work-orders" role="tablist">
-                                Work Orders
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#edit" role="tablist">
-                                Edit Part
-                            </a>
-                        </li>
+                        @if($user->role == 'Admin' || $user->role == 'Regular Technician')
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#assets" role="tablist">
+                                    Associated Assets
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#work-orders" role="tablist">
+                                    Work Orders
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#edit" role="tablist">
+                                    Edit Part
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
                 <div class="card-body">

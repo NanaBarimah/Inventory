@@ -22,7 +22,7 @@ class AssetController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if($user->role == 'Admin' || $user->role == 'Regular Technician'){
+        if($user->role == 'Admin' || $user->role == 'Regular Technician' || $user->role == 'Hospital Head'){
             $assets = Asset::with('asset_category')->where('hospital_id', $user->hospital_id)->get();
             return view("assets", compact("assets", "user"));
         } else {
@@ -133,7 +133,7 @@ class AssetController extends Controller
     {
         $user = Auth::user();
 
-        if($user->role == 'Admin' || $user->role == 'Regular Technician') {
+        if($user->role == 'Admin' || $user->role == 'Regular Technician' || $user->role == 'Hospital Head') {
             $asset = Asset::with("unit", "department", "asset_category", "service_vendor", "work_orders")->where("id", $asset)->first();
         
             $hospital = Hospital::where("id", $user->hospital_id)->with(["assets" => function($q) use ($asset){
