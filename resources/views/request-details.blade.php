@@ -1,7 +1,5 @@
 @extends('layouts.user-dashboard', ['page_title' => $request->title])
-@php
-$user = Auth::user();
-@endphp
+
 @section('content')
     <div class="content">
         <div class="col-md-12 mr-auto ml-auto">

@@ -29,9 +29,10 @@ class PreventiveMaintenanceController extends Controller
      */
     public function create()
     {
-        //
-        $pmSchedules = PmSchedule::where("hospital_id", Auth::user()->hospital_id)->with("priority")->get();
-        return view("pm-add-step1", \compact("pmSchedules"));
+        $user = Auth::user();
+
+        $pmSchedules = PmSchedule::where("hospital_id", $user->hospital_id)->with("priority")->get();
+        return view("pm-add-step1", \compact("pmSchedules", "user"));
     }
 
     /**
@@ -41,11 +42,13 @@ class PreventiveMaintenanceController extends Controller
      */
     public function make(PmSchedule $pmSchedule)
     {
+        $user = Auth::user();
+
         if($pmSchedule == null){
             return abort(403);
         }
         
-        return view("pm-add", compact("pmSchedule"));
+        return view("pm-add", compact("pmSchedule", "user"));
     }
 
     /**

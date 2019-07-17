@@ -21,9 +21,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $hospital = Hospital::where('id', '=', Auth::user()->hospital_id)->first();
+        $user = Auth::user();
 
-        return view('user-profile')->with('hospital', $hospital);
+        $hospital = Hospital::where('id', '=', $user->hospital_id)->first();
+
+        return view('user-profile')->with('hospital', $hospital)->with('user', $user);
         //$users = User::all();
 
         //return response()->json($users, 200);
@@ -170,10 +172,12 @@ class UserController extends Controller
 
     public function listAll()
     {
-        if(strtolower(Auth::user()->role) == 'admin'){
-            $users = User::where('hospital_id', '=', Auth::user()->hospital_id)->get();
+        $user = Auth::user();
 
-            return view('all-users')->with('users', $users);
+        if(strtolower($user->role) == 'admin'){
+            $users = User::where('hospital_id', '=', $user->hospital_id)->get();
+
+            return view('all-users')->with('users', $users)->with('user', $user);
         }else{
             return abort(403);
         }
@@ -181,7 +185,8 @@ class UserController extends Controller
 
     public function addNew()
     {
-        return view('add-user');
+        $user = Auth::user();
+        return view('add-user', compact("user"));
     }
 
     public function is_active (Request $request)
@@ -210,8 +215,10 @@ class UserController extends Controller
 
     public function viewAll()
     {
+        $user = Auth::user();
+
         $users = User::with('hospital')->get();
-        return view('admin.users')->with('users', $users);
+        return view('admin.users')->with('users', $users)->with('user', $user);
     }
 
     public function completeProfile($id)

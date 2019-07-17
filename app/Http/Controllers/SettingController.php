@@ -19,9 +19,10 @@ class SettingController extends Controller
      */
     public function index()
     {
-        //
-        $hospital = Hospital::with("setting")->where("id", Auth::user()->hospital_id)->first();
-        return view('setting')->with('hospital', $hospital);
+        $user = Auth::user();
+
+        $hospital = Hospital::with("setting")->where("id", $user->hospital_id)->first();
+        return view('setting')->with('hospital', $hospital)->with('user', $user);
     }
 
     /**

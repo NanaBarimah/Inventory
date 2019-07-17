@@ -15,9 +15,9 @@ class AssetCategoryController extends Controller
      */
     public function index()
     {
-        $assetCategory = AssetCategory::with('parent', 'children')->get();
+        /**$assetCategory = AssetCategory::with('parent', 'children')->get();
 
-        return view('asset-category')->with('assetCategory', $assetCategory);
+        return view('asset-category')->with('assetCategory', $assetCategory);*/
     }
 
     /**

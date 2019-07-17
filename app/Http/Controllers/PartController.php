@@ -18,10 +18,15 @@ class PartController extends Controller
      */
     public function index()
     {
-        //
-        $parts = Part::with("part_category")->where('hospital_id', Auth::user()->hospital_id)->get();
-        $part_categories = PartCategory::where('hospital_id', Auth::user()->hospital_id)->get();
-        return view('spare-parts', compact("parts", "part_categories"));
+        $user = Auth::user();
+
+        if($user->role == 'Admin' || $user->role == 'Regular Tech') {
+            $parts = Part::with("part_category")->where('hospital_id', $user->hospital_id)->get();
+            $part_categories = PartCategory::where('hospital_id', $user->hospital_id)->get();
+            return view('spare-parts', compact("parts", "part_categories", "user"));
+        } else {
+            abort(403);
+        }
     }
 
     /**
@@ -94,14 +99,19 @@ class PartController extends Controller
     {
         //
         $user = Auth::user();
-        $part = Part::with('part_category')->where('id', $part)->where('hospital_id', $user->hospital_id)->first();
-        $part_categories = PartCategory::where('hospital_id', $user->hospital_id)->get();
         
-        if($part == null){
-            return abort(403);
-        }
+        if($user->role == 'Admin' || $user->role == 'Regular Technician') {
+            $part = Part::with('part_category')->where('id', $part)->where('hospital_id', $user->hospital_id)->first();
+            $part_categories = PartCategory::where('hospital_id', $user->hospital_id)->get();
+            
+            if($part == null){
+                return abort(403);
+            }
 
-        return view('part-details', compact("part", "part_categories"));
+            return view('part-details', compact("part", "part_categories", "user"));
+        } else {
+            abort(403);
+        }
     }
 
     /**

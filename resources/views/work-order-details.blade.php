@@ -1,7 +1,3 @@
-@php
-$user = Auth::user();
-@endphp
-
 @extends('layouts.user-dashboard', ['page_title' => $work_order->title])
 @section('styles')
 <style>

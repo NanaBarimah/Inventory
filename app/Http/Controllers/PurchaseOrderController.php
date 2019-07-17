@@ -25,9 +25,10 @@ class PurchaseOrderController extends Controller
      */
     public function index()
     {
-        //
-        $orders = PurchaseOrder::with("user", "order_items", "service_vendor")->where("hospital_id", Auth::user()->hospital_id)->get();
-        return view("purchase-orders", compact("orders"));
+        $user = Auth::user();
+
+        $orders = PurchaseOrder::with("user", "order_items", "service_vendor")->where("hospital_id", $user->hospital_id)->get();
+        return view("purchase-orders", compact("orders", "user"));
     }
 
     /**
@@ -37,14 +38,15 @@ class PurchaseOrderController extends Controller
      */
     public function create(Request $request)
     {
-        //
-        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("parts", "services")->first();
+        $user = Auth::user();
+
+        $hospital = Hospital::where("id", $user->hospital_id)->with("parts", "services")->first();
         $work_order = null;
 
         if($request->work_order != null){
             $work_order = $request->work_order;
         }
-        return view("purchase-order-add", compact("hospital", "work_order"));
+        return view("purchase-order-add", compact("hospital", "work_order", "user"));
     }
 
     /**
@@ -134,12 +136,13 @@ class PurchaseOrderController extends Controller
      */
     public function show($purchaseOrder)
     {
-        //
+        $user = Auth::user();
+
         $order = PurchaseOrder::with("service_vendor", "order_items")->where("id", $purchaseOrder)->first();
-        $hospital = Hospital::where("id", Auth::user()->hospital_id)->with("parts", "services")->with(["users" => function($q){
+        $hospital = Hospital::where("id", $user->hospital_id)->with("parts", "services")->with(["users" => function($q){
             $q->where("role", "Hospital Head");
         }])->first();
-        return view("purchase-details", compact("order", "hospital"));
+        return view("purchase-details", compact("order", "hospital", "user"));
     }
 
     /**
@@ -329,7 +332,9 @@ class PurchaseOrderController extends Controller
     }
 
     public function approval($hash_link){
-        if(Auth::user()->role != "Hospital Head"){
+        $user = Auth::user();
+
+        if($user->role != "Hospital Head"){
             return abort(403);
         }
         $order = PurchaseOrder::with("service_vendor", "order_items", "hospital")->where("hash_link", $hash_link)->first();
@@ -338,7 +343,7 @@ class PurchaseOrderController extends Controller
             return abort(404);
         }
 
-        return view('purchase-approval', compact("order"));
+        return view('purchase-approval', compact("order", "user"));
     }
 }
  

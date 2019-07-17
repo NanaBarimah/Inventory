@@ -140,18 +140,37 @@ class DepartmentController extends Controller
     }
 
     public function viewAll(){
-        $departments = Department::with('units')->where('hospital_id', Auth::user()->hospital_id)->orderBy('name', 'ASC')->paginate(20);
-        return view('departments')->with('departments', $departments);
+        $user = Auth::user();
+        if($user->role == 'Admin' || $user->role == 'Regular Technician') { 
+            $departments = Department::with('units')->where('hospital_id', $user->hospital_id)->orderBy('name', 'ASC')->paginate(20);
+            return view('departments')->with('departments', $departments)->with('user', $user);
+        } else if($user->role == 'View Only'){
+             $departments = Department::with('units')->where([['hospital_id', $user->hospital_id], ['user_id', $user->id]])->orderBy('name', 'ASC')->paginate(20);
+            return view('departments')->with('departments', $departments)->with('user', $user);
+        }else {
+            abort(403);
+        }
     }
     
     public function view($department){
-        $department = Department::where([['id' , $department], ['hospital_id', Auth::user()->hospital_id]])->with("units", "assets", "units.assets", "units.user")->first();
-        $hospital = Hospital::with('users')->where('id', Auth::user()->hospital_id)->first(); 
+        $user = Auth::user();
+        if($user->role == 'Admin' || $user->role == 'Regular Technician') {
+            $department = Department::where([['id' , $department], ['hospital_id', $user->hospital_id]])->with("units", "assets", "units.assets", "units.user")->first();
+            $hospital = Hospital::with('users')->where('id', $user->hospital_id)->first(); 
+    
+            if($department == null){
+                return abort(404);
+            }
+    
+            return view('department-details', compact('department', 'hospital', 'user'));  
+        } else if($user->role == 'View Only') {
+            $department = Department::where([['id', $department], ['user_id', $user->id]])->with("units", "assets", "units.assets", "units.user")->first();
+            $hospital = Hospital::with('users')->where('id', $user->hospital_id)->first(); 
 
-        if($department == null){
-            return abort(404);
+            return view('department-details', compact('department', 'hospital', 'user'));
+        } else {
+            abort(403);
         }
-
-        return view('department-details', compact('department', 'hospital'));
+        
     }
 }

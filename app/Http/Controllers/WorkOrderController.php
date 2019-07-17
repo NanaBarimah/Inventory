@@ -21,9 +21,10 @@ class WorkOrderController extends Controller
      */
     public function index()
     {
-        //
-        $work_orders = WorkOrder::where("hospital_id", Auth::user()->hospital_id)->with("priority", "user", "asset")->get();
-        return view("work-orders", compact("work_orders"));
+        $user = Auth::user();
+
+        $work_orders = WorkOrder::where("hospital_id", $user->hospital_id)->with("priority", "user", "asset")->get();
+        return view("work-orders", compact("work_orders", "user"));
     }
 
     /**
@@ -33,12 +34,13 @@ class WorkOrderController extends Controller
      */
     public function create()
     {
-        //
+        $user = Auth::user();
+
         $hospital = Hospital::with("departments", "departments.units", "assets", 
         "fault_categories", "priorities", "services")->with(["users" => function($q){
             $q->where("role", "Admin")->orWhere("role", "Limited Technician")->orWhere("role", "Regular Technician");
-        }])->where("id", Auth::user()->hospital_id)->first();
-        return view('work-order-add', compact("hospital"));
+        }])->where("id", $user->hospital_id)->first();
+        return view('work-order-add', compact("hospital", "user"));
     }
 
     /**
@@ -141,10 +143,11 @@ class WorkOrderController extends Controller
      */
     public function show($workOrder)
     {
-        //
+        $user = Auth::user();
+
         $work_order = WorkOrder::with("user", "users", "priority", "asset", "purchase_orders", "fault_category")->where("id", $workOrder)->first();
-        $hospital = Hospital::with("parts", "priorities", "fault_categories")->where("id", Auth::user()->hospital_id)->first();
-        return view("work-order-details", compact("work_order", "hospital"));
+        $hospital = Hospital::with("parts", "priorities", "fault_categories")->where("id", $user->hospital_id)->first();
+        return view("work-order-details", compact("work_order", "hospital", "user"));
     }
 
     /**
