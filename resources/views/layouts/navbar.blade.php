@@ -25,7 +25,7 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>@if($notifications->count() > 0)<span class="badge badge-danger notification-badge" id="notification-count">{{$notifications->count()}}</span>@endif
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                                <div class="dropdown-menu dropdown-menu-right notification-dropdown" aria-labelledby="profileDropdown">
                                 @if($notifications->count() > 0)
                                     @foreach($notificationss as $notification)
                                     <a class="dropdown-item" href="{{$notification->data['action']}}">
