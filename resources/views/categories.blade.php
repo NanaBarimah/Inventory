@@ -19,7 +19,7 @@
                     <ul class="nav nav-pills nav-pills-primary text-center" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#assets" role="tablist">
-                                Asset Categories
+                                Equipment Categories
                             </a>
                         </li>
                         <li class="nav-item">
@@ -42,7 +42,7 @@
                 <div class="card-body">
                     <div class="tab-content tab-space">
                         <div class="tab-pane active" id="assets">
-                            <h6 class="header">Asset Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#asset-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
+                            <h6 class="header">Equipment Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#asset-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "asset_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>
@@ -88,8 +88,8 @@
                                                             <i class="fas fa-cog"></i>
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            <a class="dropdown-item" href="javascript:void(0)"  onclick="edit_asset_category('{{$child->name}}', '{{$child->id}}', '{{$category->id}}')">Edit Asset Category</a>
-                                                            <a class="dropdown-item text-danger" href="javascript:void(0)">Delete Asset Category</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"  onclick="edit_asset_category('{{$child->name}}', '{{$child->id}}', '{{$category->id}}')">Edit Equipment Category</a>
+                                                            <a class="dropdown-item text-danger" href="javascript:void(0)">Delete Equipment Category</a>
                                                         </div>
                                                     </span>
                                                 </div>
@@ -261,7 +261,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h6 class="header">New Asset Category</h6>
+                <h6 class="header">New Equipment Category</h6>
             </div>
             <div class="modal-body">
                 <div class="col-md-12">

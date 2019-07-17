@@ -72,7 +72,7 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Asset Number</th>
+                                        <th>Equipment Number</th>
                                         <th>Category</th>
                                         <th>Status</th>
                                         <th>Availability</th>
@@ -82,7 +82,7 @@
                                 <tfoot>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Asset Number</th>
+                                        <th>Equipment Number</th>
                                         <th>Category</th>
                                         <th>Status</th>
                                         <th>Availability</th>

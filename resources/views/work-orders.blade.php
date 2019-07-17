@@ -27,7 +27,7 @@
                                             <th>Status</th>
                                             <th>Priority</th>
                                             <th>Lead Tech</th>
-                                            <th>Asset</th>
+                                            <th>Equip.</th>
                                             <th>Last Updated</th>
                                             <th>Created</th>
                                         </tr>
@@ -40,7 +40,7 @@
                                             <th>Status</th>
                                             <th>Priority</th>
                                             <th>Lead Tech.</th>
-                                            <th>Asset</th>
+                                            <th>Equip.</th>
                                             <th>Last Updated</th>
                                             <th>Created</th>
                                         </tr>

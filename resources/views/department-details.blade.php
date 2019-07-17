@@ -27,7 +27,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link" data-toggle="tab" href="#assets" role="tablist">
                                                 <i class="now-ui-icons users_single-02"></i>
-                                                Assets
+                                                Equipment
                                             </a>
                                         </li>
                                         <li class="nav-item">
@@ -62,7 +62,7 @@
                                                         <th>Status</th>
                                                         <th>Priority</th>
                                                         <th>Lead Tech</th>
-                                                        <th>Asset</th>
+                                                        <th>Equip.</th>
                                                         <th>Last Updated</th>
                                                         <th>Created</th>
                                                     </tr>
@@ -75,7 +75,7 @@
                                                         <th>Status</th>
                                                         <th>Priority</th>
                                                         <th>Lead Tech.</th>
-                                                        <th>Asset</th>
+                                                        <th>Equip.</th>
                                                         <th>Last Updated</th>
                                                         <th>Created</th>
                                                     </tr>
@@ -89,12 +89,12 @@
                                             
                                         </div>
                                         <div class="tab-pane" id="assets">
-                                        <h4 class="heading">Assets</h4>
+                                        <h4 class="heading">Equipment</h4>
                                             <table id="assets_table" class="table table-bordered table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th>Name</th>
-                                                        <th>Asset Number</th>
+                                                        <th>Equip. No.</th>
                                                         <th>Category</th>
                                                         <th>Status</th>
                                                         <th>Availability</th>
@@ -104,7 +104,7 @@
                                                 <tfoot>
                                                     <tr>
                                                         <th>Name</th>
-                                                        <th>Asset Number</th>
+                                                        <th>Equip. No.</th>
                                                         <th>Category</th>
                                                         <th>Status</th>
                                                         <th>Availability</th>
@@ -266,7 +266,7 @@
     
     <script>
         let units_table = generateExportDtbl('#units_table', 'No units for this department', 'Search for unit');
-        let assets_table = generateExportDtbl('#assets_table', 'No assets for this department', 'Search for asset');
+        let assets_table = generateExportDtbl('#assets_table', 'No equipment for this department', 'Search for equipment');
 
         $('#add_unit_form').on('submit', function(e){
             e.preventDefault();

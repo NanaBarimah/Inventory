@@ -1,4 +1,6 @@
-
+            @php 
+                $notifications = Auth::user()->unreadNotifications;
+            @endphp
             <nav class="navbar navbar-expand-lg fixed-top navbar-transparent  bg-primary  navbar-absolute">
                 <div class="container-fluid">
                     <div class="navbar-wrapper">
@@ -19,13 +21,13 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-end" id="navigation">
                         <ul class="navbar-nav">
-                            {{--<li class="nav-item dropdown" id="notification-bell">
+                            <li class="nav-item dropdown" id="notification-bell">
                                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-bell"></i>@if(Auth::user()->unreadNotifications->count() > 0)<span class="badge badge-danger notification-badge" id="notification-count">{{Auth::user()->unreadNotifications->count()}}</span>@endif
+                                <i class="fa fa-bell"></i>@if($notifications->count() > 0)<span class="badge badge-danger notification-badge" id="notification-count">{{$notifications->count()}}</span>@endif
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-                                @if(Auth::user()->notifications->count() > 0)
-                                    @foreach(Auth::user()->notifications as $notification)
+                                @if($notifications->count() > 0)
+                                    @foreach($notificationss as $notification)
                                     <a class="dropdown-item" href="{{$notification->data['action']}}">
                                         <div class="notification-item">
                                             <span class="notification-title">{{$notification->data['title']}}</span>
@@ -39,7 +41,7 @@
                                     <i class="dropdown-item">No new notifications</i>
                                 @endif
                                 </div>
-                            </li>--}}
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <img class="round" width="30" height="30" avatar="{{Auth::user()->firstname}} {{Auth::user()->lastname}}" />

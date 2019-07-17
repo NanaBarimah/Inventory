@@ -49,7 +49,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-12">
-                                                    <label><b>Asset Code</b> <span class="text-danger">*</span></label>
+                                                    <label><b>Equipment Code</b> <span class="text-danger">*</span></label>
                                                     <div class="input-group">
                                                         <input type="text" class="form-control resetable" name="asset_code" required="true"/>
                                                     </div>

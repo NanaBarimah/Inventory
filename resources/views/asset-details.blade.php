@@ -32,7 +32,7 @@
                         <ul class="nav nav-tabs nav-tabs-primary text-center mt-2" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#details" role="tablist">
-                                    Asset Details
+                                    Details
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -52,7 +52,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#child" role="tablist">
-                                    Child Assets
+                                    Child equipment
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -190,7 +190,6 @@
                                                 <th>Status</th>
                                                 <th>Priority</th>
                                                 <th>Lead Tech</th>
-                                                <th>Asset</th>
                                                 <th>Last Updated</th>
                                                 <th>Created</th>
                                             </tr>
@@ -203,7 +202,6 @@
                                                 <th>Status</th>
                                                 <th>Priority</th>
                                                 <th>Lead Tech.</th>
-                                                <th>Asset</th>
                                                 <th>Last Updated</th>
                                                 <th>Created</th>
                                             </tr>
@@ -235,7 +233,6 @@
                                                 N/A
                                                 @endif
                                                 </td>
-                                                <td>{{$work_order->asset != null ? $work_order->asset->name : 'N/A'}}</td>
                                                 <td>{{Carbon\Carbon::parse($work_order->updated_at)->format('jS F, Y')}}</td>
                                                 <td>{{Carbon\Carbon::parse($work_order->created_at)->format('jS F, Y')}}</td>
                                             </tr>
@@ -367,7 +364,7 @@
                                 <form id="edit_asset">
                                     <div class="form-row">
                                         <div class="form-group col-md-4">
-                                            <label><b>Asset Name</b> <span class="text-danger">*</span></label>
+                                            <label><b>Equipment Name</b> <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control resetable" name="name" value="{{$asset->name}}" required/>
                                         </div>
                                         <div class="form-group col-md-4">
@@ -381,7 +378,7 @@
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-4">
-                                            <label><b>Asset Category</b> <span class="text-danger">*</span></label>
+                                            <label><b>Equipment Category</b> <span class="text-danger">*</span></label>
                                             <select class="selectpicker col-sm-12" title="Category" data-style="form-control" name="asset_category_id">
                                                 @foreach($hospital->asset_categories as $category)
                                                     <option value="{{$category->id}}" <?php if($asset->asset_category_id == $category->id){echo 'selected';}?>>{{$category->name}}</option>
@@ -507,14 +504,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                        <h6 class="header">Assign Assets</h6>
+                        <h6 class="header">Assign Equipment</h6>
                     </div>
                     <div class="modal-body">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label><b>Select Assets</b></label>
+                                <label><b>Select Equipment</b></label>
                                 <select class="selectpicker col-md-12" id="assign_children" data-style="btn btn-purple"
-                                name="children[]" title="Select Children Assets" data-show-tick="true" data-live-search = "true" multiple>
+                                name="children[]" title="Children Equipment" data-show-tick="true" data-live-search = "true" multiple>
                                     @foreach($hospital->assets as $single_asset)
                                         <option value="{{$single_asset->id}}">{{$single_asset->name}} ({{$single_asset->asset_code}})</option>
                                     @endforeach
@@ -542,7 +539,7 @@
                             <div class="form-group">
                                 <label><b>Select Part</b></label>
                                 <select class="selectpicker col-md-12" id="assign_children" data-style="btn btn-purple"
-                                name="parts[]" title="Select Children Assets" data-show-tick="true" data-live-search = "true" multiple>
+                                name="parts[]" title="Select Parts" data-show-tick="true" data-live-search = "true" multiple>
                                     @foreach($hospital->parts as $part)
                                         <option value="{{$part->id}}">{{$part->name}}</option>
                                     @endforeach
@@ -655,7 +652,7 @@
                 qr = new QRCode(document.getElementById("qrcode"), "{{$asset->id}}");
             }
 
-            let work_orders = generateDtbl("#work_orders", "No work orders raised for this asset");
+            let work_orders = generateDtbl("#work_orders", "No work orders raised for this equipment");
             demo.initDateTimePicker();
             loadParts();
             loadFiles();
@@ -740,7 +737,7 @@
                                     <div class="card-body">
                                     <a href="/inventory/${item.id}"><h6>${item.name}</h6></a>
                                     <div class="card-footer mt-3">
-                                        <a href="javascript:void(0)" class="btn btn-round btn-danger">Remove Asset</a>
+                                        <a href="javascript:void(0)" class="btn btn-round btn-danger">Remove Equipment</a>
                                     </div>
                                 </div>
                             </div>
@@ -914,7 +911,7 @@
                     data: {
                         labels: years,
                         datasets: [{
-                            label: "Asset Value",
+                            label: "Equipment Value",
                             borderColor: "#18ce0f",
                             pointBorderColor: "#FFF",
                             pointBackgroundColor: "#18ce0f",

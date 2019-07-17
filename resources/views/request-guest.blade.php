@@ -79,7 +79,7 @@
                             </div>
                             <div class="col-md-4 pr-1">
                                 <div class="form-group">
-                                    <label><b>Assets</b></label>
+                                    <label><b>Equipment</b></label>
                                     <select class="selectpicker col-md-12" data-style="btn form-control" name="asset_id" title="Equipment" 
                                     data-show-tick="true" data-live-search="true">
                                         @if($hospital->assets->count() > 0)
@@ -87,7 +87,7 @@
                                             <option value="{{$asset->id}}">{{$asset->name}}</option>
                                             @endforeach
                                         @else
-                                            <option disabled>No assets recorded</option>
+                                            <option disabled>No equipment recorded</option>
                                         @endif
                                     </select>
                                     <p class="refresh-picker pr-4 text-right">Reset</p>
