@@ -186,7 +186,11 @@ class UserController extends Controller
     public function addNew()
     {
         $user = Auth::user();
-        return view('add-user', compact("user"));
+        if(strtolower($user->role) == 'admin') {
+            return view('add-user', compact("user"));
+        } else {
+            abort(403);
+        }
     }
 
     public function is_active (Request $request)

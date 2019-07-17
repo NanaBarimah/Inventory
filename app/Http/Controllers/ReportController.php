@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use DB;
+use Auth;
 use App\WorkOrder;
 use Carbon\CarbonPeriod;
 use Carbon\Carbon;
@@ -11,8 +12,13 @@ use Illuminate\Http\Request;
 class ReportController extends Controller
 {
     //
-    public function index(){    
-        return view('reports');
+    public function index(){ 
+        $user = Auth::user();
+        if($user->role == 'Admin' || $user->role == 'Regular Technician' || $user->role == 'Hospital Head') {
+            return view('reports', compact("user"));
+        } else {
+            abort(403);
+        }
     }
 
     public function workOrderIndex(){

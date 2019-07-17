@@ -54,11 +54,13 @@
             </div>
         </div>
     </div>
-    <a href="javascript:void(0)" data-toggle="modal" data-target="#addPart">
-        <div class="fab">
-            <i class="fas fa-plus"></i>
-        </div>
-    </a>
+    @if($user->role == 'Admin' || $user->role == 'Regular Technician')
+        <a href="javascript:void(0)" data-toggle="modal" data-target="#addPart">
+            <div class="fab">
+                <i class="fas fa-plus"></i>
+            </div>
+        </a>
+    @endif
 </div>
 <div class="modal fade" id="addPart" tabindex="-1" role="dialog" aria-labelledby="addVendorLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">

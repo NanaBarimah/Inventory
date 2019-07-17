@@ -154,6 +154,7 @@ class DepartmentController extends Controller
     
     public function view($department){
         $user = Auth::user();
+        
         if($user->role == 'Admin' || $user->role == 'Regular Technician') {
             $department = Department::where([['id' , $department], ['hospital_id', $user->hospital_id]])->with("units", "assets", "units.assets", "units.user")->first();
             $hospital = Hospital::with('users')->where('id', $user->hospital_id)->first(); 

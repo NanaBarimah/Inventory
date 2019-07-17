@@ -26,9 +26,12 @@ class PurchaseOrderController extends Controller
     public function index()
     {
         $user = Auth::user();
-
-        $orders = PurchaseOrder::with("user", "order_items", "service_vendor")->where("hospital_id", $user->hospital_id)->get();
-        return view("purchase-orders", compact("orders", "user"));
+        if($user->role == 'Admin' || $user->role == 'Regular Technician') {
+            $orders = PurchaseOrder::with("user", "order_items", "service_vendor")->where("hospital_id", $user->hospital_id)->get();
+            return view("purchase-orders", compact("orders", "user"));
+        } else {
+            abort(403);
+        }  
     }
 
     /**
