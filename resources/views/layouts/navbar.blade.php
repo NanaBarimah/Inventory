@@ -27,7 +27,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
                                 @if($notifications->count() > 0)
-                                    @foreach($notificationss as $notification)
+                                    @foreach($notifications as $notification)
                                     <a class="dropdown-item" href="{{$notification->data['action']}}">
                                         <div class="notification-item">
                                             <span class="notification-title">{{$notification->data['title']}}</span>
