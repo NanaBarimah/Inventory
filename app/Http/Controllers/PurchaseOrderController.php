@@ -360,7 +360,7 @@ class PurchaseOrderController extends Controller
             return abort(404);
         }
         
-        if($user->role != "Hospital Head"){
+        if($user->role != "Hospital Head" && $order->approved_by != $user->id){
             return abort(403);
         }
         
