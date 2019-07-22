@@ -202,10 +202,14 @@ class RequestsController extends Controller
 
     public function approve(Requests $work_request, Request $request)
     {
+        $request->validate([
+            'approved_by' => 'required'
+        ]);
         $work_request->approve();
 
         $work_request->response = $request->response;
         $work_request->reason = null;
+        $work_request->approved_by = $request->approved_by;
 
         if($work_request->save()) {
             $last_order = WorkOrder::where("hospital_id", $work_request->hospital_id)->latest()->first();

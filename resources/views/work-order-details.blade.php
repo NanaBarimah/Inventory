@@ -820,7 +820,12 @@
 
     const complete = (element) => {
         let btn = $(element);
-        submit_form("/api/work-order/{{$work_order->id}}/complete", "post", null, undefined, btn, true);
+    
+        let data = {
+            "approved_by" : "{{$user->id}}"
+        }
+
+        submit_form("/api/work-order/{{$work_order->id}}/complete", "post", data, undefined, btn, true);
     }
     
     </script>

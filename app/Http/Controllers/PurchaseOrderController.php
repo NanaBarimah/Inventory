@@ -225,9 +225,15 @@ class PurchaseOrderController extends Controller
         //
     }
 
-    public function approve(PurchaseOrder $purchaseOrder) 
+    public function approve(PurchaseOrder $purchaseOrder, Request $request) 
     {
+        $request->validate([
+            'approved_by' => 'required'
+        ]);
+
         $purchaseOrder->approve();
+
+        $purchaseOrder->approved_by = $request->approved_by;
         
         if($purchaseOrder->save()){
             $user = User::where('id', $purchaseOrder->added_by)->first();

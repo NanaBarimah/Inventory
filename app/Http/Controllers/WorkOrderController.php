@@ -376,8 +376,14 @@ class WorkOrderController extends Controller
         ]);
     }
     
-    public function complete(WorkOrder $workOrder){
+    public function complete(WorkOrder $workOrder, Request $request)
+    {
+        $request->validate([
+            'approved_by' => 'required'
+        ]);
+
         $workOrder->finish();
+        $workOrder->approved_by = $request->approved_by;
         
         if($workOrder->save()){
             $users = User::whereHas('work_order_teams', function($q) use($workOrder){
