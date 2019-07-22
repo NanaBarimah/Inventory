@@ -17,7 +17,7 @@ class CreatePreventiveMaintenancesTable extends Migration
             $table->increments('id');
             $table->string('pm_schedule_id');
             $table->text('observation')->nullable();
-            $table->text('recommendation')->nuullable();
+            $table->text('recommendation')->nullable();
             $table->text('action_taken')->nullable();
             $table->smallInteger('is_completed')->default(0);
             $table->timestamps();

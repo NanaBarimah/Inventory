@@ -75,8 +75,8 @@ class PreventiveMaintenanceController extends Controller
         $preventiveMaintenance->observation    = $request->observation;
         $preventiveMaintenance->recommendation = $request->recommendation;
         $preventiveMaintenance->action_taken   = $request->action_taken;
-        $preventiveMaintenance->date_completed     = date('Y-m-d', $request->date_completed);
-        $preventiveMaintenance->is_complete = 2;
+        $preventiveMaintenance->date_completed = date('Y-m-d', strtotime($request->date_completed));
+        $preventiveMaintenance->is_completed = 2;
 
         if($preventiveMaintenance->save()) {
             return response()->json([

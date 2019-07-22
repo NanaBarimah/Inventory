@@ -40,6 +40,13 @@ class FaultCategoryController extends Controller
             'hospital_id' => 'required'
         ]);
 
+        if(FaultCategory::where([['hospital_id', $request->hospital_id], ['name', $request->name]])->get()->count() > 0) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Fault category name already exists'
+            ]);
+        }
+
         $faultCategory = new FaultCategory();
 
         $faultCategory->id          = md5($request->name.microtime());

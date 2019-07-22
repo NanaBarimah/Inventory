@@ -56,6 +56,12 @@ $auth_user = Auth::user();
                             </div>
                         </li>
                     @endif
+                    <li>
+                        <a href="/requests">
+                            <i class="now-ui-icons travel_info"></i>
+                            <p>Requests</p>
+                        </a>
+                    </li>
                     @if($auth_user->role == 'Admin' || $auth_user->role == 'Regular Technician' || $auth_user->role == 'Hospital Head')
                         <li>
                             <a data-toggle="collapse" href="#inventoryList">

@@ -41,6 +41,13 @@ class PartCategoryController extends Controller
             'hospital_id' => 'required'
         ]);
 
+        if(PartCategory::where([['hospital_id', $request->hospital_id], ['name', $request->name]])->get()->count() > 0) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Spare part category name already exists'
+            ]);
+        }
+
         $partCategory = new PartCategory();
 
         $partCategory->id          = md5($request->name.microtime());

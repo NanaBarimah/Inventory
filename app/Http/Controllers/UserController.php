@@ -252,7 +252,7 @@ class UserController extends Controller
         return view('complete-profile')->with('user', $user);
     }
 
-    public function complete(Request $request)
+    public function complete(Request $request, User $user)
     {
         $request->validate([
             'firstname'    => 'required|string',
@@ -276,7 +276,7 @@ class UserController extends Controller
         $user->completed    = 1;
 
         if($user->save()){
-            $users = User::where([['role', 'Admin'], ['hospital_id', $request->hospital_id]])->get();
+            $users = User::where([['role', 'Admin'], ['hospital_id', $user->hospital_id]])->get();
             Notification::send($users, new UserFormUpdate($user));
             
             return response()->json([

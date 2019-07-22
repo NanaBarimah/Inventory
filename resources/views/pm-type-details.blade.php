@@ -523,7 +523,7 @@
         let btn = $(this).find('[type="submit"]');
 
         //console.log(data);
-        submit_file_form(`/api/pm/${id}/approve`, "post", data, undefined, btn, false);
+        submit_file_form(`/api/pm/${id}/approve`, "post", data, undefined, btn, true);
     });
 
     $('#toggle_category').on("change", function(){

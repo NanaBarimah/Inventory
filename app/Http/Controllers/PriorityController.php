@@ -40,6 +40,13 @@ class PriorityController extends Controller
             'hospital_id' => 'required'
         ]);
 
+        if(Priority::where([['hospital_id', $request->hospital_id], ['name', $request->name]])->get()->count() > 0) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Work order priority name already exists'
+            ]);
+        }
+
         $priority = new Priority();
 
         $priority->id          = md5($request->name.microtime());
