@@ -161,6 +161,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,
 
+        Barryvdh\DomPDF\ServiceProvider::class,
+
     ],
 
     /*
@@ -211,6 +213,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Laravel\Passport\Bridge\UserRepository' => App\OAuth\PassportUserRepository::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 

@@ -13,7 +13,7 @@ $auth_user = Auth::user();
                         <li>
                             <a data-toggle="collapse" href="#maintenanceList">
                                 <i class="now-ui-icons ui-2_settings-90"></i>
-                                <p>Work Orders
+                                <p>Maintenance
                                     <b class="caret"></b>
                                 </p>
                             </a>
@@ -28,7 +28,7 @@ $auth_user = Auth::user();
                                     @if($auth_user->role == 'Admin' || $auth_user->role == 'Regular Technician')
                                     <li>
                                         <a data-toggle="collapse" href="#pms">
-                                            <p>Preventive Maintenance (PM)
+                                            <p>Preventive Maintenance
                                                 <b class="caret"></b>
                                             </p>
                                         </a>
@@ -36,12 +36,12 @@ $auth_user = Auth::user();
                                             <ul class="nav">
                                                 <li>
                                                     <a href="/pm-schedules">
-                                                        <span class="sidebar-normal">PM Schedules</span>
+                                                        <span class="sidebar-normal">PM types</span>
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a href="/pm-schedule/record">
-                                                        <span class="sidebar-normal">PM Reports</span>
+                                                        <span class="sidebar-normal">Record PM</span>
                                                     </a>
                                                 </li>
                                             </ul>

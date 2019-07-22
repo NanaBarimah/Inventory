@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function(){
 });
 
 
+
     
 Route::middleware('admin')->prefix('admin')->group(function(){
     Route::get('/', 'AdminController@index')->name('admin.dashboard');
@@ -89,3 +90,4 @@ Route::middleware('admin')->prefix('admin')->group(function(){
 
 Route::get('/admin/login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
 Route::post('/admin/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
+Route::get('/purchase-order/{hashLink}/generate', 'PurchaseOrderController@generatePdf');

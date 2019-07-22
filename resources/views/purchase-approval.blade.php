@@ -75,6 +75,9 @@
                             <div class="dropdown-menu dropdown-menu-right">
                                 <button class="dropdown-item" onclick="accept()" <?php if($order->status == 1){echo "disabled";} ?>>Approve</button>
                                 <button class="dropdown-item" onclick="decline()" <?php if($order->status == 0){echo "disabled";} ?>>Decline</button>
+                                @if($order->status == 1)
+                                <a href="/purchase-order/{{$order->hash_link}}/generate" class="dropdown-item" target="_blank">Print PDF</a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -101,7 +104,7 @@
                                 </div>
                                 <div class="form-group col-md-5 pull-right">
                                     <label><b>Date Due: </b></label>
-                                    <p>{{date('js F, Y', strtotime($order->due_date))}}</p>
+                                    <p>{{date('jS F, Y', strtotime($order->due_date))}}</p>
                                 </div>
                             </div>
                         </div>

@@ -14,6 +14,8 @@ use App\Notifications\PurchaseOrderStatus;
 use App\OrderItem;
 use Illuminate\Http\Request;
 
+use PDF;
+
 use Auth;
 
 class PurchaseOrderController extends Controller
@@ -346,7 +348,24 @@ class PurchaseOrderController extends Controller
             return abort(404);
         }
 
-        return view('purchase-approval', compact("order", "user"));
+        return view('purchase-approval');
+    }
+
+    
+    public function generatePdf($hashLink){
+        $user = Auth::user();
+        $order = PurchaseOrder::with("service_vendor", "order_items", "hospital")->where("hash_link", $hashLink)->first();
+
+        if($order == null){
+            return abort(404);
+        }
+        
+        if($user->role != "Hospital Head"){
+            return abort(403);
+        }
+        
+        $pdf = PDF::loadView('purchase-report', compact("user", "order"));
+        return $pdf->stream(microtime().'.pdf');
     }
 }
  

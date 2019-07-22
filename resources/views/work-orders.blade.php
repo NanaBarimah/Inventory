@@ -4,6 +4,11 @@
     .text-small{
         font-size: 12px;
     }
+
+    .badge-dark{
+        background-color: #777777;
+        color: #ffffff;
+    }
 </style>
 @endsection
 @section('content')
@@ -53,7 +58,7 @@
                                             <td>{{$work_order->due_date != null ? date('jS F, Y', strtotime($work_order->due_date)) : 'N/A'}}</td>
                                             <td>
                                                 @if($work_order->status == 1)
-                                                <span class="badge badge-light">Closed</span>
+                                                <span class="badge badge-dark">Closed</span>
                                                 @elseif($work_order->status == 2)
                                                 <span class="badge badge-success">In Progress</span>
                                                 @elseif($work_order->status == 3)
