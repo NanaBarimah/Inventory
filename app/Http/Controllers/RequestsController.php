@@ -107,6 +107,15 @@ class RequestsController extends Controller
 
          if($work_request->save()) {
              $user = User::where([['role', 'Admin'], ['hospital_id', $request->hospital_id]])->first();
+             if($request->requested_by != null){
+                 $requester = $work_request->user()->first();
+                 $name_of_requester = $requester->firstname.' '.$requester->lastname;
+             }else{
+                $name_of_requester = $work_request->requester_name;
+             }
+
+             $work_request->name_of_requester = $name_of_requester;
+
              if($user != null) {
                 $user->notify(new RequestReceived($work_request));
              }

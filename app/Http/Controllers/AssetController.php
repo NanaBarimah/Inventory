@@ -64,6 +64,13 @@ class AssetController extends Controller
             'availability'   => 'required'    
          ]);
 
+         if(Asset::where([['hospital_id', $request->hospital_id], ['asset_code', $request->asset_code]])->get()->count() > 0) {
+             return response()->json([
+                 'error' => true,
+                 'message' => 'Equipment code already exists'
+             ]);
+         }
+
          $asset = new Asset();
 
          $asset->id                  = md5($request->name.microtime());

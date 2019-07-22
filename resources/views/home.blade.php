@@ -1,5 +1,6 @@
 @php
 $auth_user = Auth::user();
+$notifications = Auth::user()->unreadNotifications;
 @endphp
 <!DOCTYPE html>
 <html>
@@ -27,6 +28,7 @@ $auth_user = Auth::user();
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
 
     <!-- Styles -->
     <!--link href="{{ asset('css/app.css') }}" rel="stylesheet"-->
@@ -60,25 +62,46 @@ $auth_user = Auth::user();
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navigation">
                     <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <img class="round" width="30" height="30" avatar="{{$auth_user->firstname}} {{$auth_user->lastname}}" />
-                                    <p>
-                                        <span class="d-lg-none d-md-block">Profile</span>
-                                    </p>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-                                    <a class="dropdown-item" href="/profile">My Profile</a>
-                                    <a class="dropdown-item" href="{{ route('logout') }}" 
-                                        onclick="
-                                                    event.preventDefault();
-                                                    document.getElementById('logout-form').submit();
-                                                ">Logout</a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
+                        <li class="nav-item dropdown" id="notification-bell">
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-bell"></i>@if($notifications->count() > 0)<span class="badge badge-danger notification-badge" id="notification-count">{{$notifications->count()}}</span>@endif
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right notification-dropdown" aria-labelledby="profileDropdown">
+                            @if($notifications->count() > 0)
+                                @foreach($notifications as $notification)
+                                <a class="dropdown-item" href="{{$notification->data['action']}}">
+                                    <div class="notification-item">
+                                        <span class="notification-title">{{$notification->data['title']}}</span>
+                                        <p class="notification-body">{{$notification->data['message']}}</p>
+                                        <p class="notification-time">{{Carbon\Carbon::parse($notification->created_at)->diffForHumans()}}</p>
+                                    </div>
+                                    </a>
+                                @endforeach
+                                <a class="dropdown-item notificati  on-view-all">View All Notifications</a>
+                                @else
+                                <i class="dropdown-item">No new notifications</i>
+                            @endif
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="round" width="30" height="30" avatar="{{$auth_user->firstname}} {{$auth_user->lastname}}" />
+                                <p>
+                                    <span class="d-lg-none d-md-block">Profile</span>
+                                </p>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                                <a class="dropdown-item" href="/profile">My Profile</a>
+                                <a class="dropdown-item" href="{{ route('logout') }}" 
+                                    onclick="
+                                                event.preventDefault();
+                                                document.getElementById('logout-form').submit();
+                                            ">Logout</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

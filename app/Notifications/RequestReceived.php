@@ -20,7 +20,7 @@ class RequestReceived extends Notification
      */
     public function __construct($request)
     {
-        $this->request = $request;
+        $this->request = $request; 
     }
 
     /**
@@ -58,7 +58,7 @@ class RequestReceived extends Notification
     {
         return [
             'title' => 'New work order request',
-            'message' => 'You have received a new work order request from '. $this->request->requested_by ? $this->request->requested_by : $this->request->requester_name.' (Requester User)',
+            'message' => 'You have received a new work order request from '. $this->request->name_of_requester,
             'data' => $this->request,
             'action' => '/requests'
         ];

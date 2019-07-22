@@ -223,7 +223,7 @@ class PurchaseOrderController extends Controller
         //
     }
 
-    public function approve(PurchaseOrder $purchaseOrder, Request $request) 
+    public function approve(PurchaseOrder $purchaseOrder) 
     {
         $purchaseOrder->approve();
         
@@ -280,12 +280,12 @@ class PurchaseOrderController extends Controller
 
     }
 
-    public function decline(PurchaseOrder $purchaseOrder, Request $request)
+    public function decline(PurchaseOrder $purchaseOrder)
     {
         $purchaseOrder->decline();
 
         if($purchaseOrder->save()) {
-            $user = User::where('id', $request->added_by)->first();
+            $user = User::where('id', $purchaseOrder->added_by)->first();
             $user->notify(new PurchaseOrderStatus($purchaseOrder, 'Purchase Order with number #'.$purchaseOrder->po_number.' has been declined'));
             
             return response()->json([

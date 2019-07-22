@@ -946,7 +946,7 @@
                     let downtime;
                     let runtime;
                     
-                    data.downtime == null ? downtime = 0 : downtime = data.downtime.downtime;
+                    data.downtime.downtime == null ? downtime = 0 : downtime = data.downtime.downtime;
                     runtime = data.running_time;
 
                     $("#downtime").html(downtime);

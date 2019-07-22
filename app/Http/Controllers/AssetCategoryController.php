@@ -43,8 +43,15 @@ class AssetCategoryController extends Controller
             'hospital_id' => 'required'
         ]);
 
-        $assetCategory = new AssetCategory();
+        if(AssetCategory::where([['hospital_id', $request->hospital_id], ['name', $request->name]])->get()->count() > 0) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Equipment category name already exists'
+            ]);
+        }
 
+        $assetCategory = new AssetCategory();
+ 
         $assetCategory->id          = md5($request->name.microtime());
         $assetCategory->name        = $request->name;
         $assetCategory->hospital_id = $request->hospital_id;
