@@ -206,7 +206,11 @@
     <script>
         const accept = (element) => {
             let btn = $(element);
-            submit_form("/api/purchase-order/{{$order->id}}/approve", "post", null, undefined, btn, true);
+            let data = {
+                approved_by : "{{$user->id}}"
+            };
+
+            submit_form("/api/purchase-order/{{$order->id}}/approve", "post", data, undefined, btn, true);
         }
 
         const decline = (element) => {

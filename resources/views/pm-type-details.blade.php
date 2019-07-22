@@ -468,7 +468,10 @@
     $("#approve_pm").on("submit", function(e){
         e.preventDefault();
         let id = $("#pm_id").val();
-        let data = "hospital_id={{$user->hospital_id}}";
+        //let data = `hospital_id='{{$user->hospital_id}}'&marked_by='{{$user->id}}'`;
+        let data = new FormData(this);
+        data.append("hospital_id", "{{$user->hospital_id}}");
+        data.append("marked_by", "{{$user->id}}");
         let btn = $(this).find('[type="submit"]');
 
         //console.log(data);

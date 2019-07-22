@@ -138,8 +138,12 @@ class PreventiveMaintenanceController extends Controller
     }
 
     public function approve(PreventiveMaintenance $preventiveMaintenance, Request $request){
+        $request->validate([
+            'marked_by' => 'required'
+        ]);
 
         $preventiveMaintenance->is_completed = 1;
+        $preventiveMaintenance->marked_by = $request->marked_by;
 
         if($preventiveMaintenance->update()){
             $pm_schedule = $preventiveMaintenance->pm_schedule()->first();
