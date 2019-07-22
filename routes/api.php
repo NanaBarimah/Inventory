@@ -21,7 +21,8 @@ Route::middleware('auth:api')->group(function(){
     Route::post('users/add_user', 'UserController@store');
     Route::get('users/{user}', 'UserController@show');
     Route::put('users/update/{user}', 'UserController@update');
-    Route::put('users/activate', 'UserController@is_active');
+    Route::put('users/deactivate/{user}', 'UserController@deactivate');
+    Route::put('users/activate/{user}', 'UserController@activate');
     Route::post('users/user-login', 'UserController@userLogin');
 
     Route::post('asset-category/add', 'AssetCategoryController@store');
@@ -33,6 +34,11 @@ Route::middleware('auth:api')->group(function(){
     Route::put('fault-category/update/{faultCategory}', 'FaultCategoryController@update');
     Route::put('part-category/update/{partCategory}', 'PartCategoryController@update');
     Route::put('priority/update/{priority}', 'PriorityController@update');
+
+    Route::delete('asset-category/delete/{assetCategory}', 'AssetCategoryController@destroy');
+    Route::delete('fault-category/delete/{faultCategory}', 'FaultCategoryController@destroy');
+    Route::delete('part-category/delete/{partCategory}', 'PartCategoryController@destroy');
+    Route::delete('priority/delete/{priority}', 'PriorityController@destroy');
 
     Route::post('spare-part/add', 'PartController@store');
     Route::put('spare-part/update/{part}', 'PartController@update');

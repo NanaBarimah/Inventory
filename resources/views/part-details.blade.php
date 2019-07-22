@@ -60,7 +60,7 @@
                             <div class="row pl-4">
                                 <div class="col-md-3">
                                     <div id="qrcode"></div>
-                                    <button class="btn btn-purple btn-block">Print QR Code</button>
+                                    <button class="btn btn-purple btn-block" onclick="printContent('qrcode')">Print QR Code</button>
                                 </div>
                                 <div class="col-md-9">
                                     <div class="row">
@@ -73,7 +73,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="description-label">Unit Price</label>
-                                                <p class="no-border">GHS {{$part->cost != null ? $part->cost : 'N/A'}}</p>
+                                                <p class="no-border">$ {{$part->cost != null ? $part->cost : 'N/A'}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -109,10 +109,89 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="assets">
-                            
+                            <div class="row">
+                                <table class="table table-bordered" id="assets_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Equipment Number</th>
+                                            <th>Status</th>
+                                            <th>Availability</th>
+                                            <th>Date Created</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Equipment Number</th>
+                                            <th>Status</th>
+                                            <th>Availability</th>
+                                            <th>Date Created</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                    @foreach($part->assets as $asset)
+                                        <tr>
+                                            <td>{{$asset->name}}</td>
+                                            <td>{{$asset->asset_code}}</td>
+                                            <td>{{$asset->status}}</td>
+                                            <td>{{$asset->availability}}</td>
+                                            <td>{{Carbon\Carbon::parse($asset->created_at)->format('j F, Y')}}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="tab-pane" id="work-orders">
-                            
+                            <div class="row">
+                                <table class="table table-bordered" id="work_orders">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>#</th>
+                                            <th>Due Date</th>
+                                            <th>Status</th>
+                                            <th>Last Updated</th>
+                                            <th>Created</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>#</th>
+                                            <th>Due Date</th>
+                                            <th>Status</th>
+                                            <th>Last Updated</th>
+                                            <th>Created</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                    @foreach($part->work_orders as $work_order)
+                                        <tr>
+                                            <td><a href="/work-order/{{$work_order->id}}"><b>{{$work_order->title}}</b></a></td>
+                                            <td>{{$work_order->wo_number}}</td>
+                                            <td>{{$work_order->due_date != null ? date('jS F, Y', strtotime($work_order->due_date)) : 'N/A'}}</td>
+                                            <td>
+                                                @if($work_order->status == 1)
+                                                <span class="badge badge-light">Closed</span>
+                                                @elseif($work_order->status == 2)
+                                                <span class="badge badge-success">In Progress</span>
+                                                @elseif($work_order->status == 3)
+                                                <span class="badge badge-primary">On Hold</span>
+                                                @elseif($work_order->status == 4)
+                                                <span class="badge badge-info">Open</span>
+                                                @elseif($work_order->status == 5)
+                                                <span class="badge badge-warning">Pending</span>
+                                                @endif
+                                            </td>
+                                            <td>{{Carbon\Carbon::parse($work_order->updated_at)->format('jS F, Y')}}</td>
+                                            <td>{{Carbon\Carbon::parse($work_order->created_at)->format('jS F, Y')}}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="tab-pane" id="edit">
                             <form id="edit_part">
@@ -199,10 +278,21 @@
     <script src="{{asset('js/bootstrap-selectpicker.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/jasny-bootstrap.min.js')}}"></script>
+    <script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
     <script>
         $(document).ready(function(){
             let qr = new QRCode(document.getElementById("qrcode"), "{{$part->id}}");
+            let work_orders = generateDtbl("#work_orders", "No work orders require this spare part");
+            let assets = generateDtbl("#assets_table", "No work assets associated with this spare part");
         });
+
+        function printContent(el){
+            var restorepage = $('body').html();
+            var printcontent = $('#' + el).clone();
+            $('body').empty().html(printcontent);
+            window.print();
+            window.location.reload();
+        }
 
         $("#edit_part").on("submit", function(e){
             e.preventDefault();

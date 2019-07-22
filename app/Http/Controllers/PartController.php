@@ -101,7 +101,7 @@ class PartController extends Controller
         $user = Auth::user();
         
         if($user->role == 'Admin' || $user->role == 'Regular Technician' || $user->role == 'Hospital Head') {
-            $part = Part::with('part_category')->where('id', $part)->where('hospital_id', $user->hospital_id)->first();
+            $part = Part::with('part_category', 'assets', 'work_orders')->where('id', $part)->where('hospital_id', $user->hospital_id)->first();
             $part_categories = PartCategory::where('hospital_id', $user->hospital_id)->get();
             
             if($part == null){

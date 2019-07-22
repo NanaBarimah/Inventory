@@ -944,7 +944,7 @@
 
                                         yAxis: {
                                             title: {
-                                                text: 'Cost (GHS)'
+                                                text: 'Cost ($)'
                                             }
                                         },
                                         legend: {
@@ -1041,7 +1041,7 @@
                                         }
                                     },
                                     series : [{
-                                        name: 'Cost (GHS)',
+                                        name: 'Cost ($)',
                                         data: values
                                     }],
                                     exporting: {
@@ -1076,7 +1076,7 @@
                                         text: 'Maintenance Cost Per Unit'
                                     },
                                     tooltip: {
-                                        pointFormat: '{series.name}: {point.y} GHS (<b>{point.percentage:.1f}%</b>)'
+                                        pointFormat: '{series.name}: {point.y} $ (<b>{point.percentage:.1f}%</b>)'
                                     },
                                     plotOptions: {
                                         pie: {
@@ -1126,7 +1126,7 @@
                                         text: 'Maintenance Cost Per Department'
                                     },
                                     tooltip: {
-                                        pointFormat: '{series.name}: {point.y} GHS (<b>{point.percentage:.1f}%</b>)'
+                                        pointFormat: '{series.name}: {point.y} $ (<b>{point.percentage:.1f}%</b>)'
                                     },
                                     plotOptions: {
                                         pie: {

@@ -11,7 +11,7 @@
                         <h4 class="inline-block">System Users</h4>
                     </div>
                     <div class="card-body">
-                        <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <table id="datatable" class="table table-bordered" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -44,7 +44,13 @@
                                     <td>{{$user->role}}</td>
                                     <td>{{$user->phone_number}}</td>
                                     <td>{{$user->job_title}}</td>
-                                    <td><span class="badge badge-success" onclick="setActive('{{$user->id}}', this)">Active</span></td>
+                                    <td>
+                                        @if($user->active == 1)
+                                        <span class="badge badge-info">Active</span>
+                                        @elseif($user->active == 0)
+                                        <span class="badge badge-danger">Inactive</span>
+                                        @endif
+                                    </td>    
                                     <td class="text-right">
                                         <div class="dropdown">
                                             <button type="button"
@@ -53,8 +59,13 @@
                                                 <i class="now-ui-icons loader_gear"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="#">Edit User</a>
-                                                <a class="dropdown-item text-danger" href="#">Deactivate User</a>
+                                                <a class="dropdown-item" href="javascript:void(0)" onclick="editUser({{$user}})">Edit User</a>
+                                                <a class="dropdown-item" href="#">Reset Password</a>
+                                                @if($user->active == 1)
+                                                <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deactivateUser({{$user}})">Deactivate User</a>
+                                                @elseif($user->active == 0)
+                                                <a class="dropdown-item text-info" href="javascript:void(0)" onclick="activateUser({{$user}})">Activate User</a>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -71,6 +82,116 @@
                 <i class="fas fa-plus"></i>
             </div>
         </a>
+    </div>
+    <div class="modal fade" id="edit-user-modal">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg">
+                <form method = "post" id="edit_user">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h6 class="heading">Edit user</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-2">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label><b>Email address</b> <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control form-line resetable" placeholder="Email Address" name="email" required>
+                                </div>
+                            </div>
+                            <div class="col-md-5 pl-1">
+                                <div class="form-group">
+                                    <label class="pl-3"><b>Role</b>  <span class="text-danger">*</span></label>
+                                    <select class="selectpicker col-md-12" data-style="form-control" name="role" title="System Role" required>
+                                        <option>Admin</option>
+                                        <option>Regular Technician</option>
+                                        <option>Limited Technician</option>
+                                        <option>Hospital Head</option>
+                                        <option>View Only</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">      
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label><b>First Name</b></label>
+                                    <input type="text" class="form-control resetable" name="firstname">
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label><b>Last Name</b></label>
+                                    <input type="text" class="form-control resetable" name="lastname">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label><b>Phone</b></label>
+                                    <input type="tel" class="form-control resetable" name="phone_number">
+                                </div>
+                            </div>
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label><b>Job Title</b></label>
+                                    <input type="tel" class="form-control resetable" name="job_title">
+                                </div>
+                            </div>
+                            <input type="hidden" name="id"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-4">
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-purple text-right pull-right">Edit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deactivate-user-modal">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg">
+                <form method = "post" id="deactivate_user">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h6 class="heading">Deactivate user</h6>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to deactivate <span id="user_fullname"></span>'s account?</p>
+                        <input type="hidden" id="deactivate_id" name="id"/>
+                    </div>
+                    <div class="modal-footer mt-4">
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-danger text-right pull-right">Deactivate</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="activate-user-modal">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg">
+                <form method = "post" id="activate_user">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h6 class="heading">Activate user</h6>
+                    </div>
+                    <div class="modal-body">
+                        <p>You are about to activate <span id="user_fullname_active"></span>'s account. Are you sure you want to continue?</p>
+                        <input type="hidden" id="activate_id" name="id"/>
+                    </div>
+                    <div class="modal-footer mt-4">
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-info text-right pull-right">Activate</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     @endsection
     @section('scripts')
@@ -146,5 +267,60 @@
                 }
             });
         }
+
+        const editUser = (user) => {
+            const keys = Object.keys(user);
+
+            keys.forEach(function(item, index){
+               $("#edit_user").find(`[name="${item}"]`).val(user[`${item}`]);
+            });
+
+            $(".selectpicker").selectpicker("refresh");
+
+            $("#edit-user-modal").modal("show");
+        }
+
+        $("#edit_user").on("submit", function(e){
+            e.preventDefault();
+
+            const data = $(this).serialize();
+            
+            let btn = $(this).find('[type=submit]');
+            const id = $(this).find('[name=id]').val();
+            
+            submit_form("/api/users/update/"+id, "put", data, undefined, btn, true);
+        });
+
+        const deactivateUser = (user) => {
+            $("#user_fullname").html(`${user.firstname} ${user.lastname}`);
+            $("#deactivate_id").val(user.id);
+
+            $("#deactivate-user-modal").modal("show");
+        }
+        
+        const activateUser = (user) => {
+            $("#user_fullname_active").html(`${user.firstname} ${user.lastname}`);
+            $("#activate_id").val(user.id);
+
+            $("#activate-user-modal").modal("show");
+        }
+
+        $("#deactivate_user").on("submit", function(e){
+            e.preventDefault();
+
+            let btn = $(this).find('[type=submit]');
+            const id = $(this).find('[name=id]').val();
+            
+            submit_form("/api/users/deactivate/"+id, "put", null, undefined, btn, true);
+        });
+
+        $("#activate_user").on("submit", function(e){
+            e.preventDefault();
+
+            let btn = $(this).find('[type=submit]');
+            const id = $(this).find('[name=id]').val();
+            
+            submit_form("/api/users/activate/"+id, "put", null, undefined, btn, true);
+        });
     </script>
     @endsection

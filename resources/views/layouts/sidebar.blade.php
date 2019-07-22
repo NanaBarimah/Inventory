@@ -114,26 +114,11 @@ $auth_user = Auth::user();
                     @endif
                     @if($auth_user->role == 'Admin')
                         <li>
-                            <a data-toggle="collapse" href="#usersList">
+                            <a href="/users">
                                 <i class="now-ui-icons users_single-02"></i>
                                 <p>Users
-                                    <b class="caret"></b>
                                 </p>
                             </a>
-                            <div class="collapse" id="usersList">
-                                <ul class="nav">
-                                    <li>
-                                        <a href="/users">
-                                            <span class="sidebar-normal">All Users</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/users/add">
-                                            <span class="sidebar-normal">Add New User</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
                         </li>
                     @endif
                     @if($auth_user->role == 'Admin' || $auth_user->role == 'Regular Technician')

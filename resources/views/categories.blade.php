@@ -89,7 +89,7 @@
                                                         </button>
                                                         <div class="dropdown-menu dropdown-menu-right">
                                                             <a class="dropdown-item" href="javascript:void(0)"  onclick="edit_asset_category('{{$child->name}}', '{{$child->id}}', '{{$category->id}}')">Edit Equipment Category</a>
-                                                            <a class="dropdown-item text-danger" href="javascript:void(0)">Delete Equipment Category</a>
+                                                            <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deleteAssetCategory('{{$child->id}}')">Delete Equipment Category</a>
                                                         </div>
                                                     </span>
                                                 </div>
@@ -107,7 +107,7 @@
                                                     <i class="fas fa-pen text-muted"></i>
                                                 </a>
                                                 &nbsp;
-                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete">
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete" onclick="deleteAssetCategory('{{$category->id}}')">
                                                     <i class="fas fa-trash text-danger"></i>
                                                 </a>
                                                 &nbsp;
@@ -151,7 +151,7 @@
                                                     <i class="fas fa-pen text-muted"></i>
                                                 </a>
                                                 &nbsp;
-                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete">
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete"  onclick="deletePartCategory('{{$category->id}}')">
                                                     <i class="fas fa-trash text-danger"></i>
                                                 </a>
                                                 &nbsp;
@@ -195,7 +195,7 @@
                                                     <i class="fas fa-pen text-muted"></i>
                                                 </a>
                                                 &nbsp;
-                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete">
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete" onclick="deleteFaultCategory('{{$category->id}}')">
                                                     <i class="fas fa-trash text-danger"></i>
                                                 </a>
                                                 &nbsp;
@@ -239,7 +239,7 @@
                                                     <i class="fas fa-pen text-muted"></i>
                                                 </a>
                                                 &nbsp;
-                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete">
+                                                <a href="javascript:void(0)" data-toggle="tooltip" title = "Delete" onclick="deletePriorityCategory('{{$category->id}}')">
                                                     <i class="fas fa-trash text-danger"></i>
                                                 </a>
                                                 &nbsp;
@@ -255,7 +255,7 @@
         </div>
     </div>
 </div>
-<div id="asset-modal" class="modal fade right">
+<div id="asset-modal" class="modal fade">
   <div class="modal-dialog">
     <form method = "post" id="new_asset_category">
         <div class="modal-content">
@@ -296,7 +296,7 @@
     </form>
   </div>
 </div>
-<div id="faults-modal" class="modal fade right">
+<div id="faults-modal" class="modal fade">
   <div class="modal-dialog">
     <form method = "post" id="new_fault_category">
         <div class="modal-content">
@@ -319,7 +319,7 @@
     </form>
   </div>
 </div>
-<div id="priority-modal" class="modal fade right">
+<div id="priority-modal" class="modal fade">
   <div class="modal-dialog">
     <form method = "post" id="new_priority_category">
         <div class="modal-content">
@@ -342,7 +342,7 @@
     </form>
   </div>
 </div>
-<div id="spare-part-modal" class="modal fade right">
+<div id="spare-part-modal" class="modal fade">
   <div class="modal-dialog">
     <form method = "post" id="new_spare_part_category">
         <div class="modal-content">
@@ -365,7 +365,7 @@
     </form>
   </div>
 </div>
-<div id="edit-asset-modal" class="modal fade right">
+<div id="edit-asset-modal" class="modal fade">
   <div class="modal-dialog">
     <form method = "post" id="edit_asset_category">
         <div class="modal-content">
@@ -407,7 +407,7 @@
     </form>
   </div>
 </div>
-<div id="edit-fault-modal" class="modal fade right">
+<div id="edit-fault-modal" class="modal fade">
   <div class="modal-dialog">
     <form method = "post" id="edit_fault_category">
         <div class="modal-content">
@@ -430,7 +430,7 @@
     </form>
   </div>
 </div>
-<div id="edit-priority-modal" class="modal fade right">
+<div id="edit-priority-modal" class="modal fade">
   <div class="modal-dialog">
     <form method = "post" id="edit_priority">
         <div class="modal-content">
@@ -453,7 +453,7 @@
     </form>
   </div>
 </div>
-<div id="edit-spare-part-modal" class="modal fade right">
+<div id="edit-spare-part-modal" class="modal fade">
   <div class="modal-dialog">
     <form method = "post" id="edit_spare_part">
         <div class="modal-content">
@@ -475,6 +475,90 @@
         </div>
     </form>
   </div>
+</div>
+<div id="delete-asset-modal" class="modal fade right">
+    <div class="modal-dialog">
+        <form method = "post" id="delete_asset">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                    <h6 class="header">Delete Spare Part Type</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <p>Are you sure you want to delete this spare part category. Be very sure you want to do this before you continue. This action cannot be undone</p>
+                    </div>
+                    <input name="id" type="hidden" id="del_asset_id"/>
+                </div>
+                <div class="modal-footer mt-4 pull-right">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="delete-fault-modal" class="modal fade right">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method = "post" id="delete_fault">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                    <h6 class="header">Delete Fault Type</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <p>Are you sure you want to delete this fault category. Be very sure you want to do this before you continue. This action cannot be undone</p>
+                    </div>
+                    <input name="id" type="hidden" id="del_fault_id"/>
+                </div>
+                <div class="modal-footer mt-4 pull-right">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="delete-priority-modal" class="modal fade right">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method = "post" id="delete_priority">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                    <h6 class="header">Delete pPiority Type</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <p>Are you sure you want to delete this priority category. Be very sure you want to do this before you continue. This action cannot be undone</p>
+                    </div>
+                    <input name="id" type="hidden" id="del_priority_id"/>
+                </div>
+                <div class="modal-footer mt-4 pull-right">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="delete-part-modal" class="modal fade right">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method = "post" id="delete_part">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                    <h6 class="header">Delete Spare Part Type</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <p>Are you sure you want to delete this spare part category. Be very sure you want to do this before you continue. This action cannot be undone</p>
+                    </div>
+                    <input name="id"  type="hidden" id="del_part_id"/>
+                </div>
+                <div class="modal-footer mt-4 pull-right">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -681,6 +765,58 @@
             
             let btn = $(this).find('[type=submit]');
             submit_form("/api/part-category/update/"+temp_spare_part_id, "put", data, undefined, btn, true);
+        });
+
+        const deleteAssetCategory = (category) => {
+            $("#del_asset_id").val(category);
+            $("#delete-asset-modal").modal("show");
+        }
+
+        const deleteFaultCategory = (category) => {
+            $("#del_fault_id").val(category);
+            $("#delete-fault-modal").modal("show");
+        }
+
+        const deletePartCategory = (category) => {
+            $("#del_part_id").val(category);
+            $("#delete-part-modal").modal("show");
+        }
+
+        const deletePriorityCategory = (category) => {
+            $("#del_priority_id").val(category);
+            $("#delete-priority-modal").modal("show");
+        }
+
+        $("#delete_asset").on("submit", function(e){
+            e.preventDefault();
+            
+            let btn = $(this).find('[type=submit]');
+            const id = $(this).find('[name=id]').val();
+            submit_form("/api/asset-category/delete/"+id, "delete", null, undefined, btn, true);
+        });
+
+        $("#delete_part").on("submit", function(e){
+            e.preventDefault();
+            
+            let btn = $(this).find('[type=submit]');
+            const id = $(this).find('[name=id]').val();
+            submit_form("/api/part-category/delete/"+id, "delete", null, undefined, btn, true);
+        });
+
+        $("#delete_fault").on("submit", function(e){
+            e.preventDefault();
+            
+            let btn = $(this).find('[type=submit]');
+            const id = $(this).find('[name=id]').val();
+            submit_form("/api/fault-category/delete/"+id, "delete", null, undefined, btn, true);
+        });
+
+        $("#delete_priority").on("submit", function(e){
+            e.preventDefault();
+            
+            let btn = $(this).find('[type=submit]');
+            const id = $(this).find('[name=id]').val();
+            submit_form("/api/priority/delete/"+id, "delete", null, undefined, btn, true);
         });
     </script>
 @endsection

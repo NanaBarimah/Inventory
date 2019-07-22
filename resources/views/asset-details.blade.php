@@ -895,7 +895,7 @@
                             borderWidth: 2,
                             label: {
                                 enabled: true,
-                                content: 'Current value GHS'+ current_value
+                                content: 'Current value $'+ current_value
                                 }
                             },
                         ]

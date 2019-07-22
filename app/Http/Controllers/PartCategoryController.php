@@ -112,7 +112,7 @@ class PartCategoryController extends Controller
      */
     public function destroy(PartCategory $partCategory)
     {
-        $status = Part::where('part_categories_id', $partCategory->id)->get()->count() < 1;
+        $status = Part::where('part_category_id', $partCategory->id)->get()->count() < 1;
 
         if($status){
             $status = $partCategory->delete();

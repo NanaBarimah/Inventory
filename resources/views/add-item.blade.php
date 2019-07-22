@@ -229,7 +229,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4 col-sm-12">
-                                                    <label><b>Purchase Price (in GHS)</b></label>
+                                                    <label><b>Purchase Price (in USD ($) )</b></label>
                                                     <div class="input-group">
                                                         <input type="number" step="0.01" class="form-control" name="purchase_price"/>
                                                     </div>

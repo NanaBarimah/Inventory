@@ -219,35 +219,7 @@
             $('#btn_edit').prop('disabled', true);
         });
 
-        /*$('#edit_cat_form').on('submit', function(e){
-            e.preventDefault();
-            form_data = $(this).serialize();
-            var id = $('#edit_vendor_id').val();
-            $('#btn_edit').html('<i class="now-ui-icons loader_refresh spin"></i>');
-            
-            request = $.ajax({
-                url : 'api/vendors/update/'+id,
-                method: 'PUT',
-                data: form_data,
-                success: function(data, status){
-                    $('#btn_edit').html('Save');
-                    if(data.error){
-                        presentNotification(data.message, 'warning', 'top', 'right');
-                    }else{
-                        presentNotification(data.message, 'info', 'top', 'right');
-                        setTimeout(function(){
-                        location.reload()
-                        }, 1700);
-                    }                
-                },
-                error: function(xhr, desc, err){
-                    $('#btn_edit').html('Save');
-                    presentNotification('Could not update the category', 'danger', 'top', 'right');
-                }
-            });
-        });*/
-
-        $('#edit_cat_form input').on('input', function(){
+        $('#edit_new_vendor_form input').on('input', function(){
             $('#btn_edit').prop('disabled', false);
         });
 

@@ -131,21 +131,19 @@ class UserController extends Controller
         $request->validate([
             'firstname' => 'required',
             'lastname' => 'required',
+            'email' => 'required',
+            'phone_number' => 'required',
+            'role' => 'required',
+            'job_title' => 'required'
         ]);
         
-        if(request('password_reset') == 'yes'){
-            if(Hash::check(request('old_password'), $user->password)){
-                $user->password = bcrypt(request('new_password'));
-            }else{
-                return response()->json([
-                    'error' => true,
-                    'message' => 'The old password you provided is wrong'
-                ]);
-            }
-        }
         
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
+        $user->email = $request->email;
+        $user->phone_number = $request->phone_number;
+        $user->job_title = $request->job_title;
+        $user->role = $request->role;
 
         if($user->update()){
             $status = false;
@@ -193,12 +191,30 @@ class UserController extends Controller
         }
     }
 
-    public function is_active (Request $request)
+    public function deactivate (User $user)
     {
-         $user = User::where('id', $request->user_id)->first();
+         $user->active = 0;
 
-         $isactive     = $request->active;
-         $user->active = $isactive;
+         if ($user->save())
+         {
+            return response()->json([
+               'data'    => $user,
+               'message' => 'Account deactivated',
+               'error' => false
+            ]); 
+         }
+         else
+         {
+            return response()->json([
+               'message' => 'Account activated',
+               'error'   => true
+            ]);
+         }
+    }
+
+    public function activate (User $user)
+    {
+         $user->active = 1;
 
          if ($user->save())
          {
@@ -276,4 +292,6 @@ class UserController extends Controller
         ]);
 
     }
+
+
 }

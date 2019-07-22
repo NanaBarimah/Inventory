@@ -51,6 +51,12 @@
                                         Edit
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tasks" role="tablist">
+                                        <i class="fas fa-list"></i>
+                                        Tasks
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                         <div class="col-md-10">
@@ -224,7 +230,7 @@
                                 <div class="tab-pane" id="edit">
                                     <form id="edit-pm">
                                     <div class="row">
-                                        <div class="col-md-9">
+                                        <div class="col-md-12">
                                             <div class="row mb-2">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -366,21 +372,66 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label><b>Tasks</b></label>
-                                            <div class="col-md-12">
-                                                @foreach($pmSchedule->actions as $action)
-                                                <span class="text-small">{{$action->name}}</span>
-                                                <p class="text-right text-danger text-small" onclick="removeFromTasks(${index}, this)">Remove</p>
-                                                <hr/>
-                                                @endforeach
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="row mt-5 pull-right pr-4">
                                         <button type="submit" class="btn btn-purple" id="btn_submit">Save</button> 
                                     </div>
                                     </form>
+                                </div>
+                                <div class="tab-pane" id="tasks">
+                                    <h5 class="title">Tasks</h5>
+                                    <div class="row">
+                                        <div class="col-md-8 col-md-sm-12">
+                                            <table class="table table-bordered" id="tasks_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Task</th>
+                                                        <th class="text-right disabled-sorting">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Task</th>
+                                                        <th class="text-right disabled-sorting">Action</th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+                                                    @foreach($pmSchedule->actions as $action)
+                                                    <tr>
+                                                       <td>{{$action->name}}</td>
+                                                       <td class="text-right">
+                                                            <a href="javascript:void(0)" data-toggle="tooltip" title = "Edit">
+                                                                <i class="fas fa-pen text-muted"></i>
+                                                            </a>
+                                                            &nbsp;
+                                                            <a href="javascript:void(0)" data-toggle="tooltip" title = "Remove">
+                                                                <i class="fas fa-trash text-danger"></i>
+                                                            </a>
+                                                            &nbsp;
+                                                        </td>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <h6 class="title">Add task</h6>
+                                            <form id="add_task">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label>
+                                                                Task
+                                                            </label>
+                                                            <textarea name="name" class="form-control"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                    
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

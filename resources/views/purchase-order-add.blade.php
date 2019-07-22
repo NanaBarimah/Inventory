@@ -13,7 +13,7 @@
                                         Items Cost
                                     </td>
                                     <td class="text-right">
-                                        GHS <span id="items_cost">0</span>
+                                        $ <span id="items_cost">0</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -21,7 +21,7 @@
                                         Taxes 
                                     </td>
                                     <td class="text-right">
-                                        GHS <span id="taxes_cost">0</span>
+                                        $ <span id="taxes_cost">0</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -29,7 +29,7 @@
                                         Shipping Cost 
                                     </td>
                                     <td class="text-right">
-                                        GHS <span id="shipping_cost">0</span>
+                                        $ <span id="shipping_cost">0</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -37,7 +37,7 @@
                                         Other Costs
                                     </td>
                                     <td class="text-right">
-                                        GHS <span id="other_cost">0</span>
+                                        $ <span id="other_cost">0</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -45,7 +45,7 @@
                                         <b>Total</b>
                                     </td>
                                     <td class="text-right">
-                                        <b>GHS <span id="total_cost">0</span></b>
+                                        <b>$ <span id="total_cost">0</span></b>
                                     </td>
                                 </tr>
                             </tbody>
