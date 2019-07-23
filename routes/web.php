@@ -16,9 +16,10 @@
 })->middleware('guest'); */
 
 Route::middleware('guest')->group(function(){
-    Route::get('/', function(){
+    /*Route::get('/', function(){
         return view('auth/login');
-    });
+    });*/
+    Route::get('/', 'UserController@login')->name('login');
     Route::get('/user/profile-complete/{id}', 'UserController@completeProfile')->name('profile.complete');
     Route::get('/request/guest/{request_link}', 'RequestsController@guestRequest')->name('request.guest');
 });
