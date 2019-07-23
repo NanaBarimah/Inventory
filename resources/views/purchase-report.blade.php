@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-md-5">
                         <h6><b>Purchasing Officer</b></h6>
-                        <p>21st December, 2019</p>
+                        <p>{{date('jS F, Y', strtotime($order->updated_at))}}</p>
                     </div>
                 </div>
                 <div>
@@ -55,7 +55,7 @@
                         <h6 class="letter-heading">Purchase of filters</h6>
                         <p>This note is to confirm the approval of a request to purchase the following parts 
                             for the clinicial engineering department of the hospital. Please ensure that this purchase is
-                            fulfilled by the <b>21st December, 2019</b>. </p>
+                            fulfilled by the <b>{{date('jS F, Y', strtotime($order->updated_at))}}</b>. </p>
                     </div>
                 </div>
                 <div>
