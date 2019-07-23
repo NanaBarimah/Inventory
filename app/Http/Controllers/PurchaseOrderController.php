@@ -354,7 +354,7 @@ class PurchaseOrderController extends Controller
             return abort(404);
         }
 
-        return view('purchase-approval');
+        return view('purchase-approval', compact("order", "user"));
     }
 
     
