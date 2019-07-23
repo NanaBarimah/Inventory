@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\AssetCategory;
 use App\Asset;
+
+use Auth;
+
 use Illuminate\Http\Request;
 
 class AssetCategoryController extends Controller
@@ -120,7 +123,7 @@ class AssetCategoryController extends Controller
      */
     public function destroy(AssetCategory $assetCategory)
     {
-        $status = Asset::where('asset_id', $assetCategory->id)->get()->count() < 1;
+        $status = Asset::where('asset_category_id', $assetCategory->id)->get()->count() < 1;
 
         if($status){
             $status = $assetCategory->delete();
@@ -130,5 +133,107 @@ class AssetCategoryController extends Controller
             'error'   => !$status,
             'message' => $status ? 'Asset category deleted' : 'The selected asset category already has items under it.'
          ]);
+    }
+
+    public function uploadCSV(){
+        $user = Auth::user();
+        $action = "asset category";
+        return view("upload-csv", compact("action", "user"));
+    }
+
+    public function bulkSave(Request $request){
+        if($request->file('file') != null){
+            //handle save data from csv
+            $file = $request->file('file');
+
+            // File Details 
+            $filename = $file->getClientOriginalName();
+            
+            if(strpos($filename, "tynkerbox_category_template.csv") !== false ){
+                return response()->json([
+                    "error" => true,
+                    "message" => 'Invalid file uploaded'
+                ]);
+            }
+            
+            $extension = $file->getClientOriginalExtension();
+            $tempPath = $file->getRealPath();
+            $fileSize = $file->getSize();
+            $mimeType = $file->getMimeType();
+
+            // Valid File Extensions
+            $valid_extension = array("csv");
+
+            // 4.96MB in Bytes
+            $maxFileSize = 5097152;
+            
+            if(in_array(strtolower($extension), $valid_extension)){
+                if($fileSize <= $maxFileSize){
+                    $location = "docs";
+                    
+                    // Upload file
+                    $file->move($location,$filename);
+
+                    // get path of csv file
+                    $filepath = public_path($location."/".$filename);
+
+                    // Reading file
+                    $file = fopen($filepath,"r");
+
+                    $data_array = array();
+                    $insert_data = array();
+                    $i = 1;
+
+                    while (($filedata = fgetcsv($file, 1000, ",")) !== FALSE) {
+                        $num = count($filedata);
+                        
+                        if($i == 1){
+                            $i++;
+                            continue;
+                        }
+
+                        for ($c=0; $c < $num; $c++) {
+                           $data_array[$i][] = $filedata [$c];
+                        }
+                        
+                        $i++;
+                    }
+                    fclose($file);
+
+                    foreach($data_array as $data){
+                        array_push($insert_data, array(
+                            "id" => md5(microtime().$data[0]),
+                            "name" => $data[0],
+                            "hospital_id" => $request->hospital_id,
+                            "created_at" => date("Y-m-d"),
+                            "updated_at" => date("Y-m-d")
+                        ));
+                    }
+
+                    AssetCategory::insert($insert_data);
+
+                    return response()->json([
+                        'error' => false,
+                        "message" => "Data retrieved",
+                        "data" => $insert_data
+                    ]);
+                }else{
+                    return responose()->json([
+                        "error" => true, 
+                        "message" => "The provided file is too large"
+                    ]);
+                }
+            }else{
+                return response()->json([
+                    "error" => true,
+                    "message" => 'Invalid file format received'
+                ]);
+            }
+        }else{
+            return response()->json([
+                "error" => true,
+                "message" => 'No file received'
+            ]);
+        }
     }
 }

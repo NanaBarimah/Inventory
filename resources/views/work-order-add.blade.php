@@ -44,8 +44,17 @@
                             <div class="row mb-4">
                                 <div class="col-md-4 pr-1">
                                     <div class="form-group">
-                                        <label><b>Due Date</b></label>
-                                        <input type="text" class="form-control datepicker" name="due_date"/>
+                                        <label><b>Equipment</b> <span class="text-danger">*</span></label>
+                                        <select class="selectpicker col-md-12" data-style="btn form-control" name="asset_id" title="Equipment" 
+                                        data-show-tick="true" data-live-search="true" data-show-subtext="true">
+                                            @if($hospital->assets->count() > 0)
+                                                @foreach($hospital->assets as $asset)
+                                                <option value="{{$asset->id}}" data-subtext="{{$asset->asset_code}}">{{$asset->serial_number}}</option>
+                                                @endforeach
+                                            @else
+                                                <option disabled>No equipment recorded</option>
+                                            @endif
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-4 pr-1">
@@ -70,17 +79,8 @@
                             <div class="row mb-4">
                                 <div class="col-md-3 pr-1">
                                     <div class="form-group">
-                                        <label><b>Equipment</b> <span class="text-danger">*</span></label>
-                                        <select class="selectpicker col-md-12" data-style="btn form-control" name="asset_id" title="Equipment" 
-                                        data-show-tick="true" data-live-search="true">
-                                            @if($hospital->assets->count() > 0)
-                                                @foreach($hospital->assets as $asset)
-                                                <option value="{{$asset->id}}">{{$asset->name}}</option>
-                                                @endforeach
-                                            @else
-                                                <option disabled>No equipment recorded</option>
-                                            @endif
-                                        </select>
+                                        <label><b>Due Date</b></label>
+                                        <input type="text" class="form-control datepicker" name="due_date"/>
                                     </div>
                                 </div>
                                 <div class="col-md-3 pr-1">

@@ -63,6 +63,13 @@ Route::middleware('auth')->group(function(){
     Route::get('/pm-schedule/record', 'PreventiveMaintenanceController@create')->name('pm.create');
     Route::get('/pm-schedule/{pmSchedule}', 'PmScheduleController@show')->name("pm.show");
     Route::get('/pm-schedule/{pmSchedule}/record', 'PreventiveMaintenanceController@make')->name('pm.make');
+    
+    Route::get('/part-categories/upload-csv', 'PartCategoryController@uploadCSV');
+    Route::get('/asset-categories/upload-csv', 'AssetCategoryController@uploadCSV');
+    Route::get('/fault-categories/upload-csv', 'FaultCategoryController@uploadCSV');
+    Route::get('/priorities/upload-csv', 'PriorityController@uploadCSV');
+    
+    Route::get('/download/category-csv', 'FileController@downloadCategoryCSV');
 });
 
 

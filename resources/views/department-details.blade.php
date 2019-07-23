@@ -193,6 +193,7 @@
                                                 <h5 class="subtitle text-lighted"><i class="fas fa-compass"></i> {{$department->location}}</h5>
                                                 <h5 class="subtitle text-lighted"><i class="fas fa-user"></i> {{$department->user == null ? "N/A" : $department->user->firstname." ".$department->user->lastname}}</h5>
                                                 <h5 class="subtitle text-lighted"><i class="fas fa-phone"></i> {{$department->phone_number == null ? "N/A" : $department->phone_number == null}}</h5>
+                                                <a href="javascript:void(0)" data-toggle="modal" data-target="#editDepartmentModal" class="mt-4"><b>Edit</b></a>
                                             </div>
                                         </div>
                                     </div>
@@ -202,7 +203,55 @@
                     </div>
                 </div>
             </div>
-        </div> 
+            <div class="modal fade" id="editDepartmentModal" tabindex="-1" role="dialog" aria-labelledby="addUnitLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                <h6 class="header">Edit Department</h6>
+                            </div>
+                            <form method="post" action="#" id="edit_dept_form">
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="text-muted"><b>Department Name</b></label>
+                                            <input type="text" class="form-control resetable" name="name" value="{{$department->name}}"required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="text-muted"><b>Assigned User</b></label>
+                                            <select class="selectpicker col-md-12" title="Select a user" data-style="form-control" name="user_id">
+                                                @foreach($hospital->users as $user)
+                                                <option value="{{$user->id}}" <?php if($user->id == $department->user_id){echo 'selected';} ?>>{{$user->firstname.' '.$user->lastname}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="text-muted"><b>Location</b></label>
+                                            <input type="text" class="form-control resetable" name="location" value="{{$department->location}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="text-muted"><b>Phone</b></label>
+                                            <input type="tel" class="form-control resetable" name="phone_number" value="{{$department->phone_number}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                    <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_submit">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+        </div>
     </div>
     <div class="modal fade" id="addUnitModal" tabindex="-1" role="dialog" aria-labelledby="addUnitLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -273,6 +322,14 @@
 
             submit_form('/api/units/add', "post", data, undefined, btn, true);
         });
+
+        $("#edit_dept_form").on("submit", function(e){
+            e.preventDefault();
+            let btn = $('#btn_submit');
+            let data = $(this).serialize();
+
+            submit_form('/api/departments/{{$department->id}}/update', "put", data, undefined, btn, true);
+        })
     </script>
 
 @endsection

@@ -42,7 +42,7 @@
                 <div class="card-body">
                     <div class="tab-content tab-space">
                         <div class="tab-pane active" id="assets">
-                            <h6 class="header">Equipment Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#asset-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
+                            <h6 class="header">Equipment Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#asset-modal">Add New</a></span><span class="add_new"><a href="/asset-categories/upload-csv" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "asset_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>
@@ -118,7 +118,7 @@
                             </table>
                         </div>
                         <div class="tab-pane" id="spare-parts">
-                            <h6 class="header">Spare Part Types <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#spare-part-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
+                            <h6 class="header">Spare Part Types <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#spare-part-modal">Add New</a></span><span class="add_new"><a href="/part-categories/upload-csv" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "spare_parts_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>
@@ -162,7 +162,7 @@
                             </table>
                         </div>
                         <div class="tab-pane" id="faults">
-                            <h6 class="header">Fault Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#faults-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
+                            <h6 class="header">Fault Categories <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#faults-modal">Add New</a></span><span class="add_new"><a href="/fault-categories/upload-csv" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "faults_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>
@@ -206,7 +206,7 @@
                             </table>
                         </div>
                         <div class="tab-pane" id="works">
-                            <h6 class="header">Work Order Priorities <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#priority-modal">Add New</a></span><span class="add_new"><a href="javascript:void(0)" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
+                            <h6 class="header">Work Order Priorities <span class="add_new"><a href="javascript:void(0)" data-toggle="modal" data-target="#priority-modal">Add New</a></span><span class="add_new"><a href="/priorities/upload-csv" data-toggle="tooltip" title="Import CSV">Import CSV</a></span></h6>
                             <table id = "works_table" class="data-table table table-striped">
                                 <thead>
                                     <tr>

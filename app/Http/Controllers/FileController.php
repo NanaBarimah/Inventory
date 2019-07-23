@@ -124,4 +124,8 @@ class FileController extends Controller
             ]);
         }
     }
+
+    public function downloadCategoryCSV(){
+        return response()->download(storage_path('docs/tynkerbox_category_template.csv'));
+    }
 }

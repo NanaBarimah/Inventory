@@ -35,6 +35,11 @@ Route::middleware('auth:api')->group(function(){
     Route::put('part-category/update/{partCategory}', 'PartCategoryController@update');
     Route::put('priority/update/{priority}', 'PriorityController@update');
 
+    Route::post('asset-category/bulk-save', 'AssetCategoryController@bulkSave');
+    Route::post('part-category/bulk-save', 'PartCategoryController@bulkSave');
+    Route::post('fault-category/bulk-save', 'FaultCategoryController@bulkSave');
+    Route::post('priority/bulk-save', 'PriorityController@bulkSave');
+
     Route::delete('asset-category/delete/{assetCategory}', 'AssetCategoryController@destroy');
     Route::delete('fault-category/delete/{faultCategory}', 'FaultCategoryController@destroy');
     Route::delete('part-category/delete/{partCategory}', 'PartCategoryController@destroy');
@@ -70,7 +75,7 @@ Route::middleware('auth:api')->group(function(){
     Route::put('equipment/update/{equipment}', 'EquipmentController@update');
 
     Route::post('departments/add', 'DepartmentController@store');
-    Route::put('departments/update/{department}', 'DepartmentController@update');
+    Route::put('departments/{department}/update', 'DepartmentController@update');
 
     Route::post('units/add', 'UnitController@store');
     Route::put('units/update/{unit}', 'UnitController@update');
