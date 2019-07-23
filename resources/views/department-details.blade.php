@@ -192,7 +192,7 @@
                                                 <h4 class="title">{{$department->name}}</h4>
                                                 <h5 class="subtitle text-lighted"><i class="fas fa-compass"></i> {{$department->location}}</h5>
                                                 <h5 class="subtitle text-lighted"><i class="fas fa-user"></i> {{$department->user == null ? "N/A" : $department->user->firstname." ".$department->user->lastname}}</h5>
-                                                <h5 class="subtitle text-lighted"><i class="fas fa-phone"></i> {{$department->phone_number == null ? "N/A" : $department->phone_number == null}}</h5>
+                                                <h5 class="subtitle text-lighted"><i class="fas fa-phone"></i> {{$department->phone_number == null ? "N/A" : $department->phone_number}}</h5>
                                                 <a href="javascript:void(0)" data-toggle="modal" data-target="#editDepartmentModal" class="mt-4"><b>Edit</b></a>
                                             </div>
                                         </div>

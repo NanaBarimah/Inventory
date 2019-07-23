@@ -96,7 +96,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="text-muted"><b>Phone</b></label>
-                                    <input type="tel" class="form-control resetable" name="phone">
+                                    <input type="tel" class="form-control resetable" name="phone_number">
                                 </div>
                             </div>
                         </div>
