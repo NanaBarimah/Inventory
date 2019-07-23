@@ -56,10 +56,10 @@ class UserFormUpdate extends Notification
     public function toArray($notifiable)
     {
         return [
-            'title' => 'User Form Update',
-            'message' => 'User has completed the registration form successfully',
+            'title' => 'Profile Complete',
+            'message' => $request->firstname.' '.$request->lastname.'\'s user profile was successfully completed',
             'data' => $this->request,
-            'action' => '/home'
+            'action' => '/users'
         ];
     }
 }
