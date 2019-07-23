@@ -326,7 +326,7 @@ class PurchaseOrderController extends Controller
         Mail::send('email_templates.new_order', $data, function($message) use($to_name, $to_email){
             $message->to($to_email, $to_name)
                     ->subject('New Purchase Order Request');
-            $message->from('noreply@maintainme.com', 'MaintainMe');
+            $message->from('noreply@tynkerbox.com', 'TynkerBox');
         });
 
         if(count(Mail::failures()) > 0) {

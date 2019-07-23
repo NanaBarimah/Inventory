@@ -37,7 +37,7 @@
             <div>
                 <div class="mb-2">
                     <div class="col-md-7 text-center">
-                        <h1 class="title">MaintainMe&trade;</h1>
+                        <h1 class="title">TynkerBox&trade;</h1>
                         <h6>Ledzekuku General Hospital</h6>
                         <address>
                             <span class="d-block">P.O. Box LG, 14</span>
@@ -133,7 +133,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <h1 class="title">MaintainMe&trade;</h1>
+                        <h1 class="title">TynkerBox&trade;</h1>
                     </div>
                     <div class="col-md-6">
                         <p class="text-right mb-5">Sincerely,</p>

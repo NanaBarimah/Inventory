@@ -239,7 +239,7 @@
                     <h3>All Done!</h3>
                 </div>
                 <div class="modal-body">
-                    <p>A new purchase order has been created. You can now send the purchase order to a specific hospital administrator user of MaintainMe&trade;.</p>
+                    <p>A new purchase order has been created. You can now send the purchase order to a specific hospital administrator user of TynkerBox&trade;.</p>
                 </div>
                 <div class="modal-footer mt-4">
                     <div class="pull-right">

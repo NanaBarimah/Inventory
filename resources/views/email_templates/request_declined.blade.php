@@ -130,7 +130,7 @@
                                         <tr>
                                             <td align="left" style="padding: 30px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
                                                 Cheers,<br/>
-                                                MaintainMe Team.
+                                                TynkerBox Team.
                                             </td>
                                         </tr>
                                         <tr>
@@ -151,7 +151,7 @@
             <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="max-width: 500px;" class="responsive-table">
                 <tr>
                     <td align="left" style="font-size: 12px; line-height: 18px; font-family: Helvetica, Arial, sans-serif; color:#666666;">
-                        MaintainMe&trade;. Maintained and developed by <a href="http://codbitgh.com" target="_blank">Codbit Ghana Limited</a>
+                        TynkerBox&trade;. Maintained and developed by <a href="http://codbitgh.com" target="_blank">Codbit Ghana Limited</a>
                         <br>
                         <span style="font-family: Arial, sans-serif; font-size: 12px; color: #444444;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
                         <a href="#" target="_blank" style="color: #666666; text-decoration: none;">+233 203 598143</a>
