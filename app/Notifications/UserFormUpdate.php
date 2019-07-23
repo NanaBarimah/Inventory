@@ -57,7 +57,7 @@ class UserFormUpdate extends Notification
     {
         return [
             'title' => 'Profile Complete',
-            'message' => $request->firstname.' '.$request->lastname.'\'s user profile was successfully completed',
+            'message' => $this->request->firstname.' '.$this->request->lastname.'\'s user profile was successfully completed',
             'data' => $this->request,
             'action' => '/users'
         ];
