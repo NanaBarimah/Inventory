@@ -41,7 +41,9 @@ class AssetController extends Controller
         $user = Auth::user();
         if($user->role == 'Admin' || $user->role == 'Regular Technician') {
             $hospital = Hospital::with("assets", "asset_categories", "departments",
-            "departments.units", "services", "parts", "users")->where("id", $user->hospital_id)->first();
+            "departments.units", "services", "parts")->with(["users" => function($q){
+                $q->where("role", "Admin")->orWhere("role", "Regular Technician")->orWhere("role", "Limited Technician");
+            }])->where("id", $user->hospital_id)->first();
 
             return view('add-item', compact("hospital", "user"));
         } else {
