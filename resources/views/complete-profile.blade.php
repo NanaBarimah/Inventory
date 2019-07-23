@@ -58,14 +58,14 @@
                                             <label>New Password</label>
                                             <div class="form-group">
                                                 <input type="password" class="form-control" name="password" id="new_password">
-                                                <p class="text-danger text-center" style="font-size:11px; display:none">The passwords you have provided do not match</p>
+                                                <p class="text-danger text-center warning" style="font-size:11px; display:none">The passwords you have provided do not match</p>
                                             </div>
                                         </div>
                                         <div class="col-md-6 px-1">
                                             <label>Confirm Password</label>
                                             <div class="form-group">
                                                 <input type="password" class="form-control" id="confirm_password"  name="password_confirmation"/>
-                                                <p class="text-danger text-center" style="font-size:11px; display:none;">The passwords you have provided do not match</p>
+                                                <p class="text-danger text-center warning" style="font-size:11px; display:none;">The passwords you have provided do not match</p>
                                             </div>
                                         </div>
                                     </div>
@@ -105,38 +105,49 @@
     <script>
         $('#profile_update_form').on('submit', (e) => {
             e.preventDefault();
-            var form_data = {
-                'id' : '{{$user->id}}'
-            };
-
-            //TODO : do validations;
             
-            $.each($('.form-control'), function(i, el){
-                form_data[$(el).attr('name')] = $(el).val();
-            });
+            $(".warning").css("display", "none");
 
-            $('#btn_submit').html('<i class="now-ui-icons loader_refresh spin"></i>');
+            const password = $("#new_password").val();
+            const confirm = $("#confirm_password").val();
 
-            $.ajax({
-                url: '/api/user/complete-profile',
-                method: 'post',
-                data: form_data,
-                success: (data, status) => {
-                    $('#btn_submit').html('Save');
-                    $('#profile_update_form').find('input, select').prop('disabled', false);
-                    $('#profile_update_form').find('.resetable').val('');
-                    $('#btn_reset').val('Reset');
-                    presentNotification('User profile saved', 'info', 'top', 'right');
-                    setTimeout(()=>{
-                        location.replace("/")
-                    }, 500);
-                },
-                error: function(xhr, desc, err){
-                    $('#btn_submit').html('Save');
-                    $('#profile_update_form').find('.resetable').prop('disabled', false);
-                    presentNotification('Could not save this user profile. Try again.', 'danger', 'top', 'right');
-                }
-            });
+            if(password === confirm){
+                var form_data = {
+                    'id' : '{{$user->id}}'
+                };
+
+                //TODO : do validations;
+                
+                
+                $.each($('.form-control'), function(i, el){
+                    form_data[$(el).attr('name')] = $(el).val();
+                });
+
+                $('#btn_submit').html('<i class="now-ui-icons loader_refresh spin"></i>');
+
+                $.ajax({
+                    url: '/api/user/complete-profile',
+                    method: 'post',
+                    data: form_data,
+                    success: (data, status) => {
+                        $('#btn_submit').html('Save');
+                        $('#profile_update_form').find('input, select').prop('disabled', false);
+                        $('#profile_update_form').find('.resetable').val('');
+                        $('#btn_reset').val('Reset');
+                        presentNotification('User profile saved', 'info', 'top', 'right');
+                        setTimeout(()=>{
+                            location.replace("/")
+                        }, 500);
+                    },
+                    error: function(xhr, desc, err){
+                        $('#btn_submit').html('Save');
+                        $('#profile_update_form').find('.resetable').prop('disabled', false);
+                        presentNotification('Could not save this user profile. Try again.', 'danger', 'top', 'right');
+                    }
+                });
+            }else{
+                $(".warning").css("display", "block");
+            }
         });
     </script>
 @endsection

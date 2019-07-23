@@ -25,7 +25,6 @@
                                     <div class="form-group">
                                         <label class="pl-3"><b>Role</b>  <span class="text-danger">*</span></label>
                                         <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="role" title="System Role" required>
-                                            <option>Admin</option>
                                             <option>Regular Technician</option>
                                             <option>Limited Technician</option>
                                             <option>Hospital Head</option>
