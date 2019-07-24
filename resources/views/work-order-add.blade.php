@@ -66,7 +66,7 @@
                                 @if($user->role == "Admin")
                                 <div class="col-md-4 pr-1">
                                     <div class="form-group">
-                                        <label><b>Lead Technician</b></label>
+                                        <label><b>Lead Technician</b> <span class="text-danger">*</span></label>
                                         <select class="selectpicker col-md-12" data-style="btn btn-purple btn-round" name="assigned_to" title="Lead Technician" required>
                                             @foreach($hospital->users as $user)
                                             <option value="{{$user->id}}">{{$user->firstname.' '.$user->lastname}}</option>
@@ -180,6 +180,7 @@
             e.preventDefault();
             let data = new FormData(this);
             data.append("hospital_id", '{{$user->hospital_id}}');
+            data.append("authenticated_user", "{{$user->id}}");
             
             @if($user->role != "Admin")
             data.append("assigned_to", '{{$user->id}}')

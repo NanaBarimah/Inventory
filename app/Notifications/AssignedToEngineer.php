@@ -12,15 +12,18 @@ class AssignedToEngineer extends Notification
     use Queueable;
 
     private $request;
+    private $message;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct($request, $message = null)
     {
         //
         $this->request = $request;
+        $this->message = $message == null ? 'A new work order with number #'.$request->wo_number.' ('.$request->title.') has been assigned to you'
+        : $message;
     }
 
     /**
@@ -58,9 +61,9 @@ class AssignedToEngineer extends Notification
     {
         return [
             'title' => 'New work order assignment',
-            'message' => 'A new work order has been assigned to you',
+            'message' => $this->message,
             'data' => $this->request,
-            'action' => '/admin/assigned'
+            'action' => '/work-orders'
         ];
     }
 }

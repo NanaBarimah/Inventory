@@ -10,6 +10,7 @@ use App\Comment;
 use Illuminate\Http\Request;
 use Notification;
 use App\Notifications\WorkOrderStatus;
+use App\Notifications\AssignedToEngineer;
 use Auth;
 
 class WorkOrderController extends Controller
@@ -73,7 +74,7 @@ class WorkOrderController extends Controller
         $workOrder->id                  = md5($request->title.microtime());
         $workOrder->title               = $request->title;
         $workOrder->description         = $request->description;
-        $workOrder->due_date            = date('Y-m-d', strtotime($request->due_date)); 
+        $workOrder->due_date            = $request->due_date != null ?$date('Y-m-d', strtotime($request->due_date)) : null; 
         $workOrder->estimated_duration = $request->estimated_duration; 
         $workOrder->priority_id         = $request->priority_id;
         $workOrder->hospital_id         = $request->hospital_id;
@@ -131,6 +132,11 @@ class WorkOrderController extends Controller
         if($workOrder->save()) {
             if($request->additionalWorkers != null) {
                 $workOrder->teams()->attach($request->additionalWorkers);
+            }
+
+            if($request->authenticated_user != $request->assigned_to) {
+                $user = User::where('id', $request->assigned_to)->first();
+                $user->notify(new AssignedToEngineer($workOrder, 'You have been assigned as a lead technician for a new work order with number #'.$workOrder->wo_number.' ('.$workOrder->title.')'));
             }
 
             return response()->json([
@@ -206,6 +212,11 @@ class WorkOrderController extends Controller
         
         if($request->assigned_to != null){
             $workOrder->assigned_to = $request->assigned_to;
+
+            if($request->authenticated_user != $request->assigned_to){
+                $user = User::where('id', $request->assigned_to)->first();
+                $user->notify(new AssignedToEngineer($workOrder, 'You have been assigned as a lead technician for work order with number #'.$workOrder->wo_number.' ('.$workOrder->title.')'));
+            }
         }
 
         if($workOrder->assigned_to != null && $workOrder->status == 5) {
@@ -257,6 +268,9 @@ class WorkOrderController extends Controller
 
         $workOrder->users()->attach($request->user_ids);
         
+        $users = User::whereIn("id", $request->user_ids)->where("id", "<>", $request->authenticated_user)->get();
+        Notification::send($users, new AssignedToEngineer($workOrder));
+
         return response()->json([
             "error" => false,
             "message" => "Technicians assigned to work order"
@@ -347,19 +361,19 @@ class WorkOrderController extends Controller
             $users = User::where([['role', 'Admin'], ['hospital_id', $workOrder->hospital_id]])->get();
             switch($request->status){
                 case 1:
-                    Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been closed'));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been closed'));
                     break;
                 case 2: 
-                    Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been set to in progress'));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been set to in progress'));
                     break;
                 case 3: 
-                    Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been set on hold'));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been set on hold'));
                     break;
                 case 4: 
-                    Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been opened'));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been opened'));
                     break;
                 case 5: 
-                    Notification::send($users, new WorkOrderStatus($workOrder, "Work order #".$workOrder->wo_number.' has been set to pending'));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been set to pending'));
                     break;
                 default: 
                     break;

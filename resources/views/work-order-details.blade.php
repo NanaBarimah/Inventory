@@ -743,6 +743,7 @@
     $("#add_engineer").on("submit", function(e){
         e.preventDefault();
         let data = new FormData(this);
+        data.append("authenticated_user", "{{$user->id}}");
         let btn = $(this).find('[type="submit"]');
 
         submit_file_form("/api/work-order/{{$work_order->id}}/assign-team", "post", data, undefined, btn, true);
@@ -769,7 +770,8 @@
     $("#edit_form").on("submit", function(e){
         e.preventDefault();
         let data = new FormData(this);
-        data.append("_method", "put")
+        data.append("_method", "put");
+        data.append("authenticated_user", "{{$user->id}}");
         let btn = $(this).find('[type="submit"]');
 
         submit_file_form("/api/work-order/{{$work_order->id}}/update", "post", data, undefined, btn, true);
