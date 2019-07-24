@@ -136,7 +136,7 @@ class FaultCategoryController extends Controller
 
     public function uploadCSV(){
         $user = Auth::user();
-        $action = "fualt category";
+        $action = "fault category";
         return view("upload-csv", compact("action", "user"));
     }
 
