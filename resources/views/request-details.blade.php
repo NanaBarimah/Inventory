@@ -285,9 +285,9 @@
     $("#approve_form").on("submit", function(e){
         e.preventDefault();
         let data = new FormData(this);
-        console.log("{{Auth::user()->id}}");
-        data.append("user_admin", "{{Auth::user()->id}}");
-        data.append("approved_by", "{{Auth::user()->id}}");
+        
+        data.append("user_admin", "{{$user->id}}");
+        data.append("approved_by", "{{$user->id}}");
         data.append("_method", "put");
         
         let btn = $(this).find('[type="submit"]');
