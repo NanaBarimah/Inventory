@@ -36,7 +36,7 @@
         let url = "";
 
         switch(action){
-            case "asset category":
+            case "equipment category":
                 url = "/api/asset-category/bulk-save";
                 break;
             case "part category":

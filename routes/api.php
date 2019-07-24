@@ -78,7 +78,7 @@ Route::middleware('auth:api')->group(function(){
     Route::put('departments/{department}/update', 'DepartmentController@update');
 
     Route::post('units/add', 'UnitController@store');
-    Route::put('units/update/{unit}', 'UnitController@update');
+    Route::put('units/{unit}/update', 'UnitController@update');
 
     Route::post('requests/add', 'RequestsController@store');
     Route::put('request/{work_request}/decline', 'RequestsController@decline');

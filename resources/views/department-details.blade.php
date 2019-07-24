@@ -151,7 +151,8 @@
                                                         <th>Name</th>
                                                         <th>Location</th>
                                                         <th>Contact Number</th>
-                                                        <th class="text-right disable-sorting">User</th>
+                                                        <th>User</th>
+                                                        <th class="text-right disable-sorting">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tfoot>
@@ -159,7 +160,8 @@
                                                         <th>Name</th>
                                                         <th>Location</th>
                                                         <th>Contact Number</th>
-                                                        <th class="text-right disable-sorting">User</th>
+                                                        <th>User</th>
+                                                        <th class="text-right disable-sorting">Action</th>
                                                     </tr>
                                                 </tfoot>
                                                 <tbody>
@@ -174,7 +176,8 @@
                                                             </td>
                                                             <td>{{$unit->location != null ? $unit->location : 'N/A'}}</td>
                                                             <td>{{$unit->phone_number != null ? $unit->phone_number : 'N/A'}}</td>
-                                                            <td class="text-right">{{$unit->user != null ? $unit->user->firstname.' '.$unit->user->lastname : 'N/A'}}</td>
+                                                            <td>{{$unit->user != null ? $unit->user->firstname.' '.$unit->user->lastname : 'N/A'}}</td>
+                                                            <td class="text-right"><a href="javascript:void(0)" onclick="editUnit({{$unit}})"><i class="fas fa-pen text-info"></i></a></td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -244,12 +247,55 @@
                                         </div>
                                     </div>
                                 </div>
-                                    <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_submit">Update</button>
+                                <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_submit">Update</button>
                                 </div>
                             </form>
                         </div>
                     </div> 
                 </div> 
+            </div>
+            <div class="modal fade" id="editUnitModal" tabindex="-1" role="dialog" aria-labelledby="editUnitLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <form method = "post" id="edit_unit_form">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                <h6 class="header">Add Unit</h6>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label><b>Unit Name</b> <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control resetable" name="name" required/>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label><b>Assigned User</b></label>
+                                        <select class="selectpicker col-md-12" title="Select a user" data-style="form-control" name="user_id">
+                                            @foreach($hospital->users as $user)
+                                            <option value="{{$user->id}}">{{$user->firstname.' '.$user->lastname}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label><b>Location</b></label>
+                                        <input type="text" class="form-control resetable" name="location">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label><b>Contact Number</b></label>
+                                        <input type="tel" class="form-control resetable" name="phone_number">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer mt-4">
+                                <div class="row text-right">
+                                    <button type="submit" class="btn btn-purple" id="btn_submit">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -313,6 +359,7 @@
     <script>
         let units_table = generateExportDtbl('#units_table', 'No units for this department', 'Search for unit');
         let assets_table = generateExportDtbl('#assets_table', 'No equipment for this department', 'Search for equipment');
+        let selected_unit = null;
 
         $('#add_unit_form').on('submit', function(e){
             e.preventDefault();
@@ -329,6 +376,26 @@
             let data = $(this).serialize();
 
             submit_form('/api/departments/{{$department->id}}/update', "put", data, undefined, btn, true);
+        });
+
+        const editUnit = (unit) => {
+            const keys = Object.keys(unit);
+            keys.forEach((element, index) => {
+                $("#edit_unit_form").find(`[name=${element}]`).val(unit[`${element}`]);
+            });
+            
+            $("#edit_unit_form").find(".selectpicker").selectpicker("refresh");
+            selected_unit = unit.id;
+
+            $("#editUnitModal").modal("show");
+        }
+
+        $("#edit_unit_form").on("submit", function(e){
+            e.preventDefault();
+            const data = $(this).serialize();
+            const btn = $(this).find("[type=submit]");
+
+            submit_form(`/api/units/${selected_unit}/update`, "put", data, undefined, btn, true);
         })
     </script>
 

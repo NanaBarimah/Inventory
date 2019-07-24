@@ -137,7 +137,7 @@ class AssetCategoryController extends Controller
 
     public function uploadCSV(){
         $user = Auth::user();
-        $action = "asset category";
+        $action = "equipment category";
         return view("upload-csv", compact("action", "user"));
     }
 
@@ -149,7 +149,7 @@ class AssetCategoryController extends Controller
             // File Details 
             $filename = $file->getClientOriginalName();
             
-            if(strpos($filename, "tynkerbox_category_template.csv") !== false ){
+            if(strpos($filename, "tynkerbox_category_template.csv") == false ){
                 return response()->json([
                     "error" => true,
                     "message" => 'Invalid file uploaded'

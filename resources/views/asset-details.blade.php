@@ -444,6 +444,7 @@
                                         <div class="form-group col-md-4 mt-4 col-sm-12">
                                             <label><b>Description</b></label>
                                             <textarea class="form-control resetable" name="description" rows="3">{{$asset->description}}</textarea>
+                                            
                                             <button type="submit" class="btn btn-purple mt-5" id="btn_submit">Save</button>
                                         </div>
                                         <div class="form-group col-md-4 mt-4 col-sm-12">
