@@ -147,7 +147,7 @@ class PriorityController extends Controller
 
             // File Details 
             $filename = $file->getClientOriginalName();
-            if(strpos($filename, "tynkerbox_category_template.csv") == false ){
+            if(strpos($filename, "tynkerbox_category_template.csv") === false ){
                 return response()->json([
                     "error" => true,
                     "message" => 'Invalid file uploaded'
