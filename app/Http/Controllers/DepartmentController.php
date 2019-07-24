@@ -116,15 +116,31 @@ class DepartmentController extends Controller
      * @param  \App\Department  $department
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request)
     {
-        $status = $department->update(
-            $request->only(['name'])
-        );
+        $department = Department::where('id', $request->department)->first();
+        $status = true;
+
+        $request->validate([
+            'name' => 'required',
+            'user_id' => 'required',
+            'location' => 'required',
+            'phone_number' => 'required'
+        ]);
+
+        $department->name = $request->name;
+        $department->user_id = $request->user_id;
+        $department->location = $request->location;
+        $department->phone_number = $request->phone_number;
+
+        if($department->update()) {
+            $status = false;
+        }
 
         return response()->json([
-            'data'    => $department,
-            'message' => $status ? 'Department Updated' : 'Error updating department'
+            'data' => $department,
+            'error' => $status,
+            'message' => !$status ? 'Department updated successfully' : 'Error updating department'
         ]);
     }
 
@@ -156,7 +172,7 @@ class DepartmentController extends Controller
         $user = Auth::user();
         
         if($user->role == 'Admin' || $user->role == 'Regular Technician') {
-            $department = Department::where([['id' , $department], ['hospital_id', $user->hospital_id]])->with("units", "assets", "units.assets", "units.user")->first();
+            $department = Department::where([['id' , $department], ['hospital_id', $user->hospital_id]])->with("units", "assets", "units.assets", "units.user", "user")->first();
             $hospital = Hospital::with('users')->where('id', $user->hospital_id)->first(); 
     
             if($department == null){
@@ -165,7 +181,7 @@ class DepartmentController extends Controller
     
             return view('department-details', compact('department', 'hospital', 'user'));  
         } else if($user->role == 'View Only') {
-            $department = Department::where([['id', $department], ['user_id', $user->id]])->with("units", "assets", "units.assets", "units.user")->first();
+            $department = Department::where([['id', $department], ['user_id', $user->id]])->with("units", "assets", "units.assets", "units.user", "user")->first();
             $hospital = Hospital::with('users')->where('id', $user->hospital_id)->first(); 
 
             return view('department-details', compact('department', 'hospital', 'user'));

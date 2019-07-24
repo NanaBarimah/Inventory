@@ -115,12 +115,12 @@ class UnitController extends Controller
     public function update(Request $request, Unit $unit)
     {
         $status = $unit->update(
-            $request->only(['name', 'department_id'])
+            $request->only(['name', 'user_id', 'location', 'phone_number'])
         );
 
         return response()->json([
             'data'    => $unit,
-            'message' => $status ? 'Unit Updated' : 'Error updating unit'
+            'message' => $status ? 'Unit updated successfully' : 'Error updating unit'
         ]);
     }
 
