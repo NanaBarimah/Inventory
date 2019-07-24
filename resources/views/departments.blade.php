@@ -137,7 +137,10 @@
                             $('#dept_name').val(),
                             '<a href="#" class="btn btn-round btn-info btn-icon btn-sm edit" data-toggle="tooltip" data-placement="left" title="Edit"><i class="now-ui-icons design-2_ruler-pencil"></i></a>'
                         ]).draw(true);
+                        
                         $('#add_new_dept_form').find('input').html('');
+                        $('#add_new_dept_form').trigger("reset");
+                        
                         presentNotification(data.message, 'success', 'top', 'right');
                         setTimeout(() => {
                             location.reload();
