@@ -404,7 +404,7 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-4 col-sm-12">
                                             <label><b>Warranty Expiration</b></label>
-                                            <input type="text" class="form-control datepicker" name="warranty_expiration" value="{{Carbon\Carbon::parse($asset->warranty_expiration)->format('m/d/Y')}}"/>
+                                            <input type="text" class="form-control datepicker" name="manufacturer_year" value="{{Carbon\Carbon::parse($asset->warranty_expiration)->format('m/d/Y')}}"/>
                                         </div>
                                         <div class="form-group col-md-4 col-sm-12">
                                             <label><b>Installation Date</b></label>
@@ -442,6 +442,7 @@
                                     <div class="form-row">
                                         
                                         <div class="form-group col-md-4 mt-4 col-sm-12">
+                                            
                                             <label><b>Description</b></label>
                                             <textarea class="form-control resetable" name="description" rows="3">{{$asset->description}}</textarea>
                                             
