@@ -460,7 +460,7 @@
                 $("#lead_open").html(data.datasets[0].data[1]);
                 $("#lead_progress").html(data.datasets[0].data[2]);
                 $("#lead_hold").html(data.datasets[0].data[3]);
-                $("#lead_closed").html(data.datasets[0].data[3]);
+                $("#lead_closed").html(data.datasets[0].data[4]);
 
                 const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
                 $("#wo_report_notes").html(`<p><b>Work order report</b> for <b>all time</b> grouped by <b>status</b>.</p>

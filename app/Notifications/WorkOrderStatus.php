@@ -21,7 +21,7 @@ class WorkOrderStatus extends Notification
     public function __construct($request, $message = null)
     {
         $this->request = $request;
-        $this->message = $message == null ? 'Work Order with number #'.$request->wo_number.' has been completed'
+        $this->message = $message == null ? 'Work Order with number #'.$request->wo_number.' ('.$request->title.') has been approved. You can now provide final report on the work order'
         : $message;
     }
 
