@@ -361,19 +361,19 @@ class WorkOrderController extends Controller
             $users = User::where([['role', 'Admin'], ['hospital_id', $workOrder->hospital_id]])->get();
             switch($request->status){
                 case 1:
-                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been closed'));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been marked as closed'));
                     break;
                 case 2: 
-                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been set to in progress'));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been marked as in progress'));
                     break;
                 case 3: 
-                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been set on hold'));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been marked as hold'));
                     break;
                 case 4: 
-                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been opened'));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been marked as opened'));
                     break;
                 case 5: 
-                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been set to pending'));
+                    Notification::send($users, new WorkOrderStatus($workOrder, "Status of work order #".$workOrder->wo_number.' ('.$workOrder->title.') has been marked as pending'));
                     break;
                 default: 
                     break;
