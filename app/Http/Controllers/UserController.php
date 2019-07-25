@@ -302,5 +302,30 @@ class UserController extends Controller
         return view('auth/login');
     }
 
+    public function editUser(User $user, Request $request){
+        $request->validate([
+            'role' => 'required',
+        ]);
 
+        $status = true;        
+        
+        $user->firstname = $request->firstname;
+        $user->lastname = $request->lastname;
+        $user->phone_number = $request->phone_number;
+        $user->role = $request->role;
+        $user->job_title = $request->job_title;
+
+        
+
+        if($user->update()){
+            $status = false;
+        }
+       
+        return response()->json(
+            [
+            'error' => $status,
+            'message' => !$status ? 'Profile updated!' : 'Could not update profile'
+            ]
+        );
+    }
 }

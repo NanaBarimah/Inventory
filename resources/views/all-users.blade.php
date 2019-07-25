@@ -84,8 +84,8 @@
         </a>
     </div>
     <div class="modal fade" id="edit-user-modal">
-        <div class="modal-dialog">
-            <div class="modal-content modal-lg">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
                 <form method = "post" id="edit_user">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
@@ -96,14 +96,13 @@
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
                                     <label><b>Email address</b> <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control form-line resetable" placeholder="Email Address" name="email" required>
+                                    <input type="email" class="form-control form-line resetable" placeholder="Email Address" name="email" readonly>
                                 </div>
                             </div>
                             <div class="col-md-5 pl-1">
                                 <div class="form-group">
                                     <label class="pl-3"><b>Role</b>  <span class="text-danger">*</span></label>
                                     <select class="selectpicker col-md-12" data-style="form-control" name="role" title="System Role" required>
-                                        <option>Admin</option>
                                         <option>Regular Technician</option>
                                         <option>Limited Technician</option>
                                         <option>Hospital Head</option>
@@ -288,7 +287,7 @@
             let btn = $(this).find('[type=submit]');
             const id = $(this).find('[name=id]').val();
             
-            submit_form("/api/users/update/"+id, "put", data, undefined, btn, true);
+            submit_form("/api/users/edit/"+id, "put", data, undefined, btn, true);
         });
 
         const deactivateUser = (user) => {

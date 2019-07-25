@@ -21,6 +21,7 @@ Route::middleware('auth:api')->group(function(){
     Route::post('users/add_user', 'UserController@store');
     Route::get('users/{user}', 'UserController@show');
     Route::put('users/update/{user}', 'UserController@update');
+    Route::put('users/edit/{user}', 'UserController@editUser');
     Route::put('users/deactivate/{user}', 'UserController@deactivate');
     Route::put('users/activate/{user}', 'UserController@activate');
     Route::post('users/user-login', 'UserController@userLogin');
