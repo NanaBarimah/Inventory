@@ -229,7 +229,7 @@ $notifications = Auth::user()->unreadNotifications;
                                     </ol>
                                     <div class="carousel-inner">
                                         <div class="carousel-item active">
-                                            <h6 class="text-muted">No scheduled maintenaces available</h6>
+                                            <h6 class="text-muted">No scheduled maintenace available</h6>
                                         </div>
                                     </div>
                                     <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
