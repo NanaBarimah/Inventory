@@ -222,6 +222,7 @@ class RequestsController extends Controller
                 $work_order->wo_number = $last_order->wo_number + 1;
             }
             $work_order->user_admin = $request->user_admin;
+            $work_order->due_date = null;
 
             
             if($work_order->save()) {
