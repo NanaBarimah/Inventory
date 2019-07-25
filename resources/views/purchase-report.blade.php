@@ -38,10 +38,10 @@
                 <div class="mb-2">
                     <div class="col-md-7 text-center">
                         <h1 class="title">TynkerBox&trade;</h1>
-                        <h6>Ledzekuku General Hospital</h6>
+                        <h6>{{$order->hospital->name}}</h6>
                         <address>
-                            <span class="d-block">P.O. Box LG, 14</span>
-                            <span class="d-block">+233 261 527 546</span>
+                            <span class="d-block">{{$order->hospital->address}}</span>
+                            <span class="d-block">{{$order->hospital->phone_number}}</span>
                         </address>
                     </div>
                     <div class="col-md-5">
