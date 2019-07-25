@@ -285,6 +285,7 @@
     $("#approve_form").on("submit", function(e){
         e.preventDefault();
         let data = new FormData(this);
+        console.log({{$user}});
         data.append("user_admin", "{{$user->id}}");
         data.append("approved_by", "{{$user->id}}");
         data.append("_method", "put");
