@@ -167,7 +167,7 @@
                 }
             }
 
-            submit_form("/api/users/update/{{Auth::user()->id}}", "put", form_data, undefined, btn, false);
+            submit_form("/api/users/update/{{Auth::user()->id}}", "put", form_data, undefined, btn, true);
         });
 
     </script>

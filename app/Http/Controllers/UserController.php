@@ -125,15 +125,14 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $user = User::where('id', $request->user)->first();
-        $status = true;
-
         $request->validate([
             'firstname' => 'required',
             'lastname' => 'required',
             'phone_number' => 'required',
         ]);
-        
+
+        $user = User::where('id', $request->user)->first();
+        $status = true;        
         
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
@@ -149,7 +148,7 @@ class UserController extends Controller
         return response()->json(
             [
             'error' => $status,
-            'message' => !$status ? 'User Updated Successfully!' : 'Could not update user'
+            'message' => !$status ? 'Profile updated!' : 'Could not update profile'
             ]
         );
     }
