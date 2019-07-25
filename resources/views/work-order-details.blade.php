@@ -22,6 +22,11 @@
 .image-preview{
     cursor:pointer;
 }
+
+.badge-dark{
+    background-color: #777777;
+    color: #ffffff;
+}
 </style>
 @endsection
 @section('content')
@@ -93,7 +98,7 @@
                                 <div class="col-md-12 text-right">
                                     <label><b>Status</b></label>
                                     @if($work_order->status == 1)
-                                    <span class="badge badge-info">Closed</span>
+                                    <span class="badge badge-dark">Closed</span>
                                     
                                     @elseif($work_order->status == 2)
                                     <span class="badge badge-success">In Progress</span>
