@@ -118,6 +118,13 @@ class PriorityController extends Controller
      */
     public function destroy(Priority $priority)
     {
+        if($priority->work_orders()->count() > 0 || $priority->requests()->count() > 0){
+            return response()->json([
+                "error" => true,
+                "message" => "Could not delete. This priority has requests/work orders that belong to it"
+            ]);
+        }
+        
         $delete = $priority->delete();
 
         if($delete) {
