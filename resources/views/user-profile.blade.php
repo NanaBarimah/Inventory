@@ -93,7 +93,7 @@
                                         <div class="col-md-4 px-1">
                                             <label>Confirm Password</label>
                                             <div class="form-group">
-                                                <input type="password" class="form-control" id="confirm_password">
+                                                <input type="password" class="form-control" name="new_password_confirmation" id="confirm_password">
                                                 <p class="text-danger text-center" style="font-size:11px; display:none;">The passwords you have provided do not match</p>
                                             </div>
                                         </div>

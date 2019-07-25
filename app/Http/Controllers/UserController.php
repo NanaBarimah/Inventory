@@ -133,13 +133,22 @@ class UserController extends Controller
 
         $user = User::where('id', $request->user)->first();
         $status = true;        
+
+        if($request->password_reset == "yes"){
+            $request->validate([
+                "new_password" => "required|confirmed"
+            ]);
+
+           if(Hash::check($request->old_password, $user->password)){
+                $user->password = $request->new_password;
+           }
+        }
         
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
-        $user->email = $request->email;
         $user->phone_number = $request->phone_number;
-        $user->job_title = $request->job_title;
-        $user->role = $request->role;
+
+        
 
         if($user->update()){
             $status = false;
