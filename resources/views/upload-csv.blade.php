@@ -43,7 +43,7 @@
                 url = "/api/part-category/bulk-save";
                 break;
             case "fault category":
-                url = "/api/part-category/bulk-save";
+                url = "/api/fault-category/bulk-save";
                 break;
             case "priority":
                 url = "/api/priority/bulk-save";

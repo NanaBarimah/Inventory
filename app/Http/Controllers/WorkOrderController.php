@@ -74,7 +74,7 @@ class WorkOrderController extends Controller
         $workOrder->id                  = md5($request->title.microtime());
         $workOrder->title               = $request->title;
         $workOrder->description         = $request->description;
-        $workOrder->due_date            = $request->due_date != null ?$date('Y-m-d', strtotime($request->due_date)) : null; 
+        $workOrder->due_date            = $request->due_date != null ? date('Y-m-d', strtotime($request->due_date)) : null; 
         $workOrder->estimated_duration = $request->estimated_duration; 
         $workOrder->priority_id         = $request->priority_id;
         $workOrder->hospital_id         = $request->hospital_id;

@@ -185,7 +185,7 @@
             @if($user->role != "Admin")
             data.append("assigned_to", '{{$user->id}}')
             @endif
-
+            
             data.append("user_admin", '{{$user->id}}');
             let btn = $(this).find('[type="submit"]');
 

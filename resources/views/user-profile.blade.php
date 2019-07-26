@@ -57,11 +57,17 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Username</label>
-                                                <input type="text" class="form-control" placeholder="Username" value="{{Auth::user()->username}}" name="username" readonly>
+                                                <label>Phone number</label>
+                                                <input type="tel" class="form-control" placeholder="Username" value="{{Auth::user()->phone_number}}" name="phone_number"/>
                                             </div>
                                         </div>
-                                        <div class="col-md-8 pr-1">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <input type="text" class="form-control" placeholder="Username" value="{{Auth::user()->email}}" name="email" readonly/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 pr-1">
                                             <div class="form-group">
                                                 <label>Role</label>
                                                 <p class="form-control" disabled>{{Auth::user()->role}}</p>
@@ -87,7 +93,7 @@
                                         <div class="col-md-4 px-1">
                                             <label>Confirm Password</label>
                                             <div class="form-group">
-                                                <input type="password" class="form-control" id="confirm_password">
+                                                <input type="password" class="form-control" name="new_password_confirmation" id="confirm_password">
                                                 <p class="text-danger text-center" style="font-size:11px; display:none;">The passwords you have provided do not match</p>
                                             </div>
                                         </div>
@@ -144,7 +150,7 @@
 
         $('#profile_update_form').on('submit', function(e){
             e.preventDefault();
-            $('#btn_submit').html('<i class="now-ui-icons loader_refresh spin"></i>');
+            const btn = $('#btn_submit');
 
             if($('#old_password').val() == '' && $('#new_password').val() == ''){
                 var form_data = $('#profile_update_form').serialize()+'&password_reset=no';
@@ -161,31 +167,7 @@
                 }
             }
 
-            request = $.ajax({
-                url: '/api/users/update/{{Auth::user()->id}}',
-                data: form_data,
-                method: 'PUT',
-                success: function(data, status){
-                    $('#btn_submit').html('Save');
-                    $('#profile_update_form').find('input').prop('disabled', false);
-                    if(!data.error){
-                        $('#btn_submit').prop('disabled', true);
-                        presentNotification('Profile updated', 'info', 'top', 'right');
-                        setTimeout(function(){
-                            location.reload();
-                        }, 1500);
-                    }else{
-                        presentNotification(data.message, 'danger', 'top', 'right');
-                    }
-                    
-                },
-                error: function(xhr, desc, err){
-                    console.log(form_data);
-                    $('#btn_submit').html('Save');
-                    $('#profile_update_form').find('input').prop('disabled', false);
-                    presentNotification('Could not update profile. Try again.', 'danger', 'top', 'right');
-                }
-            });
+            submit_form("/api/users/update/{{Auth::user()->id}}", "put", form_data, undefined, btn, true);
         });
 
     </script>

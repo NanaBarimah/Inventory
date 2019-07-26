@@ -149,7 +149,7 @@ class AssetCategoryController extends Controller
             // File Details 
             $filename = $file->getClientOriginalName();
             
-            if(strpos($filename, "tynkerbox_category_template.csv") === false ){
+            if(strpos($filename, "tynkerbox_category_template") === false ){
                 return response()->json([
                     "error" => true,
                     "message" => 'Invalid file uploaded'

@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/priorities/upload-csv', 'PriorityController@uploadCSV');
     
     Route::get('/download/category-csv', 'FileController@downloadCategoryCSV');
+    Route::get('/files/download/{file}', 'FileController@download');
 });
 
 
