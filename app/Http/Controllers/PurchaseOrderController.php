@@ -294,7 +294,7 @@ class PurchaseOrderController extends Controller
 
         if($purchaseOrder->save()) {
             $user = User::where('id', $purchaseOrder->added_by)->first();
-            $user->notify(new PurchaseOrderStatus($purchaseOrder, 'Purchase Order with number #'.$purchaseOrder->po_number.' has been declined'));
+            $user->notify(new PurchaseOrderStatus($purchaseOrder, 'Purchase Order with number #'.$purchaseOrder->po_number.' ('.$purchaseOrder->title.') has been declined'));
             
             return response()->json([
                 'error'   => false,

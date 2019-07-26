@@ -21,7 +21,7 @@ class PurchaseOrderStatus extends Notification
     public function __construct($request, $message = null)
     {
         $this->request = $request;
-        $this->message = $message == null ? 'Purchase Order with number #'.$request->po_number.' has been approved'
+        $this->message = $message == null ? 'Purchase Order with number #'.$request->po_number.' ('.$request->title.') has been approved'
         : $message;
     }
 
