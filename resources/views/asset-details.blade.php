@@ -745,7 +745,7 @@
                                     <div class="card-body">
                                     <a href="/inventory/${item.id}"><h6>${item.name}</h6></a>
                                     <div class="card-footer mt-3">
-                                        <a href="javascript:void(0)" class="btn btn-round btn-danger">Remove Equipment</a>
+                                        <a href="javascript:void(0)" onclick="removeChildEquipment('${item.id}', this)" class="btn btn-round btn-danger">Remove Equipment</a>
                                     </div>
                                 </div>
                             </div>
@@ -784,7 +784,7 @@
                                     <h6>${item.name}</h6>
                                     <img src='{{url("/")}}/img/file_types/${extension}.svg' style="width:56px; height:auto; margin: 0 auto;"/>
                                     <div class="card-footer mt-3">
-                                        <a href="javascript:void(0)" class="btn btn-round btn-danger">Download</a>
+                                        <a href="/files/download/${item.id}" target="_blank" class="btn btn-round btn-danger">Download</a>
                                     </div>
                                 </div>
                             </div>
@@ -815,13 +815,12 @@
                             <h6>${data.name}</h6>
                             <img src='{{url("/")}}/img/file_types/${extension}.svg' style="width:56px; height:auto; margin: 0 auto;"/>
                             <div class="card-footer mt-3">
-                                <a href="javascript:void(0)" class="btn btn-round btn-danger">Download</a>
+                                <a href="/files/download/${data.id}" class="btn btn-round btn-danger">Download</a>
                             </div>
                         </div>
                     </div>
                 </div>`;
                 container.append(holder);
-                presentNotification("File successfully added", "info", "top", "right");
             }
             submit_file_form("/api/file/add", "post", data, success, btn, false);
         });
@@ -1025,11 +1024,27 @@
             submit_file_form("/api/asset/{{$asset->id}}/remove-part", "post", data, undefined, btn, true);
         }
 
+        const removeChildEquipment = (id, element) => {
+            let data = new FormData();
+            data.append("child_id", id);
+            let btn = $(element);
+
+            submit_file_form("/api/asset/{{$asset->id}}/remove-child", "post", data, undefined, btn, true);
+        }
+
         $("#new_part").on("submit", function(e){
             e.preventDefault();
             let data = new FormData(this);
             let btn = $(this).find('[type="submit"]');
-            submit_file_form("/api/asset/{{$asset->id}}/assign-part", "post", data, undefined, btn, true);
+            submit_file_form("/api/asset/{{$asset->id}}/assign-parts", "post", data, undefined, btn, true);
         })
+
+        $("#new_asset").on("submit", function(e){
+            e.preventDefault();
+            let data = new FormData(this);
+            let btn = $(this).find('[type="submit"]');
+            submit_file_form("/api/asset/{{$asset->id}}/assign-children", "post", data, undefined, btn, true);
+        })
+        
     </script>
 @endsection

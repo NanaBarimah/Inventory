@@ -241,16 +241,29 @@ class AssetController extends Controller
         return response()->json($asset->children()->get());
     }
 
-    public function assignChildren(Requet $request, Asset $asset){
+    public function assignChild(Request $request, Asset $asset){
         $request->validate([
             "children" => "required"
         ]);
 
-        $asset->children()->attach($request->children);
+        Asset::whereIn("id", $request->children)->update(["parent_id" => $asset->id]);
         
         return response()->json([
             "error" => false,
             "message" => "Child assets assigned"
+        ]);
+    }
+
+    public function assignPart(Request $request, Asset $asset){
+        $request->validate([
+            "parts" => "required"
+        ]);
+
+        $asset->parts()->attach($request->parts);
+        
+        return response()->json([
+            "error" => false,
+            "message" => "Parts assigned"
         ]);
     }
 
@@ -307,6 +320,14 @@ class AssetController extends Controller
     
     public function removePart(Asset $asset, Request $request){
         $asset->parts()->detach($request->part_id);
+        return response()->json([
+            "error" => false,
+            "message" => "Part unlinked successfully"
+        ]);
+    }
+
+    public function removeChild(Asset $asset, Request $request){
+        Asset::where("id", $request->child_id)->update(["parent_id" => null]);
         return response()->json([
             "error" => false,
             "message" => "Part unlinked successfully"

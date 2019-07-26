@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\File;
 use Illuminate\Http\Request;
 
+use Auth;
+
 class FileController extends Controller
 {
     /**
@@ -127,5 +129,13 @@ class FileController extends Controller
 
     public function downloadCategoryCSV(){
         return response()->download(storage_path('docs/tynkerbox_category_template.csv'));
+    }
+
+    public function download(File $file){
+        if(Auth::user()->hospital_id == $file->asset()->first()->hospital_id){
+            return response()->download(\public_path('/files/'.$file->name));
+        }
+
+        return abort(403);
     }
 }
