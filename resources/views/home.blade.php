@@ -252,6 +252,7 @@ $notifications = Auth::user()->unreadNotifications;
     </div>
 </body>
 <script src="{{ asset('js/jquery.min.js') }}"></script>
+@if($auth_user->role == 'Admin' || $auth_user->role == 'Regular Technician')
 <script>
     $(document).ready(function(){
         $.ajax({
@@ -286,4 +287,5 @@ $notifications = Auth::user()->unreadNotifications;
         })
     })
 </script>
+@endif
 </html>

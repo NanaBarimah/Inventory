@@ -100,6 +100,7 @@ Route::middleware('auth:api')->group(function(){
     Route::post("work-order/{workOrder}/add-part", "WorkOrderController@attachSpareParts");
     Route::post("work-order/{workOrder}/update-status", "WorkOrderController@updateStatus");
     Route::post("work-order/{workOrder}/complete", "WorkOrderController@complete");
+    Route::post("work-order/{workOrder}/save-report", "WorkOrderController@report");
 
     Route::post("pm-schedule/add", 'PmScheduleController@store');
     Route::put('pm-schedule/update/{pmSchedule}', 'PmScheduleController@update');

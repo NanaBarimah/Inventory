@@ -99,7 +99,9 @@
                                     <label><b>Status</b></label>
                                     @if($work_order->status == 1)
                                     <span class="badge badge-dark">Closed</span>
-                                    
+                                    @if($work_order->is_complete == 1)
+                                        &nbsp;&nbsp;<i data-toggle="tooltip" title="Marked as complete" class="fas fa-check-circle text-success"></i>
+                                    @endif 
                                     @elseif($work_order->status == 2)
                                     <span class="badge badge-success">In Progress</span>
                                     @elseif($work_order->status == 3)
@@ -308,19 +310,19 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label><b>Total Cost of Maintenance</b></label>
-                                            <input type="number" step="0.01" name="total_cost" class="form-control"/>
+                                            <input type="number" step="0.01" name="cost" class="form-control"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label><b>Work Hours</b></label>
-                                            <input type="number" step="0.01" name="maintenance_duration" class="form-control"/>
+                                            <input type="number" step="0.01" name="actual_duration" class="form-control"/>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label><b>Date completed</b></label>
-                                            <input type="text" name="date_completed" class="form-control datetimepicker"/>
+                                            <input type="text" name="date_completed" class="form-control datepicker"/>
                                         </div>
                                     </div>
                                 </div>
@@ -328,7 +330,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label><b>Extra Notes</b></label>
-                                            <textarea class="form-control" name="extra_notes"></textarea>
+                                            <textarea class="form-control" name="extra_note"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -834,6 +836,15 @@
 
         submit_form("/api/work-order/{{$work_order->id}}/complete", "post", data, undefined, btn, true);
     }
+
+    $("#report_form").on("submit", function(e){
+        e.preventDefault();
+
+        let data = new FormData(this);
+        let btn = $(this).find('[type="submit"]');
+
+        submit_file_form("/api/work-order/{{$work_order->id}}/save-report", "post", data, undefined, btn, true);
+    })
     
     </script>
 @endsection

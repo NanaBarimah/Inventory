@@ -404,6 +404,7 @@
         }
         
         let data = $(this).serialize();
+        const type = $(this).find('[name=type]').val();
         let btn = $(this).find("[type=submit]");
         
         const inital = btn.html();
@@ -419,7 +420,7 @@
 
                 total = data.total;
                 
-                if(label == "status"){
+                if(label == "status" && type == "count"){
                     let pending = data.datasets[4].data.reduce((a, b) => a + b, 0);
                     let open = data.datasets[3].data.reduce((a, b) => a + b, 0);
                     let progress = data.datasets[2].data.reduce((a, b) => a + b, 0);
@@ -436,7 +437,6 @@
                 }
 
                 $("#wo_report_notes").html(`<p><b>${data.type} Work order report</b> for <b>${data.timespan}</b> grouped by <b>${label}</b>.</p>
-                <p>Total number of work orders during this time period is <b>${total}</b></p>
                 `);
 
                 btn.prop("disabled", false);

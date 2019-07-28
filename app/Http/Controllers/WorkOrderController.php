@@ -12,6 +12,7 @@ use Notification;
 use App\Notifications\WorkOrderStatus;
 use App\Notifications\AssignedToEngineer;
 use Auth;
+use DB;
 
 class WorkOrderController extends Controller
 {
@@ -418,5 +419,42 @@ class WorkOrderController extends Controller
             "error" => true,
             "message" => "Could not mark work order as completed"
         ]);
+    }
+
+    public function report(WorkOrder $workOrder, Request $request){
+        $workOrder->date_completed = date('Y-m-d', strtotime($request->date_completed));
+        $workOrder->cost = $request->cost;
+        $workOrder->extra_note = $request->extra_note;
+        $workOrder->actual_duration = $request->actual_duration;
+
+        $asset = $workOrder->asset()->first();
+
+        if($request->status != null){
+            $asset->status = $request->status;
+        }
+
+        if($request->availability != null){
+            $asset->availability = $request->availability;
+        }
+
+        $workOrder->update();
+
+        if($asset->update()){
+            $query = DB::select(DB::raw("SELECT COUNT(id) as kount FROM down_time where asset_id = '$asset->id' AND time_up IS NULL"))[0];
+            if(strtolower($asset->availability) == "operational"){
+               if($query->kount > 0){
+                    $query = DB::statement("UPDATE down_time SET time_up = NOW() where asset_id = '$asset->id' and time_up IS NULL");
+               }
+            }else{
+               if($query->kount == 0){
+                    $query = DB::statement("INSERT INTO down_time(time_down, asset_id) VALUES (NOW(), '$asset->id')");
+               }
+            }
+
+            return response()->json([
+                "error" => false,
+                "message" => "Asset updated"
+            ]);
+        }
     }
 }
