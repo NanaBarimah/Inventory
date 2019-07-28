@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Schedule;
-use DB;
+
+use App\WorkOrder;
+use App\PmSchedule;
+
 use Auth;
+
 class HomeController extends Controller
 {
     /**
@@ -28,5 +31,17 @@ class HomeController extends Controller
         $user = Auth::user();
 
         return view('home', compact('user'));
+    }
+
+    public function loadUpcoming(Request $request){
+        $request->validate([
+            "hospital_id" => "required"
+        ]);
+
+        $pms = PmSchedule::select("id", "due_date", "title")->whereDate("due_date", ">=", date('Y-m-d'))->where("hospital_id", $request->hospital_id)->get();
+        $work_orders = WorkOrder::select("id", "due_date", "title")->whereDate("due_date", ">=", date('Y-m-d'))->where("hospital_id", $request->hospital_id)->get();
+        
+        $data = $work_orders->merge($pms);
+        return response()->json($data);
     }
 }

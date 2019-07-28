@@ -17,6 +17,7 @@ Route::post('user/complete-profile', 'UserController@complete');
 Route::post('request/guest/add', 'RequestsController@guestAdd');
 
 Route::middleware('auth:api')->group(function(){
+    Route::get("home/get-upcoming", "HomeController@loadUpcoming");
     Route::get('users/', 'UserController@index');
     Route::post('users/add_user', 'UserController@store');
     Route::get('users/{user}', 'UserController@show');

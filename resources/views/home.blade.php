@@ -229,7 +229,7 @@ $notifications = Auth::user()->unreadNotifications;
                                     </ol>
                                     <div class="carousel-inner">
                                         <div class="carousel-item active">
-                                            <h6 class="text-muted">No scheduled maintenaces available</h6>
+                                            <h6 class="text-muted"><i class="now-ui-icons education_atom spin"></i></h6>
                                         </div>
                                     </div>
                                     <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -251,5 +251,39 @@ $notifications = Auth::user()->unreadNotifications;
     </div>
     </div>
 </body>
+<script src="{{ asset('js/jquery.min.js') }}"></script>
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            "url" : "/api/home/get-upcoming",
+            "method" : "get",
+            "data" : "hospital_id={{$auth_user->hospital_id}}",
+            "success" : (data) => {
+                if(data.length == 0){
+                    $(".carousel-inner").html(`<div class="carousel-item active">
+                        <h6 class="text-muted">No upcoming maintenances</h6>
+                    </div>`);
+                }else{
+                    $(".carousel-inner").html(null);
+                    for(let i = 0; i < data.length; i++){
+                        let active = "";
 
+                        if(i == 0){
+                            active = "active";
+                        }else{
+                            $(".carousel-indicators").append(`
+                                <li data-target="#carouselExampleIndicators" data-slide-to="${i+1}"></li>
+                            `);
+                        }
+
+                        $(".carousel-inner").append(`<div class="carousel-item ${active}">
+                            <h6 class="text-white">${data[i].title}</h6>
+                            <span class = "text-muted">${data[i].due_date}</span>
+                        </div>`);
+                    }
+                }
+            }
+        })
+    })
+</script>
 </html>
