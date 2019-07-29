@@ -54,7 +54,7 @@ class ReportController extends Controller
         return response()->json([
             "labels" => $labels,
             "datasets" => $datasets
-        ]);
+        ])->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 
     public function workOrderByStatus(Request $request){
@@ -101,7 +101,7 @@ class ReportController extends Controller
                 "datasets" => array(array("name" => "Work orders", "data" => $data)),
                 "timespan" => "all time",
                 "type" => ""
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
 
         }else if($request->interval == "month"){
             $request->validate([
@@ -147,7 +147,7 @@ class ReportController extends Controller
                 ),
                 "timespan" => $request->date,
                 "type" => "Monthly"
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
             
         }else if($request->interval == "year"){
             
@@ -199,7 +199,7 @@ class ReportController extends Controller
                 ),
                 "timespan" => $from.' to '.$to,
                 "type" => "Yearly"
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
         }else if($request->interval == "quarter"){
             $results = WorkOrder::select("status", DB::raw($quantifier.', QUARTER(created_at) as quarter'))
             ->whereYear("created_at", "=", $request->date)->groupBy("status", "quarter")->get();
@@ -240,7 +240,7 @@ class ReportController extends Controller
                 ),
                 "timespan" => $request->date,
                 "type" => "Quarterly"
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
         }else if($request->interval == "daily"){
             $request->validate([
                 "date" => "required"
@@ -290,7 +290,7 @@ class ReportController extends Controller
                 ),
                 "timespan" => $request->date,
                 "type" => "Daily"
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
         }
         
     }
@@ -332,7 +332,7 @@ class ReportController extends Controller
                 "timespan" => "all time",
                 "type" => "",
                 "total" => $total
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
 
         }else if($request->interval == "month"){
             $request->validate([
@@ -377,7 +377,7 @@ class ReportController extends Controller
                 "datasets" => $data,
                 "timespan" => $request->date,
                 "type" => "Monthly"
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
             
         }else if($request->interval == "year"){
             
@@ -425,10 +425,10 @@ class ReportController extends Controller
             return response()->json([
                 "labels" => $labels,
                 "datasets" => $data,
-                "timespan" => $request->date,
+                "timespan" => $from.' to '.$to,
                 "type" => "Year",
                 "total" => $total
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
 
         }else if($request->interval == "quarter"){
             $results = WorkOrder::select("department_id", DB::raw($quantifier.', QUARTER(created_at) as quarter'))->with("department")
@@ -471,7 +471,7 @@ class ReportController extends Controller
                 "timespan" => $request->date,
                 "type" => "Quarterly",
                 "total" => $total
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
 
         }else if($request->interval == "daily"){
             $request->validate([
@@ -521,7 +521,7 @@ class ReportController extends Controller
                 "timespan" => $request->date,
                 "type" => "Daily",
                 "total" => $total
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
         }
     }
 
@@ -562,7 +562,7 @@ class ReportController extends Controller
                 "timespan" => "all time",
                 "type" => "",
                 "total" => $total
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
 
         }else if($request->interval == "month"){
             $request->validate([
@@ -607,7 +607,7 @@ class ReportController extends Controller
                 "datasets" => $data,
                 "timespan" => $request->date,
                 "type" => "Monthly"
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
             
         }else if($request->interval == "year"){
             
@@ -658,7 +658,7 @@ class ReportController extends Controller
                 "timespan" => $request->date,
                 "type" => "Year",
                 "total" => $total
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
 
         }else if($request->interval == "quarter"){
             $results = WorkOrder::select("unit_id", DB::raw($quantifier.', QUARTER(created_at) as quarter'))->with("unit")
@@ -701,7 +701,7 @@ class ReportController extends Controller
                 "timespan" => $request->date,
                 "type" => "Quarterly",
                 "total" => $total
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
 
         }else if($request->interval == "daily"){
             $request->validate([
@@ -751,7 +751,7 @@ class ReportController extends Controller
                 "timespan" => $request->date,
                 "type" => "Daily",
                 "total" => $total
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
         }
     }
 
@@ -788,7 +788,7 @@ class ReportController extends Controller
                 "datasets" => array(array("name" => "Work orders", "data" => $data)),
                 "timespan" => "all time",
                 "type" => ""
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
 
         }else if($request->interval == "month"){
             $request->validate([
@@ -822,7 +822,7 @@ class ReportController extends Controller
                 ),
                 "timespan" => $request->date,
                 "type" => "Monthly"
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
             
         }else if($request->interval == "year"){
             
@@ -861,7 +861,7 @@ class ReportController extends Controller
                 ),
                 "timespan" => $from.' to '.$to,
                 "type" => "Yearly"
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
         }else if($request->interval == "quarter"){
             $results = WorkOrder::select("is_complete", DB::raw($quantifier.', QUARTER(created_at) as quarter'))
             ->whereYear("created_at", "=", $request->date)->groupBy("is_complete", "quarter")->get();
@@ -889,7 +889,7 @@ class ReportController extends Controller
                 ),
                 "timespan" => $request->date,
                 "type" => "Quarterly"
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
         }else if($request->interval == "daily"){
             $request->validate([
                 "date" => "required"
@@ -927,7 +927,7 @@ class ReportController extends Controller
                 ),
                 "timespan" => $request->date,
                 "type" => "Daily"
-            ]);
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
         }
         
     }

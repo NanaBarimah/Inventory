@@ -41,7 +41,7 @@
                         <h6>{{$order->hospital->name}}</h6>
                         <address>
                             <span class="d-block">{{$order->hospital->address}}</span>
-                            <span class="d-block">{{$order->hospital->phone_number}}</span>
+                            <span class="d-block">{{$order->hospital->contact_number}}</span>
                         </address>
                     </div>
                     <div class="col-md-5">

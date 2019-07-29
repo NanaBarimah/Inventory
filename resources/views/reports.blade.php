@@ -28,7 +28,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#maintenance" role="tablist">
+                            <a class="nav-link" data-toggle="tab" href="#maintenance" id="pm_tab" role="tablist">
                                 Preventive maintenances
                             </a>
                         </li>
@@ -269,7 +269,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-7 text-right">
-                                                            <h3 class="info-title" id="maintenance_pending"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
+                                                            <h3 class="info-title" id="maintenance_pending">N/A</h3>
                                                             <h6 class="heading-title">Pending</h6>
                                                         </div>
                                                     </div>
@@ -290,7 +290,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-7 text-right">
-                                                            <h3 class="info-title" id="maintenance_accepted"><i class="now-ui-icons arrows-1_refresh-69 spin"></i></h3>
+                                                            <h3 class="info-title" id="maintenance_accepted">N/A</h3>
                                                             <h6 class="heading-title">Accepted</h6>
                                                         </div>
                                                     </div>
@@ -316,19 +316,19 @@
                                                     <p class="refresh-picker pr-4 text-right">Reset</p>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-12 custom" style="display:none;">
+                                            <div class="col-md-2 col-sm-12 custom-pm" style="display:none;">
                                                 <div class="form-group">
                                                     <label>Start Date</label>
                                                     <input class="datepicker form-control" name="from" required disabled/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-12 custom" style="display:none;">
+                                            <div class="col-md-2 col-sm-12 custom-pm" style="display:none;">
                                                 <div class="form-group">
                                                     <label>End Date</label>
                                                     <input class="datepicker form-control" name="to" required disabled/>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-12" class="date-control" id="year-picker" style="display:none;">
+                                            <div class="col-md-2 col-sm-12" class="date-control" id="year-picker-pm" style="display:none;">
                                                 <div class="form-group">
                                                     <label>Select year</label>
                                                     <select class="selectpicker col-sm-12 resetable-select" data-style="form-control" title="Select year"
@@ -337,7 +337,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2 col-sm-12" class="date-control" id="month-picker" style="display:none;">
+                                            <div class="col-md-2 col-sm-12" class="date-control" id="month-picker-pm" style="display:none;">
                                                 <div class="form-group">
                                                     <label>Select month</label>
                                                     <select class="selectpicker col-sm-12 resetable-select" data-style="form-control" title="Select month"
@@ -383,6 +383,7 @@
 <script src="{{asset('js/chart-options.js')}}"></script>
 <script>
     demo.initDateTimePicker();
+    let hasLoadedPmDates = false;
 
     $("#work_order_report").on("submit", function(e){
         e.preventDefault();
@@ -404,6 +405,7 @@
         }
         
         let data = $(this).serialize();
+        const type = $(this).find('[name=type]').val();
         let btn = $(this).find("[type=submit]");
         
         const inital = btn.html();
@@ -419,7 +421,7 @@
 
                 total = data.total;
                 
-                if(label == "status"){
+                if(label == "status" && type == "count"){
                     let pending = data.datasets[4].data.reduce((a, b) => a + b, 0);
                     let open = data.datasets[3].data.reduce((a, b) => a + b, 0);
                     let progress = data.datasets[2].data.reduce((a, b) => a + b, 0);
@@ -436,7 +438,6 @@
                 }
 
                 $("#wo_report_notes").html(`<p><b>${data.type} Work order report</b> for <b>${data.timespan}</b> grouped by <b>${label}</b>.</p>
-                <p>Total number of work orders during this time period is <b>${total}</b></p>
                 `);
 
                 btn.prop("disabled", false);
@@ -460,7 +461,7 @@
                 $("#lead_open").html(data.datasets[0].data[1]);
                 $("#lead_progress").html(data.datasets[0].data[2]);
                 $("#lead_hold").html(data.datasets[0].data[3]);
-                $("#lead_closed").html(data.datasets[0].data[3]);
+                $("#lead_closed").html(data.datasets[0].data[4]);
 
                 const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
                 $("#wo_report_notes").html(`<p><b>Work order report</b> for <b>all time</b> grouped by <b>status</b>.</p>
@@ -531,5 +532,51 @@
             }
         });
     }
+
+    const loadPmMonths = () => {
+        const monthSelect = $("#month-picker-pm").find("select");
+        monthSelect.html(null);
+        $.ajax({
+            'url' : "/api/reports/get-pm-months",
+            'method' : "get",
+            success : (data) => {
+
+                data.forEach(function(element, index){
+                    monthSelect.append(`<option>${element.month}</option>`);
+                });
+
+                monthSelect.selectpicker("refresh");
+            },
+            error: (xhr) => {
+                       
+            }
+        });
+    }
+
+    const loadPmYears = () => {
+        const yearSelect = $("#year-picker-pm").find("select");
+        yearSelect.html(null);
+        $.ajax({
+            'url' : "/api/reports/get-pm-years",
+            'method' : "get",
+            success : (data) => {
+                data.forEach(function(element, index){
+                    yearSelect.append(`<option>${element.year}</option>`);
+                });
+
+                yearSelect.selectpicker("refresh");
+            },
+            error: (xhr) => {
+                       
+            }
+        });
+    }
+
+    $("#pm_tab").on("shown.bs.tab", function(){
+        if(hasLoadedPmDates == true){
+            loadPmMonths();
+            loadPmYears();
+        }
+    })
 </script>
 @endsection
