@@ -122,6 +122,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get("reports/work-orders/department", "ReportController@workOrderByDepartment");
     Route::get("reports/work-orders/unit", "ReportController@workOrderByUnit");
     Route::get("reports/work-orders/approval", "ReportController@workOrderByApproval");
+    Route::get("reports/preventive-maintenance", "ReportController@getPms");
     Route::get("reports/get-months", "ReportController@getMonths");
     Route::get("reports/get-pm-months", "ReportController@getPmMonths");
     Route::get("reports/get-years", "ReportController@getYears");

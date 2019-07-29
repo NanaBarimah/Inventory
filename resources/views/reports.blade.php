@@ -301,7 +301,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <h6>Filter</h6>
-                                    <form id="work_order_report">
+                                    <form id="pm_report_form">
                                         <div class="row">
                                             <div class="col-md-2 col-sm-12">
                                                 <div class="form-group">
@@ -354,7 +354,20 @@
                                 </div>
                             </div>
                             <div class="row mb-3">
-
+                                <div class="col-md-9 col-sm-12">
+                                    <h6 class="title">Report</h6>
+                                    <div class="col-sm-12">
+                                        <div id="pm-chart">
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-12">
+                                    <h6 class="title">Report Notes</h6>
+                                    <div class="col-sm-12" id="pm_report_notes">
+                                        
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="equipment">
@@ -583,6 +596,41 @@
             $(".custom-pm").find(".datepicker").val(null).prop("disabled", false);
         }
     });
+
+    $("#pm_report_form").on("submit", function(e){
+        e.preventDefault();
+        let url, label;
+        
+        url = "/api/reports/preventive-maintenance";
+        
+        let data = $(this).serialize();
+        let btn = $(this).find("[type=submit]");
+        
+        const inital = btn.html();
+        btn.prop("disabled", true);
+
+        $.ajax({
+            'url' : url,
+            'method' : "get",
+            "data" : data,
+            success : (data) => {
+                loadColumnGraph('pm-chart', data.labels, data.datasets, "Preventive Maintenances", "Preventive maintenance reports");
+                let total;
+
+                total = data.total;
+
+                $("#wo_report_notes").html(`
+                    <p><b>Preventive maintenance report</b> for <b>${data.timespan}</b>.</p>
+                `);
+
+                btn.prop("disabled", false);
+            },
+            error: (xhr) => {  
+                btn.prop("disabled", false);
+            }
+        });
+    });
+
 
     const loadPmMonths = () => {
         const monthSelect = $("#month-picker-pm").find("select");
