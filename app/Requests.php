@@ -69,7 +69,7 @@ class Requests extends Model
         $work_order->hospital_id = $this->hospital_id;
         $work_order->asset_id = $this->asset_id;
         $work_order->priority_id = $this->priority_id;
-        $work_order->department_id = $this->work_id;
+        $work_order->department_id = $this->department_id;
         $work_order->unit_id = $this->unit_id;
 
         return $work_order;

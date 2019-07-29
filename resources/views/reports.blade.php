@@ -307,7 +307,7 @@
                                                 <div class="form-group">
                                                     <label>Date Interval</label>
                                                     <select class="selectpicker col-md-12" data-style="form-control" title="Report type"
-                                                    data-show-tick="true" name="interval" id="wo_report_date">
+                                                    data-show-tick="true" name="interval" id="pm_report_date">
                                                         <option value="daily">Daily</option>
                                                         <option value="month">Monthly</option>
                                                         <option value="quarter">Quarterly</option>
@@ -494,6 +494,7 @@
         }
     });
 
+
     const loadMonths = () => {
         const monthSelect = $("#month-picker").find("select");
         monthSelect.html(null);
@@ -533,25 +534,7 @@
         });
     }
 
-    const loadPmMonths = () => {
-        const monthSelect = $("#month-picker-pm").find("select");
-        monthSelect.html(null);
-        $.ajax({
-            'url' : "/api/reports/get-pm-months",
-            'method' : "get",
-            success : (data) => {
-
-                data.forEach(function(element, index){
-                    monthSelect.append(`<option>${element.month}</option>`);
-                });
-
-                monthSelect.selectpicker("refresh");
-            },
-            error: (xhr) => {
-                       
-            }
-        });
-    }
+    
 
     const loadPmYears = () => {
         const yearSelect = $("#year-picker-pm").find("select");
@@ -573,10 +556,52 @@
     }
 
     $("#pm_tab").on("shown.bs.tab", function(){
-        if(hasLoadedPmDates == true){
+        if(hasLoadedPmDates == false){
             loadPmMonths();
             loadPmYears();
+            hasLoadedPmDates = true;
         }
-    })
+    });
+
+    
+    $("#pm_report_date").on("change", function(){
+        $(".custom-pm, #month-picker-pm, #year-picker-pm").css("display", "none");
+        $("#month-picker-pm, #year-picker-pm").find("select").prop("disabled", true);
+        $("#month-picker-pm, #year-picker-pm").find("select").val(null).selectpicker("refresh");
+        $(".custom-pm").find(".datepicker-pm").val(null).prop("disabled", true);
+
+        if($(this).val() == "daily"){
+            $("#month-picker-pm").find("select").prop("disabled", false);
+            $("#month-picker-pm").css("display", "block");
+            $("#month-picker-pm").find("select").val(null).selectpicker("refresh");
+        }else if($(this).val() == "month" || $(this).val() == "quarter"){
+            $("#year-picker-pm").find("select").prop("disabled", false);
+            $("#year-picker-pm").find("select").val(null).selectpicker("refresh");
+            $("#year-picker-pm").css("display", "block");
+        }else{
+            $(".custom-pm").css("display", "block");
+            $(".custom-pm").find(".datepicker").val(null).prop("disabled", false);
+        }
+    });
+
+    const loadPmMonths = () => {
+        const monthSelect = $("#month-picker-pm").find("select");
+        monthSelect.html(null);
+        $.ajax({
+            'url' : "/api/reports/get-pm-months",
+            'method' : "get",
+            success : (data) => {
+
+                data.forEach(function(element, index){
+                    monthSelect.append(`<option>${element.month}</option>`);
+                });
+
+                monthSelect.selectpicker("refresh");
+            },
+            error: (xhr) => {
+                       
+            }
+        });
+    }
 </script>
 @endsection
