@@ -1,4 +1,4 @@
-@extends('layouts.user-dashboard', ['page_title' => 'Work Order Requests'])
+@extends('layouts.user-dashboard', ['page_title' => 'Work Order'])
 @section('styles')
 <style>
     .text-small{
