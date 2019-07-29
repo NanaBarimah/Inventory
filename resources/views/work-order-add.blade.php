@@ -49,7 +49,7 @@
                                         data-show-tick="true" data-live-search="true" data-show-subtext="true">
                                             @if($hospital->assets->count() > 0)
                                                 @foreach($hospital->assets as $asset)
-                                                <option value="{{$asset->id}}" data-subtext="{{$asset->asset_code}}">{{$asset->serial_number}}</option>
+                                                <option value="{{$asset->id}}" data-subtext="{{$asset->name}}">{{$asset->serial_number}}</option>
                                                 @endforeach
                                             @else
                                                 <option disabled>No equipment recorded</option>

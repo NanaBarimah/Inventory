@@ -992,5 +992,43 @@ class ReportController extends Controller
 
         return $temp;
     }
+
+    public function getPms(Request $request){
+        if($request->interval == null){
+            $statuses = ["Approved", "Pending", "Declined"];
+            $results = PreventiveMaintenance::select("status", DB::raw("COUNT(id) as kount"))->groupBy("status")->get();
+            $data = [0,0,0]; 
+            
+            foreach($results as $result){
+                 switch($result->status){
+                     case 5:
+                         $data[4] = $result->kount != null ? $result->kount : $result->cost;
+                         break;
+                     case 4:
+                         $data[3] = $result->kount != null ? $result->kount : $result->cost;
+                         break;
+                     case 3:
+                         $data[2] = $result->kount != null ? $result->kount : $result->cost;
+                         break;
+                     case 2:
+                         $data[1] = $result->kount != null ? $result->kount : $result->cost;
+                         break;
+                     case 1:
+                         $data[0] = $result->kount != null ? $result->kount : $result->cost;
+                         break;
+                     default: 
+                         break;
+                 }
+             }
+ 
+             return response()->json([
+                 "labels" => $statuses,
+                 "datasets" => array(array("name" => "Work orders", "data" => $data)),
+                 "timespan" => "all time",
+                 "type" => ""
+             ])->setEncodingOptions(JSON_NUMERIC_CHECK);
+ 
+         }
+    }
 }
 
