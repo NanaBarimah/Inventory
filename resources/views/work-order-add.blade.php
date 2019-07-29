@@ -179,14 +179,11 @@
         $("#add_wo_form").on("submit", function(e){
             e.preventDefault();
             let data = new FormData(this);
-            data.append("hospital_id", '{{$user->hospital_id}}');
-            data.append("authenticated_user", "{{$user->id}}");
             
-            @if($user->role != "Admin")
-            data.append("assigned_to", '{{$user->id}}')
-            @endif
+            data.append("hospital_id", '{{Auth::user()->hospital_id}}');
+            data.append("authenticated_user", "{{Auth::user()->id}}");
             
-            data.append("user_admin", '{{$user->id}}');
+            data.append("user_admin", '{{Auth::user()->id}}');
             let btn = $(this).find('[type="submit"]');
 
             const success = (data) => {
