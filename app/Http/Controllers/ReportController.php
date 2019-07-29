@@ -425,7 +425,7 @@ class ReportController extends Controller
             return response()->json([
                 "labels" => $labels,
                 "datasets" => $data,
-                "timespan" => $request->date,
+                "timespan" => $from.' to '.$to,
                 "type" => "Year",
                 "total" => $total
             ])->setEncodingOptions(JSON_NUMERIC_CHECK);
