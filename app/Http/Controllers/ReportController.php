@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 use DB;
 use Auth;
+
 use App\WorkOrder;
+use App\PreventiveMaintenance;
+
 use Carbon\CarbonPeriod;
 use Carbon\Carbon;
 
@@ -967,6 +970,16 @@ class ReportController extends Controller
 
     public function getYears(){
         $years = WorkOrder::select(DB::raw("DISTINCT(YEAR(created_at)) as year"))->get();
+        return response()->json($years);
+    }
+
+    public function getPmMonths(){
+        $months = PreventiveMaintenance::select(DB::raw("DISTINCT(DATE_FORMAT(created_at, '%M %Y')) as month"))->get();
+        return response()->json($months);
+    }
+
+    public function getPmYears(){
+        $years = PreventiveMaintenance::select(DB::raw("DISTINCT(YEAR(created_at)) as year"))->get();
         return response()->json($years);
     }
 
