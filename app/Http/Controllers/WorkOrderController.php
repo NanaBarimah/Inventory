@@ -76,7 +76,7 @@ class WorkOrderController extends Controller
         $workOrder->title               = $request->title;
         $workOrder->description         = $request->description;
         $workOrder->due_date            = $request->due_date != null ? date('Y-m-d', strtotime($request->due_date)) : null; 
-        $workOrder->estimated_duration = $request->estimated_duration; 
+        $workOrder->estimated_duration  = $request->estimated_duration; 
         $workOrder->priority_id         = $request->priority_id;
         $workOrder->hospital_id         = $request->hospital_id;
         $workOrder->fault_category_id   = $request->fault_category_id;
@@ -88,6 +88,7 @@ class WorkOrderController extends Controller
         $workOrder->request_id          = $request->request_id;
         $work_order->cost               = $request->cost;
         $workOrder->asset_id            = $request->asset_id;
+        $workOrder->user_admin          = $request->user_admin;
 
         if($workOrder->assigned_to != null){
             $workOrder->status = 4;
