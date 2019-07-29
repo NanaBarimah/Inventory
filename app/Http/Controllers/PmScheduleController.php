@@ -209,4 +209,26 @@ class PmScheduleController extends Controller
 
         return view();
     }
+
+    public function addTask(PmSchedule $pmSchedule, Request $request){
+        $pmAction = new PmAction();
+        $pmAction->pm_schedule_id = $pmSchedule->id;
+        $pmAction->name = $request->name;
+
+        $pmAction->save();
+
+        return response()->json([
+            "error" => false,
+            "message" => "Task added",
+            "data" => $pmAction
+        ]);
+    }
+
+    public function deleteTask(PmAction $pmAction){
+        $pmAction->delete();
+        return response()->json([
+            "error" => false,
+            "message" => "Task deleted"
+        ]);
+    }
 }

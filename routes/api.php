@@ -104,6 +104,8 @@ Route::middleware('auth:api')->group(function(){
 
     Route::post("pm-schedule/add", 'PmScheduleController@store');
     Route::put('pm-schedule/update/{pmSchedule}', 'PmScheduleController@update');
+    Route::post("pm-schedule/{pmSchedule}/task/add", "PmScheduleController@addTask");
+    Route::delete("pm-schedule/{pmAction}/task/delete", "PmScheduleController@deleteTask");
     
     Route::post("pm/add", "PreventiveMaintenanceController@store");
     Route::post("pm/{preventiveMaintenance}/approve", "PreventiveMaintenanceController@approve");

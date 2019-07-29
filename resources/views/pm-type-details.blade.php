@@ -400,11 +400,7 @@
                                                     <tr>
                                                        <td>{{$action->name}}</td>
                                                        <td class="text-right">
-                                                            <a href="javascript:void(0)" data-toggle="tooltip" title = "Edit">
-                                                                <i class="fas fa-pen text-muted"></i>
-                                                            </a>
-                                                            &nbsp;
-                                                            <a href="javascript:void(0)" data-toggle="tooltip" title = "Remove">
+                                                            <a href="javascript:void(0)" data-toggle="tooltip" title = "Remove" onclick="deleteTask('{{$action->id}}')">
                                                                 <i class="fas fa-trash text-danger"></i>
                                                             </a>
                                                             &nbsp;
@@ -422,11 +418,11 @@
                                                             <label>
                                                                 Task
                                                             </label>
-                                                            <textarea name="name" class="form-control"></textarea>
+                                                            <textarea name="name" class="form-control" required></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-4">
-                                                    
+                                                        <button type="submit" class="btn btn-purple">Add Task</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -485,6 +481,28 @@
         </div>
     </div>
 </div>
+<div id="delete-task" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method = "post" id="delete_task_form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                    <h3>Delete Task</h3>
+                </div>
+                <div class="modal-body">
+                    <h6>Confirm Delete</h6>
+                    <p>Are you sure you want to delete this task from the list of tasks to be performed for this preventive maintenance?</p>
+                    <input type="hidden" id="delete_task_id" name="id"/>
+                </div>
+                <div class="modal-footer mt-4">
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-danger text-right pull-right">Delete</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 @section('scripts')
     <script src="{{asset('js/moment.min.js')}}" type="text/javascript"></script>
@@ -496,6 +514,7 @@
     $("[data-toggle='tooltip']").tooltip();
     demo.initDateTimePicker();
     let table = generateDtbl("#history_table", "No preventive maintenances of this type carried out", "Search");
+    let task_table = generateDtbl("#tasks_table", "No tasks available for this PM schedule", "Search");
     const approve = (id) => {
         $('#pm_id').val(id);
         $('#approve').modal("show");
@@ -562,5 +581,26 @@
 
             $("#unit").selectpicker("refresh");
         });
+
+    $("#add_task").on("submit", function(e){
+        e.preventDefault();
+        console.log("bomboyaya");
+        let data = $(this).serialize();
+        let btn = $(this).find("[type=submit]");
+
+        submit_form("/api/pm-schedule/{{$pmSchedule->id}}/task/add", "post", data, undefined, btn, true);
+    });
+
+    const deleteTask = (id) => {
+        $("#delete_task_id").val(id);
+        $("#delete-task").modal("show")
+    }
+
+    $("#delete_task_form").on("submit", function(e){
+        e.preventDefault();
+        let btn = $(this).find("[type=submit]");
+        const pmAction = $(this).find("[name=id]").val();
+        submit_form(`/api/pm-schedule/${pmAction}/task/delete`, "delete", null, undefined, btn, true);
+    })
     </script>
 @endsection

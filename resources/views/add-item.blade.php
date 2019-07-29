@@ -339,14 +339,14 @@
             let data = new FormData(this);
             data.append("hospital_id", '{{Auth::user()->hospital_id}}');
             
-            const success = (data) => {
+            const success = ({data}) => {
                 setTimeout(() => {
-                    location.replace(`/inventory/${data.data.id}`);
+                    location.replace(`/inventory/${data.id}`);
                 }, 500);
             }
             
             let btn = $(this).find('[type="submit"]');
-            submit_file_form("/api/asset/add", "post", data, success, btn, true);
+            submit_file_form("/api/asset/add", "post", data, success, btn, false);
         });
 
         $(document).ready(function () {
