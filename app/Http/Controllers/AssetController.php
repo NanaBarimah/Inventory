@@ -186,9 +186,9 @@ class AssetController extends Controller
         }
 
         $asset->name = $request->name;
-        $asset->parent_id = $asset->parent_id;
-        $asset->serial_number = $asset->serial_number;
-        $asset->model_number = $asset->model_number;
+        $asset->parent_id = $request->parent_id;
+        $asset->serial_number = $request->serial_number;
+        $asset->model_number = $request->model_number;
         $asset->manufacturer_name = $request->manufacturer_name;
         $asset->description = $request->description;
         $asset->asset_category_id = $request->asset_category_id;

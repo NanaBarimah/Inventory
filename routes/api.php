@@ -53,7 +53,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('assets/{hospital}', 'AssetController@get');
     Route::post('asset/add', 'AssetController@store');
     Route::put('asset/{asset}/update', 'AssetController@update');
-    Route::delete('asset/{asset}/delete', 'AssetController@delete');
+    Route::delete('asset/{asset}/delete', 'AssetController@destroy');
     Route::get('asset/{asset}/get-parts', 'AssetController@getParts');
     Route::get('asset/{asset}/get-files', 'AssetController@getFiles');
     Route::get('asset/{asset}/get-children', 'AssetController@getChildren');
