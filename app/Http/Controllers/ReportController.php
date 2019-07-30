@@ -358,7 +358,7 @@ class ReportController extends Controller
 
                     if($result->department_id == null){
                         $result->department_id = "";
-                    }else{
+                    }else if($result->department_id == $department && $tag == ""){
                         $tag = $result->department->name;
                     }
 
@@ -408,7 +408,7 @@ class ReportController extends Controller
 
                     if($result->department_id == null){
                         $result->department_id = "";
-                    }else{
+                    }else if($result->department_id == $department && $tag == ""){
                         $tag = $result->department->name;
                     }
 
@@ -449,7 +449,7 @@ class ReportController extends Controller
                 foreach($results as $result){
                     if($result->department_id == null){
                         $result->department_id = "";
-                    }else{
+                    }else if($result->department_id == $department && $tag == ""){
                         $tag = $result->department->name;
                     }
 
@@ -497,11 +497,12 @@ class ReportController extends Controller
 
             foreach($departments as $department){
                 $temp = $blueprint;
-                
+                $tag = "";
+
                 foreach($results as $result){
                     if($result->department_id == null){
                         $result->department_id = "";
-                    }else{
+                    }else if($result->department_id == $department && $tag == ""){
                         $tag = $result->department->name;
                     }
 
@@ -583,12 +584,13 @@ class ReportController extends Controller
 
             foreach($units as $unit){
                 $temp = array(0,0,0,0,0,0,0,0,0,0,0);
+                $tag = "";
 
                 foreach($results as $result){
 
                     if($result->unit_id == null){
                         $result->unit_id = "";
-                    }else{
+                    }else if($result->unit_id == $unit && $tag == ""){
                         $tag = $result->unit->name;
                     }
 
@@ -638,7 +640,7 @@ class ReportController extends Controller
 
                     if($result->unit_id == null){
                         $result->unit_id = "";
-                    }else{
+                    }else if($result->unit_id == $unit && $tag == ""){
                         $tag = $result->unit->name;
                     }
 
@@ -679,7 +681,7 @@ class ReportController extends Controller
                 foreach($results as $result){
                     if($result->unit_id == null){
                         $result->unit_id = "";
-                    }else{
+                    }else if($result->unit_id == $unit && $tag == ""){
                         $tag = $result->unit->name;
                     }
 
@@ -731,7 +733,7 @@ class ReportController extends Controller
                 foreach($results as $result){
                     if($result->unit_id == null){
                         $result->unit_id = "";
-                    }else{
+                    }else if($result->unit_id == $unit && $tag == ""){
                         $tag = $result->unit->name;
                     }
 
