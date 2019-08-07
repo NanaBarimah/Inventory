@@ -38,11 +38,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#pos" role="tablist">
-                                Purchase orders
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#technicians" role="tablist">
                                 Technicians
                             </a>
@@ -190,7 +185,7 @@
                                             </div>
                                             <div class="col-md-2 col-sm-12">
                                                 <div class="form-group">
-                                                    <label>Date Interval</label>
+                                                    <label>Type</label>
                                                     <select class="selectpicker col-md-12" data-style="form-control" title="Report type"
                                                     data-show-tick="true" name="interval" id="wo_report_date">
                                                         <option value="daily">Daily</option>
@@ -257,48 +252,6 @@
                         </div>
                         <div class="tab-pane" id="maintenance">
                             <div class="row mb-3">
-                                <div class="col-md-2">
-                                    <div class="card card-stats">
-                                        <div class="card-body ">
-                                            <div class="statistics statistics-horizontal">
-                                                <div class="info info-horizontal">
-                                                    <div class="row">
-                                                        <div class="col-5">
-                                                            <div class="icon icon-warning icon-circle">
-                                                                <i class="fas fa-arrow-down"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-7 text-right">
-                                                            <h3 class="info-title" id="maintenance_pending">N/A</h3>
-                                                            <h6 class="heading-title">Pending</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="card card-stats">
-                                        <div class="card-body ">
-                                            <div class="statistics statistics-horizontal">
-                                                <div class="info info-horizontal">
-                                                    <div class="row">
-                                                        <div class="col-5">
-                                                            <div class="icon icon-info icon-circle">
-                                                                <i class="fas fa-arrow-up"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-7 text-right">
-                                                            <h3 class="info-title" id="maintenance_accepted">N/A</h3>
-                                                            <h6 class="heading-title">Accepted</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-sm-12">
                                     <h6>Filter</h6>
                                     <form id="pm_report_form">
@@ -312,6 +265,7 @@
                                                         <option value="month">Monthly</option>
                                                         <option value="quarter">Quarterly</option>
                                                         <option value="year">Yearly</option>
+                                                        <option value="type">Type</option>
                                                     </select>
                                                     <p class="refresh-picker pr-4 text-right">Reset</p>
                                                 </div>
@@ -371,13 +325,108 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="equipment">
-                            
-                        </div>
-                        <div class="tab-pane" id="pos">
-                        
+                            <div class="row mb-4">
+                                <div class="col-sm-12">
+                                    <h6>Filter</h6>
+                                    <form id="equipment_report_form">
+                                        <div class="row">
+                                            <div class="col-md-2 col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Type</label>
+                                                    <select class="selectpicker col-md-12" data-style="form-control" title="Report type"
+                                                    data-show-tick="true" name="type" required>
+                                                        <option value="status">Status</option>
+                                                        <option value="availability">Availability</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-12">
+                                                <div class="form-group">
+                                                    <label>Group By</label>
+                                                    <select class="selectpicker col-md-12" data-style="form-control" title="Report type"
+                                                    data-show-tick="true" name="group">
+                                                        <option value="category">Category</option>
+                                                        <option value="department">Department</option>
+                                                        <option value="unit">Unit</option>
+                                                    </select>
+                                                    <p class="refresh-picker pr-4 text-right">Reset</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 mt-2 pt-1">
+                                                <button type="submit" class="btn btn-round btn-purple"><b>Go</b></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-9 col-sm-12">
+                                    <h6 class="title">Report</h6>
+                                    <div class="col-sm-12">
+                                        <div id="equipment-chart">
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-12">
+                                    <h6 class="title">Report Notes</h6>
+                                    <div class="col-sm-12" id="equipment_report_notes">
+                                        
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane" id="technicians">
-                        
+                            <div class="row mb-4">
+                                <div class="col-sm-12">
+                                    <h6>Filter</h6>
+                                    <form id="technician_report_form">
+                                        <div class="row">
+                                            <div class="col-md-2 col-sm-12 custom">
+                                                <div class="form-group">
+                                                    <label>Start Date</label>
+                                                    <input class="datepicker form-control" name="from" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 col-sm-12 custom">
+                                                <div class="form-group">
+                                                    <label>End Date</label>
+                                                    <input class="datepicker form-control" name="to" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2 mt-2 pt-1">
+                                                <button type="submit" class="btn btn-round btn-purple"><b>Go</b></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    <h6 class="title">Report</h6>
+                                    <div class="col-sm-12">
+                                        <table id="technician_reports" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Role</th>
+                                                    <th>Work Orders Assigned</th>
+                                                    <th>Teams Assigned</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Role</th>
+                                                    <th>Work Orders Assigned</th>
+                                                    <th>Teams Assigned</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -387,6 +436,7 @@
 </div>
 @endsection
 @section('scripts')
+<script src="{{asset('js/datatables.js')}}" type="text/javascript"></script>
 <script src="{{asset('js/moment.min.js')}}" type="text/javascript"></script>
 <script src="{{asset('js/bootstrap-datetimepicker.js')}}" type="text/javascript"></script>
 <script src="{{asset('js/highcharts.js')}}"></script>
@@ -397,7 +447,7 @@
 <script>
     demo.initDateTimePicker();
     let hasLoadedPmDates = false;
-
+    const table = generateDtbl("#technician_reports", "No data loaded");
     $("#work_order_report").on("submit", function(e){
         e.preventDefault();
         let url, label;
@@ -417,7 +467,7 @@
             label = "unit";
         }
         
-        let data = $(this).serialize();
+        let data = $(this).serialize()+"&hospital_id={{Auth::user()->hospital_id}}";
         const type = $(this).find('[name=type]').val();
         let btn = $(this).find("[type=submit]");
         
@@ -468,6 +518,7 @@
         $.ajax({
             'url' : "/api/reports/work-orders/index",
             'method' : "get",
+            'data' : "hospital_id={{Auth::user()->hospital_id}}",
             success : (data) => {
                 loadColumnGraph('wo-chart', data.labels, data.datasets, "Work orders", "Work order reports");
                 $("#lead_pending").html(data.datasets[0].data[0]);
@@ -514,6 +565,7 @@
         $.ajax({
             'url' : "/api/reports/get-months",
             'method' : "get",
+            'data' : "hospital_id={{Auth::user()->hospital_id}}",
             success : (data) => {
 
                 data.forEach(function(element, index){
@@ -534,6 +586,7 @@
         $.ajax({
             'url' : "/api/reports/get-years",
             'method' : "get",
+            'data' : "hospital_id={{Auth::user()->hospital_id}}",
             success : (data) => {
                 data.forEach(function(element, index){
                     yearSelect.append(`<option>${element.year}</option>`);
@@ -555,6 +608,7 @@
         $.ajax({
             'url' : "/api/reports/get-pm-years",
             'method' : "get",
+            'data' : "hospital_id={{Auth::user()->hospital_id}}",
             success : (data) => {
                 data.forEach(function(element, index){
                     yearSelect.append(`<option>${element.year}</option>`);
@@ -581,13 +635,13 @@
         $(".custom-pm, #month-picker-pm, #year-picker-pm").css("display", "none");
         $("#month-picker-pm, #year-picker-pm").find("select").prop("disabled", true);
         $("#month-picker-pm, #year-picker-pm").find("select").val(null).selectpicker("refresh");
-        $(".custom-pm").find(".datepicker-pm").val(null).prop("disabled", true);
+        $(".custom-pm").find(".datepicker").val(null).prop("disabled", true);
 
         if($(this).val() == "daily"){
             $("#month-picker-pm").find("select").prop("disabled", false);
             $("#month-picker-pm").css("display", "block");
             $("#month-picker-pm").find("select").val(null).selectpicker("refresh");
-        }else if($(this).val() == "month" || $(this).val() == "quarter"){
+        }else if($(this).val() == "month" || $(this).val() == "quarter" || $(this).val() == "type"){
             $("#year-picker-pm").find("select").prop("disabled", false);
             $("#year-picker-pm").find("select").val(null).selectpicker("refresh");
             $("#year-picker-pm").css("display", "block");
@@ -603,7 +657,7 @@
         
         url = "/api/reports/preventive-maintenance";
         
-        let data = $(this).serialize();
+        let data = $(this).serialize()+"&hospital_id={{Auth::user()->hospital_id}}";
         let btn = $(this).find("[type=submit]");
         
         const inital = btn.html();
@@ -614,7 +668,11 @@
             'method' : "get",
             "data" : data,
             success : (data) => {
-                loadColumnGraph('pm-chart', data.labels, data.datasets, "Preventive Maintenances", "Preventive maintenance reports");
+                if(data.type.toLowerCase() == "type"){
+                    loadPieGraph('pm-chart', data.datasets, "Preventive Maintenances", "Preventive maintenance reports");
+                }else{
+                    loadColumnGraph('pm-chart', data.labels, data.datasets, "Preventive Maintenances", "Preventive maintenance reports");
+                }
                 let total;
 
                 total = data.total;
@@ -638,6 +696,7 @@
         $.ajax({
             'url' : "/api/reports/get-pm-months",
             'method' : "get",
+            'data' : "hospital_id={{Auth::user()->hospital_id}}",
             success : (data) => {
 
                 data.forEach(function(element, index){
@@ -651,5 +710,67 @@
             }
         });
     }
+
+    $("#equipment_report_form").on("submit", function(e){
+        e.preventDefault();
+        let url, label;
+        
+        url = "/api/reports/equipment";
+        
+        let data = $(this).serialize()+"&hospital_id={{Auth::user()->hospital_id}}";
+        let btn = $(this).find("[type=submit]");
+        
+        const inital = btn.html();
+        btn.prop("disabled", true);
+
+        $.ajax({
+            'url' : url,
+            'method' : "get",
+            "data" : data,
+            success : (data) => {
+                if(data.chart == "pie"){
+                    loadPieGraph('equipment-chart', data.datasets, "Equipment", "Equipment reports");
+                }else{
+                    loadColumnGraph('equipment-chart', data.labels, data.datasets, "Equipment", "Equipment reports");
+                }
+
+                btn.prop("disabled", false);
+            },
+            error: (xhr) => {  
+                btn.prop("disabled", false);
+            }
+        });
+    });
+    $("#technician_report_form").on("submit", function(e){
+        e.preventDefault();
+        let url, label;
+        
+        url = "/api/reports/technicians";
+        
+        let data = $(this).serialize()+"&hospital_id={{Auth::user()->hospital_id}}";
+        let btn = $(this).find("[type=submit]");
+        
+        const inital = btn.html();
+        btn.prop("disabled", true);
+
+        $.ajax({
+            'url' : url,
+            'method' : "get",
+            "data" : data,
+            success : (data) => {
+                table.clear().draw();
+                let table_data = [];
+                data.forEach(function(user, index){
+                    let temp = [`${user.firstname} ${user.lastname}`, user.role, user.work_orders_count, user.work_order_teams_count];
+                    table_data.push(temp);
+                });
+                table.rows.add(table_data).draw();
+                btn.prop("disabled", false);
+            },
+            error: (xhr) => {  
+                btn.prop("disabled", false);
+            }
+        });
+    });
 </script>
 @endsection

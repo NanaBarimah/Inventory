@@ -6,6 +6,8 @@ use Auth;
 
 use App\WorkOrder;
 use App\PreventiveMaintenance;
+use App\Asset;
+use App\User;
 
 use Carbon\CarbonPeriod;
 use Carbon\Carbon;
@@ -24,8 +26,12 @@ class ReportController extends Controller
         }
     }
 
-    public function workOrderIndex(){
-        $work_orders = WorkOrder::select("status", DB::raw("COUNT(id) as kount"))->groupBy("status")->get();
+    public function workOrderIndex(Request $request){
+        $request->validate([
+            "hospital_id" => "required"
+        ]);
+
+        $work_orders = WorkOrder::select("status", DB::raw("COUNT(id) as kount"))->where("hospital_id", $request->hospital_id)->groupBy("status")->get();
         
         $labels = ["Pending", "Open", "In progress", "On hold", "Closed"];
         $data = [0, 0, 0, 0, 0];
@@ -62,7 +68,8 @@ class ReportController extends Controller
 
     public function workOrderByStatus(Request $request){
         $request->validate([
-            "type" => "required"
+            "type" => "required",
+            "hospital_id" => "required"
         ]);
 
         if($request->type == "cost"){
@@ -74,7 +81,7 @@ class ReportController extends Controller
         
         if($request->interval == null){
            $statuses = ["Closed", "On hold", "In progress", "Open", "Pending"];
-           $results = WorkOrder::select("status", DB::raw($quantifier))->groupBy("status")->get();
+           $results = WorkOrder::select("status", DB::raw($quantifier))->where("hospital_id", $request->hospital_id)->groupBy("status")->get();
            $data = [0,0,0,0,0]; 
            
            foreach($results as $result){
@@ -112,7 +119,7 @@ class ReportController extends Controller
             ]);
 
             $results = WorkOrder::select("status", DB::raw($quantifier.', MONTH(created_at) as month'))
-            ->whereYear("created_at", "=", $request->date)->groupBy("status", "month")->get();
+            ->whereYear("created_at", "=", $request->date)->where("hospital_id", $request->hospital_id)->groupBy("status", "month")->get();
 
             
             $labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -159,7 +166,7 @@ class ReportController extends Controller
             
             
             $results = WorkOrder::select("status", DB::raw($quantifier.', DATE_FORMAT(created_at, "%Y") as year'))
-            ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->groupBy("status", "year")->get();
+            ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->where("hospital_id", $request->hosptial_id)->groupBy("status", "year")->get();
             
             $labels = $this->yearsBetween($from, $to);
             $open = $pending = $in_progress = $on_hold = $closed = array();
@@ -205,7 +212,7 @@ class ReportController extends Controller
             ])->setEncodingOptions(JSON_NUMERIC_CHECK);
         }else if($request->interval == "quarter"){
             $results = WorkOrder::select("status", DB::raw($quantifier.', QUARTER(created_at) as quarter'))
-            ->whereYear("created_at", "=", $request->date)->groupBy("status", "quarter")->get();
+            ->whereYear("created_at", "=", $request->date)->where("hospital_id", $request->hospital_id)->groupBy("status", "quarter")->get();
 
             $labels = ["January - March ".$request->date, "April - June ".$request->date, "July - September ".$request->date, "October - December ".$request->date];
             $open = $pending = $in_progress = $on_hold = $closed = [0,0,0,0];
@@ -255,7 +262,7 @@ class ReportController extends Controller
             $daysInMonth = Carbon::parse($date)->daysInMonth;
 
             $results = WorkOrder::select("status", DB::raw($quantifier.', DAY(created_at) as day'))
-            ->whereRaw(DB::raw("DATE_FORMAT(created_at, '%M %Y') = '$date'"))->groupBy("status", "day")->get();
+            ->whereRaw(DB::raw("DATE_FORMAT(created_at, '%M %Y') = '$date'"))->where("hospital_id", $request->hospital_id)->groupBy("status", "day")->get();
 
             $labels = $this->createArrayOfDays($daysInMonth);
             $open = $pending = $in_progress = $on_hold = $closed = $this->createNEmptyArray($daysInMonth);
@@ -300,7 +307,8 @@ class ReportController extends Controller
 
     public function workOrderByDepartment(Request $request){
         $request->validate([
-            "type" => "required"
+            "type" => "required",
+            "hospital_id" => "required"
         ]);
 
         if($request->type == "cost"){
@@ -311,7 +319,7 @@ class ReportController extends Controller
         
         
         if($request->interval == null){
-           $results = WorkOrder::select("department_id", DB::raw($quantifier))->with("department")->groupBy("department_id")->get();
+           $results = WorkOrder::select("department_id", DB::raw($quantifier))->with("department")->where("hospital_id", $request->hospital_id)->groupBy("department_id")->get();
            
            $labels = array();
            $data = array();
@@ -343,7 +351,7 @@ class ReportController extends Controller
             ]);
 
             $results = WorkOrder::select("department_id", DB::raw($quantifier.', MONTH(created_at) as mth'))->with("department")
-            ->whereYear("created_at", "=", $request->date)->groupBy("department_id", "mth")->get();
+            ->whereYear("created_at", "=", $request->date)->where("hospital_id", $request->hospital_id)->groupBy("department_id", "mth")->get();
             
             $labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             $departments = array_keys($results->groupBy("department_id")->toArray());
@@ -353,12 +361,12 @@ class ReportController extends Controller
 
             foreach($departments as $department){
                 $temp = array(0,0,0,0,0,0,0,0,0,0,0);
-
+                
                 foreach($results as $result){
 
                     if($result->department_id == null){
                         $result->department_id = "";
-                    }else if($result->department_id == $department && $tag == ""){
+                    }else if($result->department_id == $department){
                         $tag = $result->department->name;
                     }
 
@@ -389,7 +397,7 @@ class ReportController extends Controller
             
             
             $results = WorkOrder::select("department_id", DB::raw($quantifier.', YEAR(created_at) as year'))->with("department")
-            ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->groupBy("department_id", "year")->get();
+            ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->where("hospital_id", $request->hospital_id)->groupBy("department_id", "year")->get();
             
             $labels = $this->yearsBetween($from, $to);
             $start = $labels[0];
@@ -408,7 +416,7 @@ class ReportController extends Controller
 
                     if($result->department_id == null){
                         $result->department_id = "";
-                    }else if($result->department_id == $department && $tag == ""){
+                    }else if($result->department_id == $department){
                         $tag = $result->department->name;
                     }
 
@@ -435,7 +443,7 @@ class ReportController extends Controller
 
         }else if($request->interval == "quarter"){
             $results = WorkOrder::select("department_id", DB::raw($quantifier.', QUARTER(created_at) as quarter'))->with("department")
-            ->whereYear("created_at", "=", $request->date)->groupBy("department_id", "quarter")->get();
+            ->whereYear("created_at", "=", $request->date)->where("hospital_id", $request->hospital_id)->groupBy("department_id", "quarter")->get();
 
             $labels = ["January - March ".$request->date, "April - June ".$request->date, "July - September ".$request->date, "October - December ".$request->date];
             $departments = array_keys($results->groupBy("department_id")->toArray());
@@ -449,7 +457,7 @@ class ReportController extends Controller
                 foreach($results as $result){
                     if($result->department_id == null){
                         $result->department_id = "";
-                    }else if($result->department_id == $department && $tag == ""){
+                    }else if($result->department_id == $department){
                         $tag = $result->department->name;
                     }
 
@@ -484,7 +492,7 @@ class ReportController extends Controller
             $date = $request->date;
 
             $results = WorkOrder::select("department_id", DB::raw($quantifier.', DAY(created_at) as day'))->with("department")
-            ->whereRaw(DB::raw("DATE_FORMAT(created_at, '%M %Y') = '$date'"))->groupBy("department_id", "day")->get();
+            ->whereRaw(DB::raw("DATE_FORMAT(created_at, '%M %Y') = '$date'"))->where("hospital_id", $request->hospital_id)->groupBy("department_id", "day")->get();
 
             $daysInMonth = Carbon::parse($date)->daysInMonth;
             
@@ -502,7 +510,7 @@ class ReportController extends Controller
                 foreach($results as $result){
                     if($result->department_id == null){
                         $result->department_id = "";
-                    }else if($result->department_id == $department && $tag == ""){
+                    }else if($result->department_id == $department){
                         $tag = $result->department->name;
                     }
 
@@ -531,7 +539,8 @@ class ReportController extends Controller
 
     public function workOrderByUnit(Request $request){
         $request->validate([
-            "type" => "required"
+            "type" => "required",
+            "hospital_id" => "required"
         ]);
 
         if($request->type == "cost"){
@@ -542,7 +551,7 @@ class ReportController extends Controller
         
         
         if($request->interval == null){
-           $results = WorkOrder::select("unit_id", DB::raw($quantifier))->with("unit")->groupBy("unit_id")->get();
+           $results = WorkOrder::select("unit_id", DB::raw($quantifier))->where("hospital_id", $request->hospital_id)->with("unit")->groupBy("unit_id")->get();
            
            $labels = array();
            $data = array();
@@ -574,7 +583,7 @@ class ReportController extends Controller
             ]);
 
             $results = WorkOrder::select("unit_id", DB::raw($quantifier.', MONTH(created_at) as mth'))->with("unit")
-            ->whereYear("created_at", "=", $request->date)->groupBy("unit_id", "mth")->get();
+            ->whereYear("created_at", "=", $request->date)->where("hospital_id", $request->hospital_id)->groupBy("unit_id", "mth")->get();
             
             $labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             $units = array_keys($results->groupBy("unit_id")->toArray());
@@ -621,7 +630,7 @@ class ReportController extends Controller
             
             
             $results = WorkOrder::select("unit_id", DB::raw($quantifier.', YEAR(created_at) as year'))->with("unit")
-            ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->groupBy("unit_id", "year")->get();
+            ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->where("hospital_id", $request->hospital_id)->groupBy("unit_id", "year")->get();
             
             $labels = $this->yearsBetween($from, $to);
             $start = $labels[0];
@@ -640,7 +649,7 @@ class ReportController extends Controller
 
                     if($result->unit_id == null){
                         $result->unit_id = "";
-                    }else if($result->unit_id == $unit && $tag == ""){
+                    }else if($result->unit_id == $unit){
                         $tag = $result->unit->name;
                     }
 
@@ -667,7 +676,7 @@ class ReportController extends Controller
 
         }else if($request->interval == "quarter"){
             $results = WorkOrder::select("unit_id", DB::raw($quantifier.', QUARTER(created_at) as quarter'))->with("unit")
-            ->whereYear("created_at", "=", $request->date)->groupBy("unit_id", "quarter")->get();
+            ->whereYear("created_at", "=", $request->date)->where("hospital_id", $request->hospital_id)->groupBy("unit_id", "quarter")->get();
 
             $labels = ["January - March ".$request->date, "April - June ".$request->date, "July - September ".$request->date, "October - December ".$request->date];
             $units = array_keys($results->groupBy("unit_id")->toArray());
@@ -681,7 +690,7 @@ class ReportController extends Controller
                 foreach($results as $result){
                     if($result->unit_id == null){
                         $result->unit_id = "";
-                    }else if($result->unit_id == $unit && $tag == ""){
+                    }else if($result->unit_id == $unit){
                         $tag = $result->unit->name;
                     }
 
@@ -716,7 +725,7 @@ class ReportController extends Controller
             $date = $request->date;
 
             $results = WorkOrder::select("unit_id", DB::raw($quantifier.', DAY(created_at) as day'))->with("unit")
-            ->whereRaw(DB::raw("DATE_FORMAT(created_at, '%M %Y') = '$date'"))->groupBy("unit_id", "day")->get();
+            ->whereRaw(DB::raw("DATE_FORMAT(created_at, '%M %Y') = '$date'"))->where("hospital_id", $request->hospital_id)->groupBy("unit_id", "day")->get();
 
             $daysInMonth = Carbon::parse($date)->daysInMonth;
             
@@ -733,7 +742,7 @@ class ReportController extends Controller
                 foreach($results as $result){
                     if($result->unit_id == null){
                         $result->unit_id = "";
-                    }else if($result->unit_id == $unit && $tag == ""){
+                    }else if($result->unit_id == $unit){
                         $tag = $result->unit->name;
                     }
 
@@ -836,7 +845,7 @@ class ReportController extends Controller
             
             
             $results = WorkOrder::select("is_complete", DB::raw($quantifier.', YEAR(created_at) as year'))
-            ->whereDate("created_at", ">=", $from)->whereDate("is_complete", "<=", $to)->groupBy("status", "year")->get();
+            ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->groupBy("status", "year")->get();
             
             $labels = $this->yearsBetween($from, $to);
             $start = $labels[0];
@@ -965,23 +974,29 @@ class ReportController extends Controller
         return $temp;
     }
 
-    public function getMonths(){
-        $months = WorkOrder::select(DB::raw("DISTINCT(DATE_FORMAT(created_at, '%M %Y')) as month"))->get();
+    public function getMonths(Request $request){
+        $months = WorkOrder::select(DB::raw("DISTINCT(DATE_FORMAT(created_at, '%M %Y')) as month"))->where("hospital_id", $request->hospital_id)->get();
         return response()->json($months);
     }
 
-    public function getYears(){
-        $years = WorkOrder::select(DB::raw("DISTINCT(YEAR(created_at)) as year"))->get();
+    public function getYears(Request $request){
+        $years = WorkOrder::select(DB::raw("DISTINCT(YEAR(created_at)) as year"))->where("hospital_id", $request->hospital_id)->get();
         return response()->json($years);
     }
 
-    public function getPmMonths(){
-        $months = PreventiveMaintenance::select(DB::raw("DISTINCT(DATE_FORMAT(created_at, '%M %Y')) as month"))->get();
+    public function getPmMonths(Request $request){
+        $months = PreventiveMaintenance::select(DB::raw("DISTINCT(DATE_FORMAT(created_at, '%M %Y')) as month"))
+        ->whereHas("pm_schedule", function($q)use($request){
+            $q->where("hospital_id", $request->hospital_id);
+        })->get();
         return response()->json($months);
     }
 
-    public function getPmYears(){
-        $years = PreventiveMaintenance::select(DB::raw("DISTINCT(YEAR(created_at)) as year"))->get();
+    public function getPmYears(Request $request){
+        $years = PreventiveMaintenance::select(DB::raw("DISTINCT(YEAR(created_at)) as year"))
+        ->whereHas("pm_schedule", function($q)use($request){
+            $q->where("hospital_id", $request->hospital_id);
+        })->get();
         return response()->json($years);
     }
 
@@ -996,24 +1011,31 @@ class ReportController extends Controller
     }
 
     public function getPms(Request $request){
+        $request->validate([
+            "hospital_id" => "required"
+        ]);
+
         if($request->interval == null){
             $statuses = ["Approved", "Pending", "Declined"];
-            $results = PreventiveMaintenance::select("is_completed as status", DB::raw("COUNT(id) as kount"))->groupBy("status")->get();
+            $results = PreventiveMaintenance::select("is_completed as status", DB::raw("COUNT(id) as kount"))
+            ->whereHas("pm_schedule", function($q)use($request){
+                $q->where("hospital_id", $request->hospital_id);
+            })->groupBy("status")->get();
             $data = [0,0,0]; 
             
             foreach($results as $result){
                  switch($result->status){
                      case 2:
-                         $data[1] = $result->kount;
-                         break;
+                        $data[1] = $result->kount;
+                        break;
                      case 1:
-                         $data[0] = $result->kount;
-                         break;
+                        $data[0] = $result->kount;
+                        break;
                      case 0:
-                         $data[2] = $result->kount;
-                         break;
+                        $data[2] = $result->kount;
+                        break;
                      default: 
-                         break;
+                        break;
                  }
              }
  
@@ -1024,7 +1046,528 @@ class ReportController extends Controller
                  "type" => ""
              ])->setEncodingOptions(JSON_NUMERIC_CHECK);
  
+         }else if($request->interval == "month"){
+            $request->validate([
+                "date" => "required"
+            ]);
+
+            $results = PreventiveMaintenance::select("is_completed as status", DB::raw("COUNT(id) as kount, MONTH(created_at) as mth"))
+            ->whereYear("created_at", "=", $request->date)->whereHas("pm_schedule", function($q)use($request){
+                $q->where("hospital_id", $request->hospital_id);
+            })->groupBy("status", "mth")->get();
+            
+            $labels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            $statuses = ["Approved", "Pending", "Declined"];
+            
+            $approvals = $pendings = $declines = array(0,0,0,0,0,0,0,0,0,0,0);
+
+            $total = 0;
+
+            foreach($results as $result){
+                switch($result->status){
+                    case 0:
+                        $declines[$result->mth - 1] = $result->kount;
+                        $total+= $result->kount;
+                        break;
+                    case 1: 
+                        $approvals[$result->mth - 1] = $result->kount;
+                        $total+= $result->kount;
+                        break;
+                    case 2:
+                        $pendings[$result->mth - 1] = $result->kount;
+                        $total+= $result->kount;
+                        break;
+                    default:
+                        break;
+                } 
+            }
+
+            $data = array(
+                array(
+                    "name" => "Pending",
+                    "type" => "line",
+                    "data" => $pendings
+                ),
+                array(
+                    "name" => "Approved",
+                    "type" => "line",
+                    "data" => $approvals
+                ),
+                array(
+                    "name" => "Declined",
+                    "type" => "line",
+                    "data" => $declines
+                ),
+            );
+
+            return response()->json([
+                "labels" => $labels,
+                "datasets" => $data,
+                "timespan" => $request->date,
+                "type" => "Monthly"
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
+         }else if($request->interval == "year"){
+            $from = date('Y-m-d', strtotime($request->from));
+            $to = date('Y-m-d', strtotime($request->to));
+            
+            
+            $results = PreventiveMaintenance::select("is_completed as status", DB::raw('COUNT(id) as kount, YEAR(created_at) as year'))
+            ->whereDate("created_at", ">=", $from)->whereDate("created_at", "<=", $to)->whereHas("pm_schedule", function($q)use($request){
+                $q->where("hospital_id", $request->hospital_id);
+            })->groupBy("status", "year")->get();
+            
+            $labels = $this->yearsBetween($from, $to);
+            $start = $labels[0];
+
+            $approved = $pending = $declined = $this->createNEmptyArray(count($labels));
+
+            foreach($results as $result){
+                $index = $result->year - $start;
+
+                switch($result->status){
+                    case 0:
+                        $declined[$index] = $result->kount;
+                        break;
+                    case 1:
+                        $approved[$index] = $result->kount;
+                        break;
+                    case 2:
+                        $pending[$index] = $result->kount;
+                        break;
+                    default: 
+                        break;
+                }
+            }
+
+            return response()->json([
+                "labels" => $labels,
+                "datasets" => array(
+                    array("name" => "Pending" , "data" => $pending),
+                    array("name" => "Approved" , "data" => $approved),
+                    array("name" => "Declined" , "data" => $declined)
+                ),
+                "timespan" => $from.' to '.$to,
+                "type" => "Yearly"
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
+         }else if($request->interval == "quarter"){
+            $results = PreventiveMaintenance::select("is_completed as status", DB::raw('COUNT(id) as kount, QUARTER(created_at) as quarter'))
+            ->whereYear("created_at", "=", $request->date)->whereHas("pm_schedule", function($q)use($request){
+                $q->where("hospital_id", $request->hospital_id);
+            })->groupBy("status", "quarter")->get();
+
+            $labels = ["January - March ".$request->date, "April - June ".$request->date, "July - September ".$request->date, "October - December ".$request->date];
+            $approved = $pending = $declined = [0,0,0,0];
+            $total = 0;
+            
+            foreach($results as $result){
+                switch($result->status){
+                    case 0:
+                        $declined[$result->quarter - 1] = $result->kount;
+                        $total+= $result->kount;
+                        break;
+                    case 1:
+                        $approved[$result->quarter - 1] = $result->kount;
+                        $total+= $result->kount;
+                        break;
+                    case 2:
+                        $pending[$result->quarter - 1] = $result->kount;
+                        $total+= $result->kount;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            $labels = array_unique($labels);
+            return response()->json([
+                "labels" => $labels,
+                "datasets" => array(
+                    array("name" => "Approved" , "data" => $approved),
+                    array("name" => "Pending" , "data" => $pending),
+                    array("name" => "Declined" , "data" => $declined)
+                ),
+                "timespan" => $request->date,
+                "type" => "Quarterly"
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
+         }else if($request->interval == "daily"){
+            $request->validate([
+                "date" => "required"
+            ]);
+
+            $date = $request->date;
+
+            $results = PreventiveMaintenance::select("is_completed as status", DB::raw('COUNT(id) as kount, DAY(created_at) as day'))
+            ->whereRaw(DB::raw("DATE_FORMAT(created_at, '%M %Y') = '$date'"))->whereHas("pm_schedule", function($q)use($request){
+                $q->where("hospital_id", $request->hospital_id);
+            })->groupBy("status", "day")->get();
+
+            $daysInMonth = Carbon::parse($date)->daysInMonth;
+            
+            $labels = $this->createArrayOfDays($daysInMonth);
+            $approved = $pending = $declined = $this->createNEmptyArray($daysInMonth);
+            $total = 0;
+
+            foreach($results as $result){
+                switch($result->status){
+                    case 0:
+                        $declined[$result->day - 1] = $result->kount;
+                        $total += $result->kount;
+                        break;
+                    case 1:
+                        $approved[$result->day - 1] = $result->kount;
+                        $total += $result->kount;
+                        break;
+                    case 2:
+                        $pending[$result->day - 1] = $result->kount;
+                        $total += $result->kount;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+
+            return response()->json([
+                "labels" => $labels,
+                "datasets" => array(
+                    array("name" => "Approved" , "data" => $approved),
+                    array("name" => "Pending" , "data" => $pending),
+                    array("name" => "Declined" , "data" => $declined)
+                ),
+                "timespan" => $request->date,
+                "type" => "Daily",
+                "total" => $total
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
+         }else if($request->interval == "type"){
+            $request->validate([
+                "date" => "required"
+            ]);
+
+            $date = $request->date;
+
+            /*$results = PreventiveMaintenance::select("pm_schedule_id as id", DB::raw("COUNT(id) as y"))
+            ->with(array('pm_schedule'=>function($query){
+                $query->select('title as name');
+            }))->whereYear('created_at', '=', $date)->groupBy("id")->get();*/
+            
+            $results = DB::select("SELECT preventive_maintenances.id as id, pm_schedules.title as name, COUNT(preventive_maintenances.id) as y FROM pm_schedules, preventive_maintenances where pm_schedules.id= preventive_maintenances.pm_schedule_id and pm_schedules.deleted_at is null and preventive_maintenances.deleted_at is null and YEAR(preventive_maintenances.created_at) = '$date' and pm_schedules.hospital_id = '$request->hospital_id' group by id");
+
+            return response()->json([
+                "datasets" => $results,
+                "timespan" => $request->date,
+                "type" => "Type"
+            ])->setEncodingOptions(JSON_NUMERIC_CHECK);
          }
+    }
+
+    public function equipmentReport(Request $request){
+        $request->validate([
+            "hospital_id" => "required",
+            "type" => "required"
+        ]);
+
+        if($request->type == "status"){
+            if($request->group == null){
+                $results = Asset::select(DB::raw("COUNT(id) as y, status as name"))->where("hospital_id", $request->hospital_id)->groupBy("status")->get();
+                return response()->json([
+                    "datasets" => $results,
+                    "type" => "Equipment by status",
+                    "chart" => "pie"
+                ]);
+            }else if($request->group == "department"){
+                $results = Asset::select(DB::raw("COUNT(id) as y, department_id, status"))->with("department")->where("hospital_id", $request->hospital_id)->groupBy("status", "department_id")->get();
+                
+                $departments = $results->pluck("department_id")->unique();
+
+                $labels = array();
+                $good = $bad = $this->createNEmptyArray($departments->count());
+                foreach($departments as $key => $department){
+                    $found = false;
+                    foreach($results as $result){
+                        if($result->department_id == $department){
+                            if(!$found){
+                                if($department != null){
+                                    $labels[] = $result->department->name;
+                                }else{
+                                    $labels[] = "N/A";
+                                }
+                                $found = true;
+
+                                switch($result->status){
+                                    case "Good":
+                                        $good[$key] = $result->y;
+                                        break;
+                                    case "Bad":
+                                        $bad[$key] = $result->y;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                return response()->json([
+                    "labels" => $labels,
+                    "datasets" => array(
+                        array("name" => "Good", "data" => $good),
+                        array("name" => "Bad", "data" => $bad)
+                    ),
+                    "type" => "Equipment by department and status",
+                    "chart" => "line"
+                ]);
+            }else if($request->group == "unit"){
+                $results = Asset::select(DB::raw("COUNT(id) as y, unit_id, status"))->with("unit")->where("hospital_id", $request->hospital_id)->groupBy("status", "unit_id")->get();
+                $units = $results->pluck("unit_id")->unique();
+                $labels = array();
+
+                $good = $bad = $this->createNEmptyArray($units->count());
+
+                foreach($units as $key => $unit){
+                    $found = false;
+                    foreach($results as $result){
+                        if($result->unit_id == $unit){
+                            if(!$found){
+                                if($unit != null){
+                                    $labels[] = $result->unit->name;
+                                }else{
+                                    $labels[] = "N/A";
+                                }
+                                $found = true;
+
+                                switch($result->status){
+                                    case "Good":
+                                        $good[$key] = $result->y;
+                                        break;
+                                    case "Bad":
+                                        $bad[$key] = $result->y;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                return response()->json([
+                    "labels" => $labels,
+                    "datasets" => array(
+                        array("name" => "Good", "data" => $good),
+                        array("name" => "Bad", "data" => $bad)
+                    ),
+                    "type" => "Equipment by unit and status",
+                    "chart" => "line"
+                ]);
+            }else if($request->group == "category"){
+                $results = Asset::select(DB::raw("COUNT(id) as y, asset_category_id, status"))->with("asset_category")->where("hospital_id", $request->hospital_id)->groupBy("status", "asset_category_id")->get();
+
+                $categories = $results->pluck("asset_category_id")->unique();
+                $labels = array();
+
+                $good = $bad = $this->createNEmptyArray($categories->count());
+
+                foreach($categories as $key => $category){
+                    $found = false;
+                    foreach($results as $result){
+                        if($result->asset_category_id == $category){
+                            if(!$found){
+                                if($category != null){
+                                    $labels[] = $result->asset_category->name;
+                                }else{
+                                    $labels[] = "N/A";
+                                }
+                                $found = true;
+
+                                switch($result->status){
+                                    case "Good":
+                                        $good[$key] = $result->y;
+                                        break;
+                                    case "Bad":
+                                        $bad[$key] = $result->y;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+
+                return response()->json([
+                    "labels" => $labels,
+                    "datasets" => array(
+                        array("name" => "Good", "data" => $good),
+                        array("name" => "Bad", "data" => $bad)
+                    ),
+                    "type" => "Equipment by category and status",
+                    "chart" => "line"
+                ]);
+            }
+        }else if($request->type == "availability"){
+            if($request->group == null){
+                $results = Asset::select(DB::raw("COUNT(id) as y, availability as name"))->where("hospital_id", $request->hospital_id)->groupBy("availability")->get();
+                return response()->json([
+                    "datasets" => $results,
+                    "type" => "Equipment by availability",
+                    "chart" => "pie"
+                ]);
+            }else if($request->group == "department"){
+                $results = Asset::select(DB::raw("COUNT(id) as y, department_id, availability"))->with("department")->where("hospital_id", $request->hospital_id)->groupBy("availability", "department_id")->get();
+                $labels = array();
+
+                $departments = $results->pluck("department_id")->unique();
+                $operational = $non_operational = $this->createNEmptyArray($results->count());
+                
+                foreach($departments as $key => $department){
+                    $found = false;
+                    foreach($results as $result){
+                        if($result->department_id == $department){
+                            if(!$found){
+                                if($department != null){
+                                    $labels[] = $result->department->name;
+                                }else{
+                                    $labels[] = "N/A";
+                                }
+                                $found = true;
+
+                                switch($result->availability){
+                                    case "Operational":
+                                        $operational[$key] = $result->y;
+                                        break;
+                                    case "Non operational":
+                                        $non_operational[$key] = $result->y;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                
+                return response()->json([
+                    "labels" => $labels,
+                    "datasets" => array(
+                        array("name" => "Operational", "data" => $operational),
+                        array("name" => "Non operational", "data" => $non_operational)
+                    ),
+                    "type" => "Equipment by department and availability",
+                    "chart" => "line"
+                ]);
+            }else if($request->group == "unit"){
+                $results = Asset::select(DB::raw("COUNT(id) as y, unit_id, availability"))->with("unit")->where("hospital_id", $request->hospital_id)->groupBy("availability", "unit_id")->get();
+                $labels = array();
+
+                $units = $results->pluck("unit_id")->unique();
+                $operational = $non_operational = $this->createNEmptyArray($results->count());
+                
+                foreach($units as $key => $unit){
+                    $found = false;
+                    foreach($results as $result){
+                        if($result->unit_id == $unit){
+                            if(!$found){
+                                if($unit != null){
+                                    $labels[] = $result->unit->name;
+                                }else{
+                                    $labels[] = "N/A";
+                                }
+                                $found = true;
+
+                                switch($result->availability){
+                                    case "Operational":
+                                        $operational[$key] = $result->y;
+                                        break;
+                                    case "Non operational":
+                                        $non_operational[$key] = $result->y;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                
+                return response()->json([
+                    "labels" => $labels,
+                    "datasets" => array(
+                        array("name" => "Operational", "data" => $operational),
+                        array("name" => "Non operational", "data" => $non_operational)
+                    ),
+                    "type" => "Equipment by unit and availability",
+                    "chart" => "line"
+                ]);
+            }else if($request->group == "category"){
+                $results = Asset::select(DB::raw("COUNT(id) as y, asset_category_id, availability"))->with("asset_category")->where("hospital_id", $request->hospital_id)->groupBy("availability", "asset_category_id")->get();
+
+                $categories = $results->pluck("asset_category_id")->unique();
+                $labels = array();
+
+                $operational = $non_operational = $this->createNEmptyArray($categories->count());
+
+                foreach($categories as $key => $category){
+                    $found = false;
+                    foreach($results as $result){
+                        if($result->asset_category_id == $category){
+                            if(!$found){
+                                if($category != null){
+                                    $labels[] = $result->asset_category->name;
+                                }else{
+                                    $labels[] = "N/A";
+                                }
+                                $found = true;
+
+                                switch($result->availability){
+                                    case "Operational":
+                                        $operational[$key] = $result->y;
+                                        break;
+                                    case "Non operational":
+                                        $non_operational[$key] = $result->y;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+
+                return response()->json([
+                    "labels" => $labels,
+                    "datasets" => array(
+                        array("name" => "Operational", "data" => $operational),
+                        array("name" => "Non operational", "data" => $non_operational)
+                    ),
+                    "type" => "Equipment by category and availability",
+                    "chart" => "line"
+                ]);
+            }
+        }
+    }
+
+    public function technicianReport(Request $request){
+        $request->validate([
+            "from" => "required",
+            "to" => "required",
+            "hospital_id" => "required"
+        ]);
+        
+        $from = date('Y-m-d', strtotime($request->from));
+        $to = date('Y-m-d', strtotime($request->to));
+
+        $result = User::where("role", "Admin")->orWhere("role", "Limited Technician")->orWhere("role", "Regular Technician")->withCount(["work_orders" => function($q) use ($from, $to){
+            $q->whereDate("work_orders.created_at", ">=", $from)->whereDate("work_orders.created_at", "<=", $to);
+        }])->withCount(["work_order_teams" => function($q) use ($from, $to){
+            $q->whereDate("teams.created_at", ">=", $from)->whereDate("teams.created_at", "<=", $to);
+        }])->get();
+        
+        return response()->json($result);
     }
 }
 

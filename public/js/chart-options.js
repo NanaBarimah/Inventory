@@ -32,3 +32,37 @@ const loadColumnGraph = (container, labels, datasets, yLabel = "Result", title =
         series: datasets
       });
 }
+
+const loadPieGraph = (container, datasets, title = "Report", subtitle = "") => {
+  Highcharts.chart(container, {
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie'
+    },
+    title: {
+      text: title
+    },
+    subtitle: {
+      text: subtitle
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+            enabled: true,
+            style: {
+                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+            }
+        }
+      }
+    },
+    series: [{
+      name: 'Preventive Maintenances',
+      colorByPoint: true,
+      data: datasets
+    }]
+  });
+}
