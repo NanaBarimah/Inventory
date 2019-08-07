@@ -64,13 +64,13 @@ class AssetCategoryController extends Controller
             return response()->json([
                 'error'   => false,
                 'data'    => $assetCategory,
-                'message' => 'Asset category saved successfully!'
+                'message' => 'Equipment category saved successfully!'
             ]);
         }
 
         return response()->json([
             'error'   => true,
-            'message' => 'Could not save asset category'
+            'message' => 'Could not save equipment category'
         ]);
     }
 
@@ -105,13 +105,13 @@ class AssetCategoryController extends Controller
      */
     public function update(Request $request, AssetCategory $assetCategory)
     {
-        $assetCategory->name      = $request->name;
+        $assetCategory->name = $request->name;
         $assetCategory->parent_id = $request->parent_id;
-        $status                   = $assetCategory->update();
+        $status = $assetCategory->update();
 
         return response()->json([
             'data'    => $assetCategory,
-            'message' => $status ? 'Asset category updated' : 'Error updating asset category'
+            'message' => $status ? 'Equipment category updated' : 'Error updating equipment category. Try again!'
         ]);
     }
 
@@ -131,7 +131,7 @@ class AssetCategoryController extends Controller
 
          return response()->json([
             'error'   => !$status,
-            'message' => $status ? 'Asset category deleted' : 'The selected asset category already has items under it.'
+            'message' => $status ? 'Equipment category deleted' : 'The selected equipment category already has items under it.'
          ]);
     }
 

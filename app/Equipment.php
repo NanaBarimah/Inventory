@@ -9,75 +9,43 @@ class Equipment extends Model
 {
     use SoftDeletes;
 
+    protected $primaryKey = 'id';
+    
+    public $incrementing = false;
+
     protected $fillable = [
-        'code', 'name', 'serial_number', 'model_number', 'manufacturer_name', 'description', 'category_id', 'unit_id', 'status', 'location', 'year_of_purchase', 'installation_time', 'pos_rep_date', 'equipment_cost', 'service_vendor_cost', 'reason', 'warranty'
+        'name', 'equipment_code', 'admin_category_id', 'purchase_price', 'purchase_date', 'image',
+        'admin_id', 'status', 'description', 'area', 'serial_number', 'model_number', 'parent_id', 
+        'manufacturer_name', 'region_id', 'reason', 'warranty_expiration', 'type',
     ];
 
-    public $primaryKey = 'code';
-
-    public $incrementing  = false;
-
-    /**
-     * Get the hospital that has these equipment.
-     */
-    public function hospital()
+    public function parent() 
     {
-        return $this->belongsTo('App\Hospital');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
-    /**
-     * Get the category that has these equipment.
-     */
-    public function category()
+    public function children() 
     {
-        return $this->belongsTo('App\Category');
+        return $this->hasMany(self::class, 'parent_id', 'id');
     }
 
-    
-    /**
-     * Get the records for the equipment.
-     */
-    public function records()
+    public function admin_category() 
     {
-        return $this->hasMany('App\Record');
+        return $this->belongsTo('App\AdminCategory');
     }
 
-
-     /**
-     * Get the maintenances for the equipment.
-     */
-    public function maintenances()
+    public function admin()
     {
-        return $this->hasMany('App\Maintenance');
+        return $this->belongsTo('App\Admin');
     }
 
-    /**
-     * Get the schedules for the equipment
-     */
-    public function schedules()
+    public function region()
     {
-        return $this->hasMany('App\Schedule');
+        return $this->belongsTo('App\Region');
     }
 
-    /**
-     * Get the unit that has these equipment.
-     */
-    public function unit()
+    public function donation()
     {
-        return $this->belongsTo('App\Unit');
-    }
-
-    public function service_vendor(){
-        return $this->belongsTo('App\Service_Vendor');
-    }
-
-    public function equipment_requests()
-    {
-        return $this->hasMany('App\Equipment_request');
-    }
-
-    public function request()
-    {
-        return $this->belongsToMany('App\Requests', 'equipment_requests')->withTimestamps();
+        return $this->belongsTo('App\Donation');
     }
 }

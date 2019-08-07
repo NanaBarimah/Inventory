@@ -63,4 +63,9 @@ class Admin extends Authenticatable
     {
         return $this->hasMany('App\WorkOrder');
     }
+
+    public function equipment()
+    {
+        return $this->hasMany('App\Equipment');
+    }
 }

@@ -5,31 +5,31 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class District extends Model
+class Donation extends Model
 {
     use SoftDeletes;
 
     protected $primaryKey = 'id';
-    
+
     public $incrementing = false;
-    
+
     protected $fillable = [
-        'name', 'region_id', 'type'
+        'region_id', 'hospital_id', 'date_donated', 'description',
+        'presented_by', 'presented_to'
     ];
 
-    /**
-     * Get the region that contains the district.
-     */
     public function region()
     {
         return $this->belongsTo('App\Region');
     }
 
-    /**
-     * Get the hospitals for the district.
-     */
-    public function hospitals()
+    public function hospital()
     {
-        return $this->hasMany('App\Hospital');
+        return $this->belongsTo('App\Hospital');
+    }
+
+    public function equipment()
+    {
+        return $this->hasMany('App\Equipment');
     }
 }

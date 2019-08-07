@@ -14,7 +14,7 @@ class Hospital extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'name', 'address', 'district_id', 'contact_number'
+        'name', 'address', 'district_id', 'contact_number', 'type'
     ];
 
     /**
@@ -94,5 +94,10 @@ class Hospital extends Model
     public function pm_schedules()
     {
         return $this->hasMany('App\PmSchedule');
+    }
+
+    public function donations()
+    {
+        return $this->hasMany('App\Donation');
     }
 }

@@ -73,7 +73,7 @@ class AssetController extends Controller
              ]);
          }
 
-         $asset = new Asset();
+         $asset = new Asset(); 
 
          $asset->id                  = md5($request->name.microtime());
          $asset->parent_id           = $request->parent_id;
@@ -99,6 +99,7 @@ class AssetController extends Controller
          $asset->procurement_type    = $request->procurement_type;
          $asset->reason              = $request->reason;
          $asset->warranty_expiration = $request->warranty_expiration != null ? date('Y-m-d', strtotime($request->warranty_expiration)) : null;
+         $asset->donor               = $request->donor;
 
          if($request->image != null) {
             $request->validate([
@@ -219,13 +220,13 @@ class AssetController extends Controller
         if($asset->delete()){
             return response()->json([
                 "error" => false,
-                "message" => "Asset deleted" 
+                "message" => "Equipment deleted" 
             ]);
         }
 
         return response()->json([
             "error" => true,
-            "message" => "Could not delete asset deleted"
+            "message" => "Could not delete equipment"
         ]);
     }
 
@@ -250,7 +251,7 @@ class AssetController extends Controller
         
         return response()->json([
             "error" => false,
-            "message" => "Child assets assigned"
+            "message" => "Child equipment assigned"
         ]);
     }
 
@@ -330,7 +331,7 @@ class AssetController extends Controller
         Asset::where("id", $request->child_id)->update(["parent_id" => null]);
         return response()->json([
             "error" => false,
-            "message" => "Part unlinked successfully"
+            "message" => "Child unlinked successfully"
         ]);
     }
 }
