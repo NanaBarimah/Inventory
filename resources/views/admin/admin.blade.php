@@ -37,8 +37,37 @@
                                                 <div class="icon icon-info">
                                                     <i class="now-ui-icons health_ambulance"></i>
                                                 </div>
-                                                <a href="/admin/hospitals"><h3 class="info-title">{{$hospitals}}</h3>
-                                                <h6 class="stats-title">Hospitals</h6></a>
+                                                <a href="/admin/hospitals"><h6 class="stats-title">Hospitals</h6></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="statistics">
+                                            <div class="info">
+                                                <div class="icon icon-info">
+                                                    <i class="now-ui-icons health_ambulance"></i>
+                                                </div>
+                                                <a href="/admin/hospitals"><h6 class="stats-title">Equipment</h6></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="statistics">
+                                            <div class="info">
+                                                <div class="icon icon-info">
+                                                    <i class="now-ui-icons health_ambulance"></i>
+                                                </div>
+                                                <a href="/admin/hospitals"><h6 class="stats-title">Donations</h6></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="statistics">
+                                            <div class="info">
+                                                <div class="icon icon-info">
+                                                    <i class="now-ui-icons health_ambulance"></i>
+                                                </div>
+                                                <a href="/admin/hospitals"><h6 class="stats-title">Reports</h6></a>
                                             </div>
                                         </div>
                                     </div>
@@ -48,8 +77,7 @@
                                                 <div class="icon icon-info">
                                                     <i class="now-ui-icons location_pin"></i>
                                                 </div>
-                                                <a href="/admin/districts"><h3 class="info-title">{{$districts}}</h3>
-                                                <h6 class="stats-title">Districts</h6></a>
+                                                <a href="/admin/districts"><h6 class="stats-title">Districts and Communities</h6></a>
                                             </div>
                                         </div>
                                     </div>
@@ -60,8 +88,7 @@
                                                     <div class="icon icon-info">
                                                         <i class="now-ui-icons users_single-02"></i>
                                                     </div>
-                                                    <a href="/admin/users"><h3 class="info-title">{{$users}}</h3>
-                                                    <h6 class="stats-title">Users</h6></a>
+                                                    <a href="/admin/users"><h6 class="stats-title">Users and Engineers</h6></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -73,8 +100,7 @@
                                                     <div class="icon icon-info">
                                                         <i class="now-ui-icons users_single-02"></i>
                                                     </div>
-                                                    <a href="/admin/assigned"><h3 class="info-title">{{$jobs}}</h3>
-                                                    <h6 class="stats-title">Assigned Jobs</h6></a>
+                                                    <a href="/admin/assigned"><h6 class="stats-title">Assigned Jobs</h6></a>
                                                 </div>
                                             </div>
                                         </div>
