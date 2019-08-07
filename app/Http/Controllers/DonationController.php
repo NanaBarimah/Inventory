@@ -14,7 +14,9 @@ class DonationController extends Controller
      */
     public function index()
     {
-        //
+        $donation = Donation::with('equipment')->get();
+
+        return view('all-donations', compact('donation'));
     }
 
     /**
@@ -35,7 +37,34 @@ class DonationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'region_id' => 'required',
+            'hospital_id' => 'required',
+            'date_donated' => 'required'
+        ]);
+
+        $donation = new Donation();
+
+        $donation->id = md5('Donation'.microtime().rand(1000));
+        $donation->region_id = $request->region_id;
+        $donation->hospital_id = $request->hospital_id;
+        $donation->date_donated = $request->date_donated != null ? date('Y-m-d', \strtotime($request->date_donated)) : null;
+        $donation->description = $request->description;
+        $donation->presented_by = $request->presented_by;
+        $donation->presented_to = $request->presented_to;
+
+        if($donation->save()) {
+            return response()->json([
+                'error' => false,
+                'data' => $donation,
+                'message' => 'Donation saved successfully'
+            ]);
+        }
+
+        return response()->json([
+            'error' => true,
+            'message' => 'Could not save donation. Try again!'
+        ]);
     }
 
     /**

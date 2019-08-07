@@ -80,6 +80,7 @@ class EquipmentController extends Controller
         $equipment->warranty_expiration = $request->warranty_expiration != null ? date('Y-m-d', strtotime($request->warranty_expiration)) : null;
         $equipment->procurement_type = $request->procurement_type;
         $equipment->donor = $request->donor;
+        $equipment->donation_id = $request->donation_id;
 
         if($request->image != null) {
             $request->validate([
