@@ -42,7 +42,8 @@ class DistrictController extends Controller
 
         $request->validate([
             'name'      => 'required|string',
-            'region_id' => 'required'
+            'region_id' => 'required',
+            'type' => 'required|string'
         ]);
 
         $district = new District();
@@ -50,8 +51,9 @@ class DistrictController extends Controller
         $district->id        = md5($request->name.microtime());
         $district->name      = $request->name;
         $district->region_id = $request->region_id;
+        $district->type      = $request->type;
 
-        if(District::where('name', '=', $request->name)->get()->count() > 0){
+        if(District::where('name', $request->name)->get()->count() > 0){
             return response()->json([
                 'error' => $result,
                 'message' => 'District name already exists'
@@ -101,7 +103,7 @@ class DistrictController extends Controller
     public function update(Request $request, District $district)
     {
         $status = $district->update(
-            $request->only(['name'])
+            $request->only(['name', 'type'])
         );
 
         return response()->json([
@@ -122,8 +124,10 @@ class DistrictController extends Controller
     }
 
     public function viewAll(){
-        $districts = District::where('region_id', Auth::guard('admin')->user()->region_id)->get();
+        $admin = Auth::guard('admin')->user();
 
-        return view('admin.districts')->with('districts', $districts);
+        $districts = District::where('region_id', $admin->region_id)->get();
+
+        return view('admin.districts')->with('districts', $districts)->with('admin', $admin);
     }
 }

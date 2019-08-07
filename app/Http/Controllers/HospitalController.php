@@ -57,6 +57,7 @@ class HospitalController extends Controller
         $hospital->address        = $request->address;
         $hospital->district_id    = $request->district_id;
         $hospital->contact_number = $request->contact_number;
+        $hospital->type           = $request->type;
 
         if($d = $hospital->save()){
             $service = new Service_Vendor();

@@ -16,7 +16,7 @@ class PmSchedule extends Model
 
     protected $fillable = [
         'title', 'due_date', 'endDueDate', 'department_id', 'unit_id', 
-        'rescheduledBasedOnCompleted', 'priority_id', 'description'
+        'rescheduledBasedOnCompleted', 'priority_id', 'description', 'recorded_by'
     ];
 
     public function department()
@@ -57,5 +57,10 @@ class PmSchedule extends Model
     public function asset_category()
     {
         return $this->belongsTo('App\AssetCategory');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
     }
 }

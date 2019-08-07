@@ -225,14 +225,14 @@ class UserController extends Controller
          {
             return response()->json([
                'data'    => $user,
-               'message' => 'User updated',
+               'message' => 'Account activated',
                'error' => false
             ]); 
          }
          else
          {
             return response()->json([
-               'message' => 'Could not update the user',
+               'message' => 'Account deactivated',
                'error'   => true
             ]);
          }
@@ -324,7 +324,7 @@ class UserController extends Controller
         return response()->json(
             [
             'error' => $status,
-            'message' => !$status ? 'Profile updated!' : 'Could not update profile'
+            'message' => !$status ? 'User account updated!' : 'Could not update user account. Try again!'
             ]
         );
     }

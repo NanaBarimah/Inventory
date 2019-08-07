@@ -72,6 +72,7 @@ class PmScheduleController extends Controller
         $pmSchedule->hospital_id       = $request->hospital_id;
         $pmSchedule->description       = $request->description;
         $pmSchedule->asset_category_id = $request->asset_category_id;
+        $pmSchedule->recorded_by       = $request->recorded_by;
         
         if($request->rescheduledBasedOnCompletion == "on"){
             $pmSchedule->rescheduledBasedOnCompletion = 1;
@@ -157,6 +158,7 @@ class PmScheduleController extends Controller
         $pmSchedule->priority_id = $request->priority_id;
         $pmSchedule->description = $request->description;
         $pmSchedule->asset_category_id = $request->asset_category_id;
+        $pmSchedule->recorded_by = $request->recorded_by;
 
         if($request->rescheduledBasedOnCompletion == 'on') {
             $pmSchedule->rescheduledBasedOnCompletion = 1;

@@ -73,9 +73,9 @@ class User extends Authenticatable
         return $this->hasMany('App\Department');
     }
 
-    public function asset()
+    public function assets()
     {
-        return $this->hasMany('App\User');
+        return $this->hasMany('App\Asset');
     }
 
     public function purchase_orders()
@@ -106,5 +106,10 @@ class User extends Authenticatable
     public function messages()
     {
         return $this->belongsToMany('App\WorkOrder', 'work_order_messages', 'user_id', 'work_order_id')->withPivot('action_taken')->withTimestamps();
+    }
+
+    public function pm_schedules()
+    {
+        return $this->hasMany('App\PmSchedule');
     }
 }
