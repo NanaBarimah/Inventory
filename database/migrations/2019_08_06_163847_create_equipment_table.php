@@ -46,7 +46,7 @@ class CreateEquipmentTable extends Migration
                   ->onUpdate('cascade')->onDelete('cascade');
         });
 
-        Schema::create('equipment', function($table) {
+        Schema::table('equipment', function($table) {
             $table->foreign('parent_id')->references('id')->on('equipment')
                   ->onUpdate('cascade')->onDelete('cascade');
         });
