@@ -141,80 +141,19 @@ Route::middleware('passport:admin-api')->group(function(){
     Route::post('admins/admin-login', 'Auth\AdminLoginController@adminLogin');
     Route::put('admins/activate', 'AdminController@is_active');
 
-    Route::get('regions/', 'RegionController@index');
-    Route::post('regions/add_region', 'RegionController@store');
-    Route::get('regions/{region}', 'RegionController@show');
-    Route::put('regions/update/{region}', 'RegionController@update');
-
-    Route::get('districts/', 'DistrictController@index');
-    Route::post('districts/add_district', 'DistrictController@store');
-    Route::get('districts/{district}', 'DistrictController@show');
-    Route::put('districts/update/{district}', 'DistrictController@update');
-
     Route::get('hospitals/', 'HospitalController@index');
-    Route::post('hospitals/add_hospital', 'HospitalController@store');
+    Route::get('hospitals/{hospital}/get-equipment', 'HospitalController@getEquipment');
+    Route::get('hospitals/{hospital}/get-departments', 'HospitalController@getDepartments');
     Route::get('hospitals/{hospital}', 'HospitalController@show');
-    Route::put('hospitals/update/{hospital}', 'HospitalController@update');
-    Route::put('hospitals/settings', 'HospitalController@updateSettings');
 
-    Route::get('maintenances/', 'MaintenanceController@index');
-    Route::post('admin/maintenances/add', 'MaintenanceController@store');
-    Route::get('admin/maintenances/{maintenance}', 'MaintenanceController@show');
-    Route::put('admin/maintenances/update/{maintenance}', 'MaintenanceController@update');
-    Route::post('admin/maintenances/report/cummulative', 'MaintenanceController@getCummulativeReport');
-    Route::post('admin/maintenances/report/categorized', 'MaintenanceController@getCategorizedReport');
-    Route::post('admin/maintenances/report/unit', 'MaintenanceController@getUnitReport');
-    Route::post('admin/maintenances/report/department', 'MaintenanceController@getDepartmentReport');
-    Route::post('admin/maintenances/report/cost/month', 'MaintenanceController@costPerMonth');
-    Route::post('admin/maintenances/report/cost/type', 'MaintenanceController@costPerType');
-    Route::post('admin/maintenances/report/cost/unit', 'MaintenanceController@costPerUnit');
-    Route::post('admin/maintenances/report/cost/department', 'MaintenanceController@costPerDepartment');
-    Route::put('admin/maintenances/admin-approve', 'MaintenanceController@adminApprove');
+    Route::post("categories/add", "AdminCategoryController@store");
+    Route::put("categories/update/{adminCategory}", "AdminCategoryController@update");
+    Route::delete("categories/delete/{adminCategory}", "AdminCategoryController@destroy");
 
-    Route::put('requests/assign/{request}', 'RequestsController@assign');   
+    Route::post("equipment/add", "EquipmentController@store");
 });
 
 // route for issue tokens
 Route::group(['middleware' => ['passport:admin-api']], function() {
     Route::post('/token1', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
 });
-
-    Route::post('maintenances/report/cummulative', 'MaintenanceController@getCummulativeReport');
-    Route::post('maintenances/report/categorized', 'MaintenanceController@getCategorizedReport');
-    Route::post('maintenances/report/unit', 'MaintenanceController@getUnitReport');
-    Route::post('maintenances/report/department', 'MaintenanceController@getDepartmentReport');
-    Route::post('maintenances/report/cost/month', 'MaintenanceController@costPerMonth');
-    Route::post('maintenances/report/cost/type', 'MaintenanceController@costPerType');
-    Route::post('maintenances/report/cost/unit', 'MaintenanceController@costPerUnit');
-    Route::post('maintenances/report/cost/department', 'MaintenanceController@costPerDepartment');
-    Route::post('maintenances/report/cummulative', 'MaintenanceController@getCummulativeReport');
-    Route::post('maintenances/report/categorized', 'MaintenanceController@getCategorizedReport');
-    Route::post('maintenances/report/unit', 'MaintenanceController@getUnitReport');
-    Route::post('maintenances/report/department', 'MaintenanceController@getDepartmentReport');
-    Route::post('maintenances/report/cost/month', 'MaintenanceController@costPerMonth');
-    Route::post('maintenances/report/cost/type', 'MaintenanceController@costPerType');
-    Route::post('maintenances/report/cost/unit', 'MaintenanceController@costPerUnit');
-    Route::post('maintenances/report/cost/department', 'MaintenanceController@costPerDepartment');
-    Route::post('equipment/report/cummulative', 'EquipmentController@fetchCummulativeReport');
-    Route::post('equipment/report/categorized', 'EquipmentController@fetchCategorizedReport');
-    Route::post('equipment/report/unit', 'EquipmentController@fetchUnitReport');
-    Route::post('equipment/report/department', 'EquipmentController@fetchDepartmentReport'); 
-    
-    
-
-/*Route::prefix('maintenances')->group(function(){
-    Route::get('/', 'MaintenanceController@index');
-    Route::post('/add', 'MaintenanceController@store');
-    Route::get('/{maintenance}', 'MaintenanceController@show');
-    Route::put('/update/{maintenance}', 'MaintenanceController@update');
-    Route::post('/report/cummulative', 'MaintenanceController@getCummulativeReport');
-    Route::post('/report/categorized', 'MaintenanceController@getCategorizedReport');
-    Route::post('/report/unit', 'MaintenanceController@getUnitReport');
-    Route::post('/report/department', 'MaintenanceController@getDepartmentReport');
-    Route::post('/report/cost/month', 'MaintenanceController@costPerMonth');
-    Route::post('/report/cost/type', 'MaintenanceController@costPerType');
-    Route::post('/report/cost/unit', 'MaintenanceController@costPerUnit');
-    Route::post('/report/cost/department', 'MaintenanceController@costPerDepartment');
-    Route::put('/approve', 'MaintenanceController@hospitalApprove');
-    Route::put('/admin-approve', 'MaintenanceController@adminApprove');
-});*/

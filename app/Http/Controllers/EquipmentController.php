@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Equipment;
-use App\Region;
+use App\AdminCategory;
 use Illuminate\Http\Request;
+
+use Auth;
 
 class EquipmentController extends Controller
 {
@@ -18,7 +20,7 @@ class EquipmentController extends Controller
         $admin = Auth::guard('admin')->user();
 
         $equipment = Equipment::with('admin_category')->where('region_id', $admin->region_id)->get();
-        return view("equipment", compact('equipment', 'admin'));
+        return view("admin.equipment", compact('equipment', 'admin'));
     }
 
     /**
@@ -29,12 +31,9 @@ class EquipmentController extends Controller
     public function create()
     {
         $admin = Auth::guard('admin')->user();
+        $categories = AdminCategory::where('region_id', $admin->region_id)->get();
 
-        $region = Region::with('admin_category')->with(['admin' => function($q) {
-            $q->where('role', 'Admin');
-        }])->where('id', $admin->region_id)->first();
-
-        return view('add-equipment', compact('admin', 'region'));
+        return view('admin.equipment-add', compact('admin', 'categories'));
     }
 
     /**

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\AdminCategory;
+use App\Equipment;
+
 use Illuminate\Http\Request;
+
+use Auth;
 
 class AdminCategoryController extends Controller
 {
@@ -15,6 +19,9 @@ class AdminCategoryController extends Controller
     public function index()
     {
         //
+        $admin = Auth::guard("admin")->user();
+        $categories = AdminCategory::where("region_id", $admin->region_id)->get();
+        return view("admin.categories", compact("categories", "admin"));
     }
 
     /**
@@ -118,7 +125,7 @@ class AdminCategoryController extends Controller
      */
     public function destroy(AdminCategory $adminCategory)
     {
-        $status = AdminCategory::where('admin_category_id', $adminCategory->id)->get()->count() < 1;
+        $status = Equipment::where('admin_category_id', $adminCategory->id)->get()->count() < 1;
 
         if($status) {
             $status = $adminCategory->delete();

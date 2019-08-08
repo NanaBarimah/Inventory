@@ -80,10 +80,10 @@ Route::middleware('admin')->prefix('admin')->group(function(){
     Route::get('/', 'AdminController@index')->name('admin.dashboard');
     Route::get('/profile', 'AdminController@profile')->name('admin.profile');
     Route::get('/hospitals', 'HospitalController@index')->name('admin.hospitals');
-    Route::get('/hospitals/add', 'HospitalController@addHospital')->name('admin.hospitals.add');
-    Route::get('/hospitals/{code}', 'HospitalController@viewHospital')->name('admin.hospitals.view');
-    Route::get('/hospitals/edit/{code}', 'HospitalController@updateHospital')->name('admin.hospitals.edit');
-    Route::get('/districts', 'DistrictController@viewAll')->name('admin.districts');
+    Route::get('/hospitals/{hospital}', 'HospitalController@viewHospital')->name('admin.hospitals.view');
+    Route::get('/equipment', 'EquipmentController@index')->name("admin.equipment.view");
+    Route::get('/equipment/add', 'EquipmentController@create')->name("admin.equipment.create");
+    Route::get('/categories', 'AdminCategoryController@index')->name('admin.categories');
     Route::get('/users', 'UserController@viewAll')->name('admin.users');
     Route::get('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout');
     Route::get('/equipment-types', 'CategoryController@index')->name('equipment-types');

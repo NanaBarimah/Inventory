@@ -19,7 +19,9 @@ class HospitalController extends Controller
      */
     public function index()
     {
-        $hospitals = Hospital::with('district')->get();
+        $hospitals = Hospital::with('district')->whereHas("district", function($q){
+            $q->where("region_id", Auth::guard("admin")->user()->region_id);
+        })->get();
 
         return view('admin.hospitals')->with('hospitals', $hospitals);
     }
@@ -150,43 +152,15 @@ class HospitalController extends Controller
         //
     }
 
-    public function viewHospital($code){
-        $hospital = Hospital::where('id', $code)->with(['users', 'district', 'equipments'])->first();
-        $years = DB::select('SELECT DISTINCT(YEAR(created_at)) as year FROM maintenances');
-        return view('admin.single_hospital')->with('hospital', $hospital)->with('years', $years);
-}
-
-    public function addHospital(){
-        $districts = District::where('region_id', Auth::guard('admin')->user()->region_id)->get();
-        return view('admin.add-hospital')->with('districts', $districts);
+    public function viewHospital(Hospital $hospital){
+        return view('admin.single_hospital')->with('hospital', $hospital);
     }
 
-    public function updateHospital($code){
-        if(Auth::guard('admin')->user()->role == 'Admin'){
-            $hospital = Hospital::where('id', $code)->first();
-            $districts = District::where('region_id', Auth::guard('admin')->user()->region_id)->get();
-
-            return view('admin.edit-hospital')->with('districts', $districts)->with('hospital', $hospital);
-        }else{
-            abort(403);
-        }
+    public function getEquipment(Hospital $hospital){
+        return response()->json($hospital->assets()->with("asset_category")->get());
     }
 
-    public function updateSettings(Request $request){
-        $request->validate([
-            'hospital_id' => 'required',
-            'sms_number' => 'required',
-            'sms_frequency' => 'required'
-        ]);
-
-        $hospital = Hospital::find($request->hospital_id);
-        $hospital->sms_number = $request->sms_number;
-        $hospital->sms_frequency = $request->sms_frequency;
-
-        $status = $hospital->update();
-
-        return response()->json([
-            'success' => $status
-        ]);
+    public function getDepartments(Hospital $hospital){
+        return response()->json($hospital->departments()->with("units")->get());
     }
 }

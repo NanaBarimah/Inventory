@@ -26,36 +26,29 @@
             </div>
             <div class="content">
                 <div class="row">
-                    <div class="col-md-10 center">
+                    <div class="col-md-12 center">
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="inline-block">Hospitals</h4>
-                                @if(Auth::guard('admin')->user()->role == 'Admin')
-                                    <a href="/admin/hospitals/add" class="btn btn-purple pull-right">Add New</a>
-                                @endif
                             </div>
                             <div class="card-body">
                                 <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
                                             <th>Hospital Name</th>
-                                            <th>District</th>
+                                            <th>Location</th>
+                                            <th>Type</th>
                                             <th>Address</th>
                                             <th>Contact</th>
-                                            @if(Auth::guard('admin')->user()->role == 'Admin')
-                                                <th class="disabled-sorting text-right">Actions</th>
-                                            @endif
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Hospital Name</th>
-                                            <th>District</th>
+                                            <th>Location</th>
+                                            <th>Type</th>
                                             <th>Address</th>
                                             <th>Contact</th>
-                                            @if(Auth::guard('admin')->user()->role == 'Admin')
-                                                <th class="disabled-sorting text-right">Actions</th>
-                                            @endif
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -64,16 +57,10 @@
                                             <td>
                                                 <a href="/admin/hospitals/{{$hospital->id}}">{{$hospital->name}}</a>
                                             </td>
+                                            <td>{{$hospital->type != null ? $hospital->type : 'N/A'}}</td>
                                             <td>{{$hospital->district->name}}</td>
                                             <td>{{$hospital->address}}</td>
                                             <td>{{$hospital->contact_number}}</td>
-                                            @if(Auth::guard('admin')->user()->role == 'Admin')
-                                                <td class="text-right">
-                                                    <a href="/admin/hospitals/edit/{{$hospital->id}}" class="btn btn-round btn-info btn-icon btn-sm edit">
-                                                        <i class="now-ui-icons design-2_ruler-pencil"></i>
-                                                    </a>
-                                                </td>
-                                            @endif
                                         </tr>
                                         @endforeach
                                     </tbody>
