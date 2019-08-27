@@ -26,139 +26,87 @@
             </div>
             <div class="content">
                 <div class="row">
-                    <div class="col-md-10 center">
+                    <div class="col-md-12 center">
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="inline-block">Districts</h4>
                                 <a href="#" data-toggle="modal" data-target="#addDistrictModal" class="btn btn-purple pull-right">Add New</a>
                             </div>
                             <div class="card-body">
-                                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th class="disabled-sorting">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th class="disabled-sorting">Actions</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        @foreach($districts as $district)
-                                        <tr>
-                                            <td>{{$district->name}}</td>
-                                            <td>
-                                                <a href="#" data-toggle="modal" data-target="#editDistrictModal" class="btn btn-round btn-info btn-icon btn-sm edit">
-                                                    <i class="now-ui-icons design-2_ruler-pencil"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                    <ul>
+                                    @foreach($districts as $district)
+                                        <li>
+                                            <h6 class="title"><a href="javascript:void(0)" onclick="viewHospitals('{{$district->id}}')">{{$district->name}}</a></h6>
+                                            @foreach($district->children as $child)
+                                                <ul>
+                                                    <li><p><a href="javascript:void(0)"  onclick="viewHospitals('{{$child->id}}')">{{$child->name}}</a></p>
+                                                        @foreach($child->children as $baby)
+                                                            <ul>
+                                                                <li><span class="text-muted text-small">
+                                                                <a href="javascript:void(0)"  onclick="viewHospitals('{{$baby->id}}')">{{$baby->name}}</a>
+                                                                </span>
+                                                                </li>
+                                                            </ul>
+                                                        @endforeach
+                                                    </li>
+                                                </ul>
+                                            @endforeach
+                                        </li>
+                                    @endforeach
+                                    </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="addDistrictModal" tabindex="-1" role="dialog" aria-labelledby="addDistrictLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <h5 class="modal-title margin-bottom-10" id="addDistrictLabel">Add District</h5>
-                        <form method="post" action="#" id="add_district">
-                            <div class="form-group">
-                                <input type="text" class="form-control normal-radius" placeholder="District Name" name="name" id="district_name"/>
-                                <input type="hidden" name="region_id" value="{{Auth::guard('admin')->user()->region_id}}"/>
-                                <span class="text-danger hidden">Enter a district name</span>
-                                <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_save">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
         </div>
-        <div class="modal fade" id="editDistrictModal" tabindex="-1" role="dialog" aria-labelledby="editDistrictLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <h5 class="modal-title margin-bottom-10" id="editDistrictLabel">Edit District</h5>
-                        <form method="post" action="#" id="add_district">
-                            <div class="form-group">
-                                <input type="text" class="form-control normal-radius" placeholder="District Name" name="name" id="district_name"/>
-                                <input type="hidden" name="region_id" value="{{Auth::guard('admin')->user()->region_id}}"/>
-                                <span class="text-danger hidden">Enter a district name</span>
-                                <button type="submit" class="pull-right btn btn-purple btn-fill btn-wd" id="btn_save">Save</button>
-                            </div>
-                        </form>
+    </div>
+    <div id="hospitals-modal" class="modal fade right">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                    <h6 class="header">Hospitals</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12" id="hospitals-list">
+
                     </div>
+                    <input name="id"  type="hidden" id="del_id"/>
                 </div>
             </div>
         </div>
     </div>
     @include('layouts.admin_core_scripts')
-    <script src="{{asset('js/datatables.js')}}"></script>
-    <script src="{{asset('js/bootstrap-notify.js')}}" type="text/javascript"></script>
     <script>
-        $(document).ready(function () {
-            $('#datatable').DataTable({
-                "pagingType": "full_numbers",
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                responsive: true,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Find a district",
-                }
-
-            });
-
-            var table = $('#datatable').DataTable();
-
-        });
-
-        $('#add_district').on('submit', function(e){
-            e.preventDefault();
-
-            if($('#district_name').val().length < 1){
-                $('.text-danger').css('display', 'inline');
-                return false;
-            }
+        const viewHospitals = (id) => {
+            $("#hospitals-list").html('<p class="text-center"><i class="now-ui-icons education_atom spin" style="font-size: 24px;"></i></p>');
+            $("#hospitals-modal").modal("show");
             
-            $('.text-danger').css('display', 'none');
-            $('#btn_save').html('<i class="now-ui-icons loader_refresh spin"></i>');
-            var form_data = $(this).serialize();
-            $(this).find('input').prop('disabled', true);
-
-            request = $.ajax({
-                url : '/api/districts/add_district',
-                method : 'post',
-                data : form_data,
-                success : function(data, status){
-                    $('#btn_save').html('Save');
-
-                    if(data.error){
-                        presentNotification(data.message+". Try again.", 'danger', 'top', 'right');
+            $.ajax({
+                "url" : `/api/districts/${id}/view-hospitals`,
+                "method" : "get",
+                "success" : data => {
+                    $("#hospitals-list").html(null);
+                    $("#hospitals-list").append("<ul>");
+                    if(data.length > 0){
+                        data.forEach(function(hospital, index){
+                            $("#hospitals-list").append(`<li><a href="/admin/hospitals/${hospital.id}">${hospital.name}</a></li>`);
+                        })
                     }else{
-                        var table = $('#datatable').DataTable();
-                        table.row.add([
-                                $('#district_name').val(),
-                                '<a href="#" class="btn btn-round btn-info btn-icon btn-sm edit" data-toggle="tooltip" data-placement="left" title="Edit"><i class="now-ui-icons design-2_ruler-pencil"></i></a>'
-                        ]).draw(true);
-                        $('#add_district').find('[type="text"]').val('');
-                        $('#add_district').find('input').prop('disabled', false);
-                        presentNotification('District saved', 'info', 'top', 'right');
+                        $("#hospitals-list").append("<li><i class='text-muted'>No hospitals in this location</i></li>");
                     }
+                    $("#hospitals-list").append("</ul>");
                 },
-                error : function(xhr, err, desc){
-                    $('#btn_save').html('Save');
-                    $('#add_district').find('input').prop('disabled', false);
-                    presentNotification('Could not save district', 'danger', 'top', 'right');
+                "error" : err => {
+                    $("#hospitals-list").html(`<p><i class='text-muted'>Could not retrieve hospital data. <a href='javscript:void(0)' onclick='viewHospitals('${id}')'>Try again.</a></i></p>`);
                 }
             })
-        });
+        }
     </script>
 </body>
 

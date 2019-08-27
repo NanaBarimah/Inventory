@@ -1,4 +1,3 @@
-<?php use App\Category; ?>
 <!DOCTYPE html>
 <html>
 
@@ -58,7 +57,7 @@
                                 <tbody>
                                     @foreach($equipment as $eq)
                                     <tr>
-                                        <td><a href="javascript:void(0)">{{$eq->name}}</a></td>
+                                        <td><a href="/admin/equipment/{{$eq->id}}">{{$eq->name}}</a></td>
                                         <td>{{$eq->equipment_code}}</td>
                                         <td>{{$eq->type}}</td>
                                         <td>{{$eq->admin_category == null ? 'N/A' : $eq->admin_category->name}}</td>

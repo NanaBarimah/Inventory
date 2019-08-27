@@ -79,7 +79,6 @@ class EquipmentController extends Controller
         $equipment->warranty_expiration = $request->warranty_expiration != null ? date('Y-m-d', strtotime($request->warranty_expiration)) : null;
         $equipment->procurement_type = $request->procurement_type;
         $equipment->donor = $request->donor;
-        $equipment->donation_id = $request->donation_id;
 
         if($request->image != null) {
             $request->validate([
@@ -117,13 +116,9 @@ class EquipmentController extends Controller
     {
         $admin = Auth::guard('admin')->user();
 
-        $equipment = Equipment::with('admin_category')->where('id', $equipment)->first();
-
-        $region = Region::where('id', $equipment->region_id)->with(['equipment' => function($q) use($equipment) {
-            $q->where('id', '<>', $equipment->id);
-        }])->with('admin_categories', 'admins')->first();
-
-        return view('equipment-details', compact('admin', 'equipment', 'region'));
+        $equipment = $equipment->with("donation", "admin_category")->first();
+        $categories = AdminCategory::where("region_id", $admin->region_id)->get();
+        return view('admin.equipment-details', compact('admin', 'equipment', 'categories'));
     }
 
     /**
@@ -164,6 +159,8 @@ class EquipmentController extends Controller
         $equipment->description = $request->description;
         $equipment->admin_category_id = $request->admin_category_id;
         $equipment->area = $request->area;
+        $equipment->purchase_price = $request->purchase_price;
+        $equipment->donor = $request->donor;
         $equipment->purchase_date = date('Y-m-d', strtotime($request->purchase_date));
         $equipment->warranty_expiration = date('Y-m-d', strtotime($request->warranty_expiration));
 
@@ -198,31 +195,20 @@ class EquipmentController extends Controller
         }
     }
 
-    public function getChildren(Equipment $equipment)
-    {
-        return response()->json($equipment->children()->get());
-    }
+    public function updateStatus(Equipment $equipment, Request $request){
+        $equipment->status = $request->status;
+        $equipment->status = $request->status;
 
-    public function assignChild(Request $request, Equipment $equipment)
-    {
-        $request->validate([
-            'children' => 'required'
-        ]);
-
-        Equipment::whereIn('id', $request->children)->update(['parent_id' => $equipment->id]);
+        if($equipment->update()){
+            return response()->json([
+                "error" => false,
+                "message" => "Status updated"
+            ]);
+        }
 
         return response()->json([
-            "error" => false,
-            "message" => "Child equipment assigned"
-        ]);
-    }
-
-    public function removeChild(Equipment $equipment, Request $request) 
-    {
-        Equipment::where('id', $request->child_id)->update(['parent_id' => null]);
-        return response()->json([
-            "error" => false,
-            "message" => "Child unlinked successfully"
+            "error" => true,
+            "message" => "Could not update status"
         ]);
     }
 }

@@ -1,4 +1,3 @@
-<?php use App\Category; ?>
 <!DOCTYPE html>
 <html>
 
@@ -100,7 +99,7 @@
                                                     <div class="form-group col-md-3 col-sm-12">
                                                         <label><b>Warranty Expiration</b></label>
                                                         <div class="input-group">
-                                                            <input type="text" class="datepicker form-control resetable" name="manufacturer_name"/>
+                                                            <input type="text" class="datepicker form-control resetable" name="warranty_expiration"/>
                                                         </div>
                                                     </div>
                                                 </div>

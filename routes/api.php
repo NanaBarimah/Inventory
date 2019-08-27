@@ -151,6 +151,12 @@ Route::middleware('passport:admin-api')->group(function(){
     Route::delete("categories/delete/{adminCategory}", "AdminCategoryController@destroy");
 
     Route::post("equipment/add", "EquipmentController@store");
+    Route::put("equipment/{equipment}/update", "EquipmentController@update");
+    Route::put("equipment/{equipment}/update-status", "EquipmentController@updateStatus");
+
+    Route::post("donations/add", "DonationController@store");
+
+    Route::get("districts/{district}/view-hospitals", "DistrictController@viewHospitals");
 });
 
 // route for issue tokens

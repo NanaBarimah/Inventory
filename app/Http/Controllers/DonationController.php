@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Donation;
+use App\Region;
+use App\Equipment;
 use Illuminate\Http\Request;
+
+use Auth;
 
 class DonationController extends Controller
 {
@@ -14,9 +18,9 @@ class DonationController extends Controller
      */
     public function index()
     {
-        $donation = Donation::with('equipment')->get();
+        $donations = Donation::with('hospital')->get();
 
-        return view('all-donations', compact('donation'));
+        return view('admin.donations', compact('donations'));
     }
 
     /**
@@ -27,6 +31,10 @@ class DonationController extends Controller
     public function create()
     {
         //
+        $admin = Auth::guard("admin")->user();
+        
+        $region = Region::with("districts", "districts.hospitals", "equipment")->where("id", $admin->region_id)->first();
+        return view("admin.donation-add", compact("region", "admin"));
     }
 
     /**
@@ -45,15 +53,17 @@ class DonationController extends Controller
 
         $donation = new Donation();
 
-        $donation->id = md5('Donation'.microtime().rand(1000));
+        $donation->id = md5('Donation'.microtime().rand(1, 1000));
         $donation->region_id = $request->region_id;
         $donation->hospital_id = $request->hospital_id;
+        $donation->title = $request->title;
         $donation->date_donated = $request->date_donated != null ? date('Y-m-d', \strtotime($request->date_donated)) : null;
         $donation->description = $request->description;
         $donation->presented_by = $request->presented_by;
         $donation->presented_to = $request->presented_to;
 
         if($donation->save()) {
+            Equipment::whereIn("id", $request->equipment)->update(["donation_id" => $donation->id]);
             return response()->json([
                 'error' => false,
                 'data' => $donation,
@@ -76,6 +86,8 @@ class DonationController extends Controller
     public function show(Donation $donation)
     {
         //
+        $donation = $donation->with("equipment", "hospital")->first();
+        return view("admin.donation-details", compact("donation"));
     }
 
     /**

@@ -19,6 +19,12 @@
                 </a>
             </li>
             <li>
+                <a href="/admin/donations">
+                    <i class="now-ui-icons shopping_delivery-fast"></i>
+                    <p>Donations</p>
+                </a>
+            </li>
+            <li>
                 <a href="/admin/equipment">
                     <i class="now-ui-icons ui-2_settings-90"></i>
                     <p>Equipment</p>

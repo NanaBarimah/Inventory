@@ -83,7 +83,12 @@ Route::middleware('admin')->prefix('admin')->group(function(){
     Route::get('/hospitals/{hospital}', 'HospitalController@viewHospital')->name('admin.hospitals.view');
     Route::get('/equipment', 'EquipmentController@index')->name("admin.equipment.view");
     Route::get('/equipment/add', 'EquipmentController@create')->name("admin.equipment.create");
+    Route::get('/equipment/{equipment}', 'EquipmentController@show')->name("admin.equipment.show");
     Route::get('/categories', 'AdminCategoryController@index')->name('admin.categories');
+    Route::get('/donations', 'DonationController@index')->name("admin.donations");
+    Route::get('/donations/add', 'DonationController@create')->name("admin.donations.add");
+    Route::get('/donations/{donation}', 'DonationController@show')->name("admin.donations.show");
+    Route::get("/districts", "DistrictController@index")->name("admin.districts");
     Route::get('/users', 'UserController@viewAll')->name('admin.users');
     Route::get('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout');
     Route::get('/equipment-types', 'CategoryController@index')->name('equipment-types');

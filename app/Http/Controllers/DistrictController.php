@@ -15,9 +15,10 @@ class DistrictController extends Controller
      */
     public function index()
     {
-        $districts = District::all();
+        $admin = Auth::guard("admin")->user();
+        $districts = District::where("region_id", $admin->region_id)->whereDoesntHave("parent")->with("children", "children.children")->get();
 
-        return response()->json($districts, 200);
+        return view("admin.districts", compact("districts", "admin"));
     }
 
     /**
@@ -123,11 +124,7 @@ class DistrictController extends Controller
         //
     }
 
-    public function viewAll(){
-        $admin = Auth::guard('admin')->user();
-
-        $districts = District::where('region_id', $admin->region_id)->get();
-
-        return view('admin.districts')->with('districts', $districts)->with('admin', $admin);
+    public function viewHospitals(District $district){
+        return response()->json($district->hospitals()->get());
     }
 }
